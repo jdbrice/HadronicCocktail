@@ -30,3 +30,7 @@
 
 #Scons
 *.sconsign.dblite
+
+
+#debug configs
+*_out.xml

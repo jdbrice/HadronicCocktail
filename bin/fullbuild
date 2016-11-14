@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+cd ../
+scons -c
+scons -j8
+cd bin

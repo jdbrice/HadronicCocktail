@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Mesons>
+
+	<TF1 name="BreitWigner" formula="2.0 * [0] / ( pow( x - [1], 2.0 ) + pow( [0] / 2.0, 2.0 ) )" />
+
+</Mesons>

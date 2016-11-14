@@ -11,11 +11,15 @@ using namespace jdb;
 
 
 // TaskRunners
-#include "MesonDecayMaker.h"
+// #include "MesonDecayMaker.h"
+
+// UnitTests
+#include "UnitTestFunctionLibrary.h"
 
 int main( int argc, char* argv[] ) {
 
-	TaskFactory::registerTaskRunner<MesonDecayMaker>( "MesonDecayMaker" );
+	// UnitTests
+	TaskFactory::registerTaskRunner<UnitTestFunctionLibrary>( "UnitTestFunctionLibrary" );
 
 	TaskEngine engine( argc, argv );
 

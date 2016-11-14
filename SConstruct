@@ -21,6 +21,7 @@ cxxFlags.extend( ROOTCFLAGS )
 
 paths 			= [ '.', 			# dont really like this but ended up needing for root dict to work ok
 					'include', 
+					'include/UnitTests',
 					JDB_LIB + "/include"
 					]
 
