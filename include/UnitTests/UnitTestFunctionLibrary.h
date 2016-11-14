@@ -27,9 +27,10 @@ public:
 		UnitTest::start( config[ nodePath + ":subject" ] );
 
 		FunctionLibrary f1lib;
-		f1lib.loadFunction( config, nodePath + ".TF1[0]" );
+		f1lib.loadAll( config, nodePath );
 
-		TF1 * ftest = new TF1( "test", "TF1_BreitWigner(0)" );
+		TF1 * ftest = new TF1( "test", "BreitWigner" );
+		TF1 * ftest2 = new TF1( "ftest2", "pow( pow( 1 + x*x / ( DM2(0) ), 2) - pow( 2 * [0] * x, 2 ) / ( [0]*[0] - [1]*[1] ), 3.0/2.0  )" );
 
 
 		INFO( classname(), UnitTest::summary() );
