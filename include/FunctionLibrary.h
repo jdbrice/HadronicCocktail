@@ -35,6 +35,8 @@ public:
 		XmlFunction xf1;
 		xf1.set( _cfg, _nodePath );
 		f1s.push_back( xf1.getTF1() );
+
+		INFO( classname(), "Compiled: " << f1s[f1s.size()-1]->GetFormula()->GetExpFormula() );
 	}
 
 	void loadAll( XmlConfig &_cfg, string _nodePath ){

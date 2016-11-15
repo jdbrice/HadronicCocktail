@@ -1,35 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 
-	<VectorMeson name="omega" code="223" >
 
-		<PtSpectra>
-			<!-- For Phenix mT scaling  -->
-			<TF1 name="" formula=""/>
-			<!-- OR for Tsallis fits-->
-			<TH1 name="" url="" />
-		</PtSpectra>
+	<DecayChannel name="omega_pi0ee_dalitz" parent="omega" >
+		<DecayProduct name="pi0" />
+		<DecayProduct name="electron" />
+		<DecayProduct name="electron" />
+	</DecayChannel>
 
+	<DecayChannel name="omega_ee" parent="omega" >
+		<DecayProduct name="electron" />
+		<DecayProduct name="electron" />
+	</DecayChannel>
 
-		<DecayChannel name="eegamma" type="dalitz" >
-		</DecayChannel>
-
-		<DecayChannel name="ee" >
-		</DecayChannel>
-
-		<DecayChannel name="mumu" >
-		</DecayChannel>
-
-
-	</VectorMeson>
-
-
-	<ParticleMap>
-		<codeToNames>
-			
-		</codeToNames>
-	</ParticleMap>
-
+	<DecayChannel name="omega_mumu" parent="omega" >
+		<DecayProduct name="muon" />
+		<DecayProduct name="muon" />
+	</DecayChannel>
 
 
 </config>

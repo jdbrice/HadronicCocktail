@@ -30,7 +30,7 @@ public:
 		f1lib.loadAll( config, nodePath );
 
 		TF1 * ftest = new TF1( "test", "BreitWigner" );
-		TF1 * ftest2 = new TF1( "ftest2", "pow( pow( 1 + x*x / ( DM2(0) ), 2) - pow( 2 * [0] * x, 2 ) / ( [0]*[0] - [1]*[1] ), 3.0/2.0  )" );
+		// TF1 * ftest2 = new TF1( "ftest2", "" );
 
 
 		INFO( classname(), UnitTest::summary() );

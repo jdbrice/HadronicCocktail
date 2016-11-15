@@ -15,11 +15,15 @@ using namespace jdb;
 
 // UnitTests
 #include "UnitTestFunctionLibrary.h"
+#include "UnitTestParticleLibrary.h"
+#include "UnitTestDecayChannelInfo.h"
 
 int main( int argc, char* argv[] ) {
 
 	// UnitTests
 	TaskFactory::registerTaskRunner<UnitTestFunctionLibrary>( "UnitTestFunctionLibrary" );
+	TaskFactory::registerTaskRunner<UnitTestParticleLibrary>( "UnitTestParticleLibrary" );
+	TaskFactory::registerTaskRunner<UnitTestDecayChannelInfo>( "UnitTestDecayChannelInfo" );
 
 	TaskEngine engine( argc, argv );
 

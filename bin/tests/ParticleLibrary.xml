@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+	<Task name="UT ParticleLibrary" type="UnitTestParticleLibrary" config="" nodePath="UTPL" />
+	<Logger color="true" />
+
+	<UTPL subject="ParticleLibrary">
+		<Logger color="true" />
+		<Include url="config/ParticleLibrary.xml" />
+	</UTPL>
+
+
+</config>
