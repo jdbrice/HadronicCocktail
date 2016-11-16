@@ -54,6 +54,7 @@ public:
 		if ( plcsByName.count( _name ) > 0 ){
 			return *(plcsByName[ _name ]);
 		}
+		WARN( classname(), "Cannot find plc for name: " << _name );
 		return ParticleInfo();
 	}
 
@@ -61,6 +62,7 @@ public:
 		if ( plcsByMCId.count( _mcId ) > 0 ){
 			return *(plcsByMCId[ _mcId ]);
 		}
+		WARN( classname(), "Cannot find plc for mcId: " << _mcId );
 		return ParticleInfo();
 	}
 

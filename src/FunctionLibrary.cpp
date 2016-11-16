@@ -1,6 +1,6 @@
 #include "FunctionLibrary.h"
 
-int FunctionLibrary::tf1_instance_count = 0;
+// int FunctionLibrary::tf1_instance_count = 0;
 
 double TFormula_BreitWigner( double *x, double *par ){
 	double width = par[0];

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+	<Task name="UT ParticleDecayer" type="UnitTestParticleDecayer" config="" nodePath="UTPD" />
+	<Logger color="true" globalLogLevel="info" />
+
+	<UTPD subject="ParticleDecayer">
+		<Logger color="true" globalLogLevel="info" />
+		
+		<DecayChannels>
+			<Include url="config/DecayChannels.xml" />
+		</DecayChannels>
+
+		<FunctionLibrary>
+			<Include url="config/FunctionLibrary.xml" />
+		</FunctionLibrary>
+
+		<ParticleLibrary>
+			<Include url="config/ParticleLibrary.xml" />
+		</ParticleLibrary>
+	</UTPD>
+
+
+</config>

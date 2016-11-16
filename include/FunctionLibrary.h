@@ -13,6 +13,10 @@ using namespace jdb;
 #include "TF1.h"
 
 // STL
+#include <vector>
+#include <map>
+#include <cmath>
+
 
 // Project
 
@@ -36,6 +40,12 @@ public:
 		xf1.set( _cfg, _nodePath );
 		f1s.push_back( xf1.getTF1() );
 
+		string name = _cfg.getString( _nodePath + ":name" );
+		INFO( "Loading Function " << name );
+		if ( "" != name ){
+			f1sByName[ name ] = xf1.getTF1();
+		}
+
 		INFO( classname(), "Compiled: " << f1s[f1s.size()-1]->GetFormula()->GetExpFormula() );
 	}
 
@@ -47,11 +57,16 @@ public:
 		}
 	}
 
+	shared_ptr<TF1> get( string _name ){
+		if ( f1sByName.count( _name ) > 0 ){
+			return f1sByName[ _name ];
+		} return nullptr;
+	}
+
 
 protected:
-
-	static int tf1_instance_count;
 	vector< shared_ptr<TF1> > f1s;
+	map<string, shared_ptr<TF1> > f1sByName;
 
 	
 };

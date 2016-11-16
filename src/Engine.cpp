@@ -17,6 +17,7 @@ using namespace jdb;
 #include "UnitTestFunctionLibrary.h"
 #include "UnitTestParticleLibrary.h"
 #include "UnitTestDecayChannelInfo.h"
+#include "UnitTestParticleDecayer.h"
 
 int main( int argc, char* argv[] ) {
 
@@ -24,6 +25,7 @@ int main( int argc, char* argv[] ) {
 	TaskFactory::registerTaskRunner<UnitTestFunctionLibrary>( "UnitTestFunctionLibrary" );
 	TaskFactory::registerTaskRunner<UnitTestParticleLibrary>( "UnitTestParticleLibrary" );
 	TaskFactory::registerTaskRunner<UnitTestDecayChannelInfo>( "UnitTestDecayChannelInfo" );
+	TaskFactory::registerTaskRunner<UnitTestParticleDecayer>( "UnitTestParticleDecayer" );
 
 	TaskEngine engine( argc, argv );
 

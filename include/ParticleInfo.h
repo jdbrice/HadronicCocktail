@@ -4,13 +4,15 @@
 // RooBarb
 #include "IObject.h"
 #include "XmlConfig.h"
+#include "Utils.h"
+using namespace jdb;
 
 // STL
 #include <string>
 #include <limits>
 
 // ROOT
-
+#include "TLorentzVector.h"
 // Project
 
 class ParticleInfo : public IObject
@@ -41,6 +43,16 @@ public:
 		this->width = _cfg.getDouble( _nodePath + ":width", 0 );
 	}
 
+	string toString(){
+		string str = "";
+		str += this->name + "(" + ts(this->mcId) + ")" + "<m=";
+		str += dts(this->mass) + ", w=";
+		str += dts( this->width ) + ", lv(P=";
+		str += dts(lv.Px()) + "," + dts(lv.Py()) + "," + dts(lv.Pz()) + ", M=";
+		str += dts( lv.M() ) + ")>";
+		return str;
+	}
+
 
 
 	~ParticleInfo() {}
@@ -49,6 +61,9 @@ public:
 	int mcId;
 	double mass;
 	double width;
+
+
+	TLorentzVector lv;
 
 protected:
 
