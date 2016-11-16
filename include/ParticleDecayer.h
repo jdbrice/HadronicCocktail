@@ -138,6 +138,12 @@ protected:
 		d2.lv = daughter2;
 	}
 
+	/* Dalitz Decay
+	 *
+	 */
+	virtual void dalitzDecay( TLorentzVector _parent_lv ){
+
+	}
 
 
 	/*Calculates the phase space for a 2-body decay
