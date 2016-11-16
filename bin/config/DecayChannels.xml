@@ -18,5 +18,11 @@
 		<DecayProduct name="muon" />
 	</DecayChannel>
 
+	<!-- Example of a custom plc for flat mass distribution to mu mu-->
+	<DecayChannel name="X_mumu" parent="X" >
+		<DecayProduct name="muon" />
+		<DecayProduct name="muon" />
+	</DecayChannel>
+
 
 </config>
