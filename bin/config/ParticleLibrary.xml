@@ -18,8 +18,8 @@
 	
 
 	<!-- PHOTONS -->
-	<Particle name="photon" mcId="1" mass="" width="0" />
-	<Particle name="virtualphoton" mcId="0" mass="" width="0" />
+	<Particle name="photon" mcId="22" mass="0" width="0" />
+	<!-- <Particle name="virtualphoton" mcId="0" mass="" width="0" /> -->
 
 	<!-- LEPTONS -->
 	<Particle name="electron" mcId="11" mass="0.000511" width="0" />

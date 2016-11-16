@@ -47,10 +47,22 @@ public:
 		string str = "";
 		str += this->name + "(" + ts(this->mcId) + ")" + "<m=";
 		str += dts(this->mass) + ", w=";
-		str += dts( this->width ) + ", lv(P=";
-		str += dts(lv.Px()) + "," + dts(lv.Py()) + "," + dts(lv.Pz()) + ", M=";
+		str += dts( this->width ) + ", lv(P=" + dts(lv.P()) + "[";
+		str += dts(lv.Px()) + "," + dts(lv.Py()) + "," + dts(lv.Pz()) + "], M=";
 		str += dts( lv.M() ) + ")>";
 		return str;
+	}
+
+	bool isLepton() {
+		if ( abs(mcId) == 11 || abs(mcId) == 13 || abs(mcId) == 15 )
+			return true;
+		return false;
+	}
+
+	bool isPhoton(){
+		if ( mcId == 22 )
+			return true;
+		return false;
 	}
 
 
@@ -64,6 +76,7 @@ public:
 
 
 	TLorentzVector lv;
+
 
 protected:
 
