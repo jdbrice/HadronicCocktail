@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+	<Task name="rho" type="UnitTestParticleSampler" config="" nodePath="UTPS" />
+
+	<UTPS subject="ParticleSampler">
+		<!-- <Include url="config/FunctionLibrary.xml" /> -->
+	</UTPS>
+
+
+</config>

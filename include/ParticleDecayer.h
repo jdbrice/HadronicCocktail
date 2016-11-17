@@ -93,12 +93,10 @@ public:
 		ParticleInfo ll1 = lepton1();
 		return ll1;
 	}
-
 	ParticleInfo getLepton2(){
 		ParticleInfo ll2 = lepton2();
 		return ll2;
 	}
-
 	ParticleInfo getNeutral(){
 		ParticleInfo n = neutral();
 		return n;
@@ -135,7 +133,6 @@ protected:
 		ERROR( classname(), "Cannot find two leptons" );
 		return products[0];
 	}
-
 	ParticleInfo &neutral() {
 		for ( ParticleInfo &pi : products ){
 			if ( false == pi.isLepton() ){
@@ -147,6 +144,16 @@ protected:
 	}
 
 
+	// double sampleParentMass(){
+	// 	// TODO: use the parent's mass distribution 
+	// 	return parent.mass;
+	// }
+
+	// double sampleDileptonMass(){
+	// 	// TODO: use the constructed PDF specific to each parent
+	// 	return 0.023;
+	// }
+
 
 	virtual void applyBoost( TLorentzVector &_parent_lv, TLorentzVector &_d_lv ){
 
@@ -157,11 +164,10 @@ protected:
 		_d_lv.Boost(betaX,betaY,betaZ);
 	}
 
-	void rotate(double pin[3], double pout[3], double _costheta, double _sintheta, double _cosphi, double _sinphi)
-	{
-		pout[0] = pin[0] * _costheta * _cosphi-pin[1] * _sinphi+pin[2] * _sintheta * _cosphi;
-		pout[1] = pin[0] * _costheta * _sinphi+pin[1] * _cosphi+pin[2] * _sintheta * _sinphi;
-		pout[2] = -1.0  * pin[0] * _sintheta + pin[2] * _costheta;
+	void rotate(double pIn[3], double pOut[3], double _costheta, double _sintheta, double _cosphi, double _sinphi){
+		pOut[0] = pIn[0] * _costheta * _cosphi-pIn[1] * _sinphi+pIn[2] * _sintheta * _cosphi;
+		pOut[1] = pIn[0] * _costheta * _sinphi+pIn[1] * _cosphi+pIn[2] * _sintheta * _sinphi;
+		pOut[2] = -1.0  * pIn[0] * _sintheta + pIn[2] * _costheta;
 		return;
 	}
 
@@ -219,9 +225,11 @@ protected:
 		ParticleInfo &l2 = this->lepton2();
 		ParticleInfo &n  = this->neutral();
 
-		double pdgMass = _parent_lv.M();
+		// Mass in the lorentz vector is the sampled mass not necessarily the pdg Mass
+		// Shuai's code uses the pdg mass NOT the sampled mass! Is this correct
+		double pdgMass = parent.mass;//_parent_lv.M();
 
-		// two body decay of elextrons in virtual photon's rest frame
+		// two body decay of electrons in virtual photon's rest frame
 		double l_E    = _M_ll / 2; // Energy of lepton
 		double p1     = sqrt( (l_E + l1.mass ) * ( l_E - l1.mass ) );
 		double beta2  = 1.0 - 4.0 * ( l1.mass * l1.mass ) / ( _M_ll * _M_ll );

@@ -1,12 +1,6 @@
 #ifndef FUNCTION_LIBRARY_H
 #define FUNCTION_LIBRARY_H
 
-// RooBarb
-#include "IObject.h"
-#include "XmlConfig.h"
-#include "XmlFunction.h"
-#include "Logger.h"
-using namespace jdb;
 
 
 // ROOT
@@ -22,9 +16,20 @@ using namespace jdb;
 
 
 // Global function definitions to work easily with ROOT
-double TFormula_BreitWigner( double *x, double *par );
-double TFormula_MasslesPS( double *x, double *par );
+double TF_BreitWigner( double *x, double *par );
+double TF_MasslesPS( double *x, double *par );
+double TF_FFSquare(double *x, double *par);
 
+
+#ifndef __CINT__
+
+
+// RooBarb
+#include "IObject.h"
+#include "XmlConfig.h"
+#include "XmlFunction.h"
+#include "Logger.h"
+using namespace jdb;
 
 class FunctionLibrary : public IObject
 {
@@ -49,8 +54,17 @@ public:
 		INFO( classname(), "Compiled: " << f1s[f1s.size()-1]->GetFormula()->GetExpFormula() );
 	}
 
+	void loadBuiltin(){
+		INFO( classname(), "Loading built in functions" );
+		// f1s.push_back( shared_ptr<TF1>( new TF1( "BreitWigner", TF_BreitWigner, 0, 100, 2 ) ) );
+		// f1sByName[ "BreitWigner" ] = f1s[ f1s.size() - 1 ];
+	}
+
 	void loadAll( XmlConfig &_cfg, string _nodePath ){
 		INFO( classname(), "Loading all Functions @ " << _nodePath );
+		
+		loadBuiltin();
+
 		vector<string> paths = _cfg.childrenOf( _nodePath, "TF1" );
 		for ( string path : paths ){
 			loadFunction( _cfg, path );
@@ -63,6 +77,16 @@ public:
 		} return nullptr;
 	}
 
+	shared_ptr<TF1> copy( string _name, string _new_name ){
+		shared_ptr<TF1> orig = get(_name);
+		shared_ptr<TF1> copied = shared_ptr<TF1>( new TF1( ) );
+		if ( orig ){
+			orig->Copy( (*copied) );
+		} 
+		copied->SetName( _new_name.c_str() );
+		return copied;
+	}
+
 
 protected:
 	vector< shared_ptr<TF1> > f1s;
@@ -71,6 +95,7 @@ protected:
 	
 };
 
+#endif	// cint
 
 
 #endif

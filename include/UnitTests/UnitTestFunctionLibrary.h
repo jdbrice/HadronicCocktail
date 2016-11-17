@@ -33,14 +33,14 @@ public:
 		// TF1 * ftest2 = new TF1( "ftest2", "" );
 		// 
 		// 
-		FunctionLibrary f2lib = f1lib;
+		// FunctionLibrary f2lib = f1lib;
 
 
-		TF1 * ftest2 = new TF1( "test2", "BreitWigner" );
+		// TF1 * ftest2 = new TF1( "test2", "BreitWigner" );
 
 
-		INFO( classname(), "f1lib BreitWigner = " << f1lib.get( "BreitWigner" ) );
-		INFO( classname(), "f2lib BreitWigner = " << f2lib.get( "BreitWigner" ) );
+		// INFO( classname(), "f1lib BreitWigner = " << f1lib.get( "BreitWigner" ) );
+		// INFO( classname(), "f2lib BreitWigner = " << f2lib.get( "BreitWigner" ) );
 
 
 		INFO( classname(), UnitTest::summary() );

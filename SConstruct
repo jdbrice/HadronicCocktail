@@ -27,6 +27,31 @@ paths 			= [ '.', 			# dont really like this but ended up needing for root dict 
 
 exe = "hadronicCocktail.app"
 
+
+########################### ROOT dictionary creation ##########################
+if "LD_LIBRARY_PATH" in os.environ :
+	LD_LIBRARY_PATH = os.environ[ "LD_LIBRARY_PATH" ]
+else :
+	LD_LIBRARY_PATH = ""
+rootcint_env = Environment(ENV = {'PATH' : os.environ['PATH'], 'ROOTSYS' : os.environ[ "ROOTSYS" ], 'LD_LIBRARY_PATH' : LD_LIBRARY_PATH })
+rootcint_env.Append(CPPPATH		= paths)
+
+
+rootcint = Builder( action='rootcint -f $TARGET -c $_CPPINCFLAGS $SOURCES.file' )  
+rootcint_env.Append( BUILDERS 		= { 'RootCint' : rootcint } )
+
+# hack to make the rootcint use abs path to headers
+# rootcint_env[ "_CPPINCFLAGS" ] = rootcint_env[ "_CPPINCFLAGS" ] + "-I" + Dir(".").abspath + "/include/"
+# "-I" + Dir(".").abspath + "/" + "-I" + Dir(".").abspath + "/include/" + str( " -I" + Dir(".").abspath + "/").join( map( str, Glob( "#include/*" ) ) ) 
+
+
+root_dict = rootcint_env.RootCint( "src/CintFunctionLibraryDictionary.cpp", [Glob( "include/CintFunction*.h" ), "include/LinkDef.h"] )
+Clean( root_dict, "src/TreeData/CintDictionary_rdict.pcm" )
+rootcint_env.Alias( 'dict', root_dict )
+
+
+
+
 ########################## Project Target #####################################
 
 common_env = env.Clone()
@@ -57,5 +82,8 @@ Depends( target, Glob( JDB_LIB + "/include/jdb/*" ) )
 
 # set as the default target
 Default( target )
+
+
+
 
 
