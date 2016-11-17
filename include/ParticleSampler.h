@@ -33,6 +33,10 @@ public:
 		this->makeDileptonMassDistribution();
 	}
 
+	double sampleMass(){
+
+	}
+
 protected:
 	ParticleInfo plcInfo;
 	FunctionLibrary funLib;	
@@ -47,11 +51,32 @@ protected:
 	void makeMassDistribution(){
 		INFO( classname(), "Making mass distribution for " << this->plcInfo.toString() );
 		string fname = this->plcInfo.name + "_mass";
-		massDistribution = shared_ptr<TF1>( new TF1( fname.c_str(), TF_BreitWigner, 0, 10, 2 ) );
+		
+		// If the function library has the mass distribution then use it. If not build it as we think it should be
+		if ( this->funLib.get( fname ) ){
+			massDistribution = this->funLib.get( fname );
+			massDistribution->SetRange( 0, 5 ); // TODO: make configurable
+			massDistribution->SetNpx(10000);
+			INFO( classname(), "Loaded the mass distribution for " << plcInfo.name << " from the function library" );
+			return;
+		}
 
-		// Set the BreitWigner to use the width and mass of this plc
-		massDistribution->SetParameter( 0, this->plcInfo.width );
-		massDistribution->SetParameter( 1, this->plcInfo.mass );
+
+		// we use a special form for rho
+		if ( "rho" == this->plcInfo.name ){
+
+		} else {
+			// use a breit wigner shape
+			massDistribution = shared_ptr<TF1>( new TF1( fname.c_str(), BreitWigner, 0, 10, 2 ) );
+			
+			// Set the BreitWigner to use the width and mass of this plc
+			massDistribution->SetParameter( 0, this->plcInfo.width );
+			massDistribution->SetParameter( 1, this->plcInfo.mass );
+
+			massDistribution->SetRange( 0, 5 ); // TODO: make configurable
+			massDistribution->SetNpx(10000);
+		}
+
 	}
 
 	void makeDileptonMassDistribution(){

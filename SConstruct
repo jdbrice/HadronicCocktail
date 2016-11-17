@@ -37,7 +37,7 @@ rootcint_env = Environment(ENV = {'PATH' : os.environ['PATH'], 'ROOTSYS' : os.en
 rootcint_env.Append(CPPPATH		= paths)
 
 
-rootcint = Builder( action='rootcint -f $TARGET -c $_CPPINCFLAGS $SOURCES.file' )  
+rootcint = Builder( action='rootcint -v4 -f $TARGET -c $_CPPINCFLAGS $SOURCES.file' )  
 rootcint_env.Append( BUILDERS 		= { 'RootCint' : rootcint } )
 
 # hack to make the rootcint use abs path to headers

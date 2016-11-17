@@ -13,7 +13,7 @@
 
 
 // Project
-
+#include "CintFunctionLibrary.h"
 
 // Global function definitions to work easily with ROOT
 double TF_BreitWigner( double *x, double *par );
@@ -56,8 +56,8 @@ public:
 
 	void loadBuiltin(){
 		INFO( classname(), "Loading built in functions" );
-		// f1s.push_back( shared_ptr<TF1>( new TF1( "BreitWigner", TF_BreitWigner, 0, 100, 2 ) ) );
-		// f1sByName[ "BreitWigner" ] = f1s[ f1s.size() - 1 ];
+		f1s.push_back( shared_ptr<TF1>( new TF1( "BreitWigner", BreitWigner, 0, 100, 2 ) ) );
+		f1sByName[ "BreitWigner" ] = f1s[ f1s.size() - 1 ];
 	}
 
 	void loadAll( XmlConfig &_cfg, string _nodePath ){
