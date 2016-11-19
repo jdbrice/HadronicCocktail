@@ -7,12 +7,12 @@
 
 	
 	<!-- MESONS -->
-	<Particle name="pi0" mcId="111" mass="0.1349766" width="0" />
-	<Particle name="eta" mcId="221" mass="0.547853" width="1.3e-6" />
+	<Particle name="pi0" mcId="111" mass="0.1349766" width="0" invLambda2="1.756" />
+	<Particle name="eta" mcId="221" mass="0.547853" width="1.3e-6" invLambda2="1.95"/>
 	<Particle name="rho" mcId="113" mass="0.77549" width="0.1491" />
-	<Particle name="omega" mcId="223" mass="0.78265" width="8.49e-3" />
-	<Particle name="phi" mcId="333" mass="1.019455" width="4.26e-3" />
-	<Particle name="etaprime" mcId="331" mass="0.95778" width="1.94e-4" />
+	<Particle name="omega" mcId="223" mass="0.78265" width="8.49e-3" invLambda2="2.24"/>
+	<Particle name="phi" mcId="333" mass="1.019455" width="4.26e-3" invLambda2="3.8"/>
+	<Particle name="etaprime" mcId="331" mass="0.95778" width="1.94e-4" invLambda2="1.8396" gamma2="0.01989"/>
 	<Particle name="jpsi" mcId="443" mass="3.096916" width="9.29e-5" />
 	<Particle name="psi" mcId="100443" mass="3.68609" width="3.04e-4" />
 	

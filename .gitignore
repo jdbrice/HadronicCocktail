@@ -35,3 +35,7 @@
 
 #debug configs
 *_out.xml
+
+#data
+*.root
+bin/log

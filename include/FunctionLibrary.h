@@ -63,7 +63,7 @@ public:
 	void loadAll( XmlConfig &_cfg, string _nodePath ){
 		INFO( classname(), "Loading all Functions @ " << _nodePath );
 		
-		loadBuiltin();
+		// loadBuiltin();
 
 		vector<string> paths = _cfg.childrenOf( _nodePath, "TF1" );
 		for ( string path : paths ){

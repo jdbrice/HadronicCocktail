@@ -28,6 +28,8 @@ public:
 
 		DecayChannelInfo dci( config, nodePath + ".DecayChannel" );
 
+		UT_TEST( "DecayChannel name", UT_EQ( dci.name, "omega_pi0ee_dalitz" ) );
+
 		INFO( classname(), UnitTest::summary() );
 
 		config.toXmlFile( "UnitTestDecayChannelInfo_out.xml" );

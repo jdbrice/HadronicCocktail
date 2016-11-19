@@ -2,10 +2,10 @@
 <config>
 
 	<Task name="UT DecayChannelInfo" type="UnitTestDecayChannelInfo" config="" nodePath="UTDCI" />
-	<Logger color="true" globalLogLevel="all" />
+	<Logger color="true" globalLogLevel="info" />
 
 	<UTDCI subject="DecayChannelInfo">
-		<Logger color="true" globalLogLevel="all" />
+		<Logger color="true" globalLogLevel="info" />
 		<Include url="config/DecayChannels.xml" />
 	</UTDCI>
 

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+	<Task name="rho" type="UnitTestHistogramLibrary" config="" nodePath="UTHL" />
+
+	<UTHL subject="HistogramLibrary">
+		<Include url="config/HistogramLibrary.xml" />
+	</UTHL>
+
+
+</config>

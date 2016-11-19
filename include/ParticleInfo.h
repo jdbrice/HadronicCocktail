@@ -37,17 +37,22 @@ public:
 
 	ParticleInfo( XmlConfig &_cfg, string _nodePath ){
 		DEBUG( classname(), "(cfg=" << _cfg.getFilename() << ", nodePath=" << _nodePath << ")" );
-		this->name  = _cfg.getString( _nodePath + ":name", "NA" );
-		this->mcId  = _cfg.getInt(    _nodePath + ":mcId", 0 );
-		this->mass  = _cfg.getDouble( _nodePath + ":mass", 0 );
-		this->width = _cfg.getDouble( _nodePath + ":width", 0 );
+		this->name       = _cfg.getString( _nodePath + ":name", "NA" );
+		this->mcId       = _cfg.getInt(    _nodePath + ":mcId", 0 );
+		this->mass       = _cfg.getDouble( _nodePath + ":mass", 0 );
+		this->width      = _cfg.getDouble( _nodePath + ":width", 0 );
+		this->gamma2     = _cfg.getDouble( _nodePath + ":gamma2", 0 );
+		this->invLambda2 = _cfg.getDouble( _nodePath + ":invLambda2", 0 );
 	}
 
 	string toString(){
 		string str = "";
 		str += this->name + "(" + ts(this->mcId) + ")" + "<m=";
 		str += dts(this->mass) + ", w=";
-		str += dts( this->width ) + ", lv(P=" + dts(lv.P()) + "[";
+		str += dts( this->width ) + ", G2=";
+		str += dts( this->gamma2 ) + ", G2=";
+		str += dts( this->invLambda2 );
+		str += ", lv(P=" + dts(lv.P()) + "[";
 		str += dts(lv.Px()) + "," + dts(lv.Py()) + "," + dts(lv.Pz()) + "], M=";
 		str += dts( lv.M() ) + ")>";
 		return str;
@@ -70,9 +75,11 @@ public:
 	~ParticleInfo() {}
 
 	string name;
-	int mcId;
-	double mass;
-	double width;
+	int mcId = 0.0;
+	double mass = 0.0;
+	double width = 0.0;
+	double gamma2 = 0.0;
+	double invLambda2 = 0.0;
 
 
 	TLorentzVector lv;

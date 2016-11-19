@@ -57,8 +57,8 @@ public:
 
 		gRandom = new TRandom3();
 		gRandom->SetSeed( 1 );
-		INFO( classname(), "Energy Conserved : " << bts( pd.checkDalitzEnergyConservation( lv, eeMass ) ) );
-		pd.decay( lv, eeMass );
+		// INFO( classname(), "Energy Conserved : " << bts( pd.checkDalitzEnergyConservation( lv ) ) );
+		pd.decay( lv );
 
 		TLorentzVector plv = pd.getLepton1().lv + pd.getLepton2().lv + pd.getNeutral().lv;
 		INFO( classname(), "lv( P=" << dts(plv.Px()) << "," << dts(plv.Py()) << "," << dts(plv.Pz()) << ", M=" << dts( plv.M() ) << ")" );

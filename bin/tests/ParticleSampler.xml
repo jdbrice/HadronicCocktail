@@ -4,7 +4,10 @@
 	<Task name="rho" type="UnitTestParticleSampler" config="" nodePath="UTPS" />
 
 	<UTPS subject="ParticleSampler">
-		<!-- <Include url="config/FunctionLibrary.xml" /> -->
+		<make N="100000" />
+		<Include url="config/HistogramLibrary.xml" />
+		<Include url="config/FunctionLibrary.xml" />
+		<Include url="config/ParticleLibrary.xml" />
 	</UTPS>
 
 

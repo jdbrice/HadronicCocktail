@@ -33,6 +33,7 @@ public:
 		this->parentName = _cfg.getString( _nodePath + ":parent", "NA" );
 
 		vector<string> paths = _cfg.childrenOf( _nodePath, "DecayProduct" );
+		INFO( classname(), "Loading decay info for " << this->name );
 		for ( string path : paths ){
 			string prodName = _cfg.getString( path + ":name" );
 			INFO( classname(), "Adding Product " << prodName );

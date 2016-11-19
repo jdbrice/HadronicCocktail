@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<KinematicDistributions>
+
+	<!-- pT Node -->
+	<!-- Attributes -->
+	<!-- name : name of particle that will use this distribution -->
+
+	<TH1 url="config/pT.root" hName="omega" name="omega_pT" />
+
+</KinematicDistributions>

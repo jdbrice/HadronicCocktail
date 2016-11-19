@@ -14,74 +14,80 @@
 // Project
 #include "ParticleLibrary.h"
 #include "FunctionLibrary.h"
+#include "HistogramLibrary.h"
 #include "ParticleInfo.h"
+
+#include "KinematicDistribution.h"
 
 class ParticleSampler : public IObject
 {
 public:
 	virtual const char* classname() const { return "ParticleSampler"; }
 	ParticleSampler() {}
-	ParticleSampler( ParticleInfo _parent ) {
-
-	}
 	~ParticleSampler() {}
 
-	void set( ParticleInfo _plcInfo, FunctionLibrary &_funLib ){
-		this->funLib = _funLib;
-		this->plcInfo = _plcInfo;
-		this->makeMassDistribution();
-		this->makeDileptonMassDistribution();
+	void set( ParticleInfo _plcInfo, FunctionLibrary &_funLib, HistogramLibrary &_histoLib ){
+		this->funLib   = _funLib;
+		this->histoLib = _histoLib;
+		this->plcInfo  = _plcInfo;
+
+		// look for distributions
+		kdPt.set( nullptr, this->funLib.get( "default_pT" ) ); // default in case nex ones are nullptr
+		kdPt.set( this->histoLib.get( _plcInfo.name + "_pT" ), this->funLib.get( _plcInfo.name + "_pT" ) );
+
+		kdRapidity.set( nullptr, this->funLib.get("CERES" ) );
+		kdRapidity.set( this->histoLib.get( _plcInfo.name + "_rapidity" ), this->funLib.get( _plcInfo.name + "_rapidity" ) );
+		kdRapidity.getTF1()->SetParameter( 2, this->plcInfo.mass ); // set the plc mass
+
+		kdPhi.set( nullptr, this->funLib.get("Phi" ) );
+		kdPhi.set( this->histoLib.get( _plcInfo.name + "_phi" ), this->funLib.get( _plcInfo.name + "_phi" ) );
+
+
 	}
 
-	double sampleMass(){
+	double samplePt(){
+		return kdPt.sample();
+	}
 
+	double sampleRapidity(){
+		return kdRapidity.sample();
+	} 
+
+	double samplePhi(){
+		return kdPhi.sample();
+	}
+
+	double rapidityToEta( double _y, double _pT ){
+		
+		double m = this->plcInfo.mass;
+		double mT = sqrt(_pT*_pT+m*m);
+		double pZ = mT*TMath::SinH(_y);
+		double pTot = sqrt(_pT*_pT+pZ*pZ);
+
+		double eta = 0.5 * log( ( pTot+pZ )/(pTot-pZ));
+		
+		return eta;
+	}
+
+	TLorentzVector sample(){
+		TLorentzVector lv;
+		double pT = this->samplePt();
+		double y = this->sampleRapidity();
+		double phi = this->samplePhi();
+		double eta = rapidityToEta( y, pT );
+
+		lv.SetPtEtaPhiM( pT, eta, phi, this->plcInfo.mass );
+		return lv;
 	}
 
 protected:
 	ParticleInfo plcInfo;
 	FunctionLibrary funLib;	
+	HistogramLibrary histoLib;	
+
+	KinematicDistribution kdPt, kdRapidity, kdPhi;
 	
-	// particles mass distribution
-	shared_ptr<TF1> massDistribution = nullptr;
 
-	// used in dalitz decays only
-	shared_ptr<TF1> dileptonMassDistribution = nullptr;
-
-
-	void makeMassDistribution(){
-		INFO( classname(), "Making mass distribution for " << this->plcInfo.toString() );
-		string fname = this->plcInfo.name + "_mass";
-		
-		// If the function library has the mass distribution then use it. If not build it as we think it should be
-		if ( this->funLib.get( fname ) ){
-			massDistribution = this->funLib.get( fname );
-			massDistribution->SetRange( 0, 5 ); // TODO: make configurable
-			massDistribution->SetNpx(10000);
-			INFO( classname(), "Loaded the mass distribution for " << plcInfo.name << " from the function library" );
-			return;
-		}
-
-
-		// we use a special form for rho
-		if ( "rho" == this->plcInfo.name ){
-
-		} else {
-			// use a breit wigner shape
-			massDistribution = shared_ptr<TF1>( new TF1( fname.c_str(), BreitWigner, 0, 10, 2 ) );
-			
-			// Set the BreitWigner to use the width and mass of this plc
-			massDistribution->SetParameter( 0, this->plcInfo.width );
-			massDistribution->SetParameter( 1, this->plcInfo.mass );
-
-			massDistribution->SetRange( 0, 5 ); // TODO: make configurable
-			massDistribution->SetNpx(10000);
-		}
-
-	}
-
-	void makeDileptonMassDistribution(){
-
-	}
 };
 
 

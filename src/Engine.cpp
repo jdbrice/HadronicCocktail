@@ -19,6 +19,7 @@ using namespace jdb;
 #include "UnitTestDecayChannelInfo.h"
 #include "UnitTestParticleDecayer.h"
 #include "UnitTestParticleSampler.h"
+#include "UnitTestHistogramLibrary.h"
 
 int main( int argc, char* argv[] ) {
 
@@ -28,6 +29,7 @@ int main( int argc, char* argv[] ) {
 	TaskFactory::registerTaskRunner<UnitTestDecayChannelInfo>( "UnitTestDecayChannelInfo" );
 	TaskFactory::registerTaskRunner<UnitTestParticleDecayer>( "UnitTestParticleDecayer" );
 	TaskFactory::registerTaskRunner<UnitTestParticleSampler>( "UnitTestParticleSampler" );
+	TaskFactory::registerTaskRunner<UnitTestHistogramLibrary>( "UnitTestHistogramLibrary" );
 
 	TaskEngine engine( argc, argv );
 
