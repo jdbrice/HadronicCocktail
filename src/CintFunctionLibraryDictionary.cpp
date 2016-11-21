@@ -50,9 +50,9 @@ namespace {
     };
     static const char* includePaths[] = {
 "include/UnitTests",
-"/Users/danielbrandenburg/bnl/local/work/RooBarb/include",
-"/Users/danielbrandenburg/bnl/vendor/root-6.06.04/include",
-"/Users/danielbrandenburg/bnl/local/work/HadronicCocktail/",
+"/Users/jdb/bnl/local/work/roobarb/include",
+"/Users/jdb/bnl/vendor/root-6.06.02/include",
+"/Users/jdb/bnl/local/work/HadronicCocktail/",
 0
     };
     static const char* fwdDeclCode = R"DICTFWDDCLS(

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+	<Task name="omega" type="SingleDecayMaker" config="" nodePath="SDM_omega" />
+
+	<SDM_omega >
+		<make N="100000" decay="omega" />
+		<Include url="config/HistogramLibrary.xml" />
+		<Include url="config/FunctionLibrary.xml" />
+		<Include url="config/ParticleLibrary.xml" />
+	</SDM_omega>
+
+
+</config>

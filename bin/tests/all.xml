@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+	<Task name=" UT DecayChannelInfo" type="UnitTestDecayChannelInfo" config="tests/DecayChannelInfo.xml" nodePath="UTDCI" />
+	<Task name=" UT FunctionLibrary" type="UnitTestFunctionLibrary" config="tests/FunctionLibrary.xml" nodePath="UTFL" />
+	<Task name=" UT HistogramLibrary" type="UnitTestHistogramLibrary" config="tests/HistogramLibrary.xml" nodePath="UTHL" />
+	<Task name=" UT ParticleDecayer" type="UnitTestParticleDecayer" config="tests/ParticleDecayer.xml" nodePath="UTPD" />
+	<Task name=" UT ParticleLibrary" type="UnitTestParticleLibrary" config="tests/ParticleLibrary.xml" nodePath="UTPL" />
+	<!-- <Task name=" UT ParticleSampler" type="UnitTestParticleSampler" config="tests/ParticleSampler.xml" nodePath="UTPS" /> -->
+
+</config>

@@ -1,8 +1,6 @@
 #ifndef FUNCTION_LIBRARY_H
 #define FUNCTION_LIBRARY_H
 
-
-
 // ROOT
 #include "TF1.h"
 
@@ -11,17 +9,8 @@
 #include <map>
 #include <cmath>
 
-
 // Project
 #include "CintFunctionLibrary.h"
-
-// Global function definitions to work easily with ROOT
-double TF_BreitWigner( double *x, double *par );
-double TF_MasslesPS( double *x, double *par );
-double TF_FFSquare(double *x, double *par);
-
-
-#ifndef __CINT__
 
 
 // RooBarb
@@ -95,7 +84,6 @@ protected:
 	
 };
 
-#endif	// cint
 
 
 #endif

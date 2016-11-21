@@ -50,7 +50,7 @@ public:
 		str += this->name + "(" + ts(this->mcId) + ")" + "<m=";
 		str += dts(this->mass) + ", w=";
 		str += dts( this->width ) + ", G2=";
-		str += dts( this->gamma2 ) + ", G2=";
+		str += dts( this->gamma2 ) + ", iL2=";
 		str += dts( this->invLambda2 );
 		str += ", lv(P=" + dts(lv.P()) + "[";
 		str += dts(lv.Px()) + "," + dts(lv.Py()) + "," + dts(lv.Pz()) + "], M=";
