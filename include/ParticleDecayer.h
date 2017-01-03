@@ -91,7 +91,7 @@ public:
 
 				// sample the parent mass and set the lv
 				_lv.SetXYZM(  _lv.Px(), _lv.Py(), _lv.Pz(), sampleParentMass() );
-				
+				lastSampledMass = _lv.M();
 				twoBodyDecay( _lv );
 			}
 		} else if ( nProducs == 3 ){
@@ -109,7 +109,7 @@ public:
 				ERROR( classname(), "Unable to meet Energy Conservation criteria, bailing out of decay" );
 				return;
 			}
-
+			lastSampledMass = M_ll;
 			dalitzDecay( _lv, M_ll );
 		}
 	}
@@ -127,6 +127,14 @@ public:
 		ParticleInfo n = neutral();
 		return n;
 	}
+
+	double getSampledMass(){
+		return lastSampledMass;
+	}
+
+	int getNProducts(){
+		return products.size();
+	}
 	
 protected:
 	FunctionLibrary funLib;
@@ -143,6 +151,7 @@ protected:
 	// used in dalitz decays only
 	shared_ptr<TF1> dileptonMassDistribution = nullptr;
 
+	double lastSampledMass;
 
 
 	ParticleInfo &lepton1( ) {

@@ -11,7 +11,9 @@ using namespace jdb;
 
 
 // TaskRunners
-// #include "MesonDecayMaker.h"
+#include "TaskRunners/CocktailMaker.h"
+#include "TaskRunners/CocktailNTupleMaker.h"
+
 
 // UnitTests
 #include "UnitTestFunctionLibrary.h"
@@ -30,6 +32,11 @@ int main( int argc, char* argv[] ) {
 	TaskFactory::registerTaskRunner<UnitTestParticleDecayer>( "UnitTestParticleDecayer" );
 	TaskFactory::registerTaskRunner<UnitTestParticleSampler>( "UnitTestParticleSampler" );
 	TaskFactory::registerTaskRunner<UnitTestHistogramLibrary>( "UnitTestHistogramLibrary" );
+
+
+	// TaskRunners
+	TaskFactory::registerTaskRunner<CocktailMaker>( "CocktailMaker" );	
+	TaskFactory::registerTaskRunner<CocktailNTupleMaker>( "CocktailNTupleMaker" );	
 
 	TaskEngine engine( argc, argv );
 

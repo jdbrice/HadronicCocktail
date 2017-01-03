@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+
+	<Task name="Cocktail Maker" type="CocktailMaker" config="" nodePath="cm" />
+	<Logger color="true" globalLogLevel="info" />
+
+	<cm>
+		<Logger color="true" globalLogLevel="info" />
+
+		<output>
+			<TFile url="QAMuonCocktail.root" />
+		</output>
+
+		
+		<ActiveChannels>
+			<ActiveChannel name="eta_gammamumu_dalitz" n="100000" weight="0.5" />
+			<ActiveChannel name="etaprime_gammamumu_dalitz" n="100000" weight="0.5" />
+			<ActiveChannel name="omega_pi0mumu_dalitz" n="100000" weight="0.1"/>
+			<ActiveChannel name="omega_mumu" n="100000" weight="1.0"/>
+			<ActiveChannel name="phi_mumu" n="100000" weight="1.0" />
+			<ActiveChannel name="eta_mumu" n="100000" weight="0.5" />
+		</ActiveChannels>		
+
+		<DecayChannels>
+			<Include url="config/DecayChannels.xml" />
+		</DecayChannels>
+
+		<FunctionLibrary>
+			<Include url="config/FunctionLibrary.xml" />
+		</FunctionLibrary>
+
+		<ParticleLibrary>
+			<Include url="config/ParticleLibrary.xml" />
+		</ParticleLibrary>
+
+		<histograms>
+			<Histo name="pT" title=";pT [GeV/c]; dN/dpT" bins_x="bins.pT"/>
+			<Histo name="eta" title=";eta [GeV/c]; dN/deta" bins_x="bins.eta"/>
+			<Histo name="phi" title=";phi [GeV/c]; dN/dphi" bins_x="bins.phi"/>
+			<Histo name="mass" title=";M_{#mu#mu} [GeV/c^{2}]; dN/dM [c^{2}/GeV]" bins_x="bins.mass" />
+			<Histo name="mass_vs_pT" title=";M_{#mu#mu} [GeV/c^{2}]; p_{T} [GeV/c]" bins_x="bins.mass" bins_y="bins.pT" />
+		</histograms>
+
+		<KinematicFilters>
+			<Parent>
+				<Range name="pT" min="0.1" max="inf"/>
+				<Range name="eta" min="-0.8" max="0.8" />
+				<Range name="phi" min="-4" max="4" />
+				<Range name="y" min="-0.8" max="0.8" />
+			</Parent>
+			<Daughter>
+				<Range name="pT" min="0.8" max="inf"/>
+				<Range name="eta" min="-0.8" max="0.8" />
+				<Range name="phi" min="-4" max="4" />
+				<Range name="y" min="-0.8" max="0.8" />
+			</Daughter>
+		</KinematicFilters>
+
+	</cm>
+
+	<bins>
+		<pT width="0.01" min="0.0" max="5.0" />
+		<eta width="0.01" min="-1.0" max="1.0" />
+		<phi width="0.01" min="-4.0" max="4.0" />
+		<mass width="0.01" min="0" max="5" />
+	</bins>
+
+
+</config>

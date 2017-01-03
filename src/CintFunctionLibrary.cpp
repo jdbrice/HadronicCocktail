@@ -110,3 +110,19 @@ double RhoMassDistribution( double *x, double *par ){
 
 
 }
+
+double CrystalBall( double x, double N, double mu, double sig, double n, double alpha ){
+
+	double A = pow( n/fabs(alpha), n) * exp(-alpha*alpha/2.);
+	double B = n/fabs(alpha) - fabs(alpha);
+	double norm = (x-mu)/sig;
+
+	if(norm > -alpha) {
+		return N * exp(-0.5*norm*norm);
+	} else {
+		return N * A * pow(B-norm, -n);
+	}
+}
+double CrystalBall( double *x, double *par ){
+	return CrystalBall( x[0], par[0], par[1], par[2], par[3], par[4] );
+}

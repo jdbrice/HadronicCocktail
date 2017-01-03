@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+
+	<Task name="Cocktail Maker" type="CocktailNTupleMaker" config="" nodePath="cm" />
+	<Logger color="true" globalLogLevel="info" />
+
+	<cm>
+		<Logger color="true" globalLogLevel="info" />
+
+		<output>
+			<TFile url="NTupleMuonCocktail.root" />
+		</output>
+
+		<Make QA="false" />
+		
+		<ActiveChannels>
+			<!-- <ActiveChannel name="eta_gammamumu_dalitz" n="10000" weight="0.5" />
+			<ActiveChannel name="etaprime_gammamumu_dalitz" n="1000" weight="0.5" />
+			<ActiveChannel name="omega_pi0mumu_dalitz" n="1000" weight="0.1"/>
+			<ActiveChannel name="omega_mumu" n="1000" weight="1.0"/> -->
+			<ActiveChannel name="phi_mumu" n="10000" weight="1.0" />
+			<!-- <ActiveChannel name="eta_mumu" n="10000" weight="0.5" /> -->
+		</ActiveChannels>		
+
+		<DecayChannels>
+			<Include url="config/DecayChannels.xml" />
+		</DecayChannels>
+
+		<FunctionLibrary>
+			<Include url="config/FunctionLibrary.xml" />
+		</FunctionLibrary>
+
+		<ParticleLibrary>
+			<Include url="config/ParticleLibrary.xml" />
+		</ParticleLibrary>
+
+		<KinematicFilters>
+			<Parent>
+				<Range name="pT" min="1.5" max="inf"/>
+				<Range name="eta" min="-0.8" max="0.8" />
+				<Range name="phi" min="-4" max="4" />
+				<Range name="y" min="-0.8" max="0.8" />
+			</Parent>
+			<Daughter>
+				<Range name="pT" min="0.8" max="inf"/>
+				<Range name="eta" min="-0.8" max="0.8" />
+				<Range name="phi" min="-4" max="4" />
+				<Range name="y" min="-0.8" max="0.8" />
+			</Daughter>
+		</KinematicFilters>
+
+	</cm>
+
+</config>

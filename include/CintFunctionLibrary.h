@@ -31,6 +31,9 @@ double KrollWada( double Mll, double M0, double Mn, double ml, double G0, double
 double KrollWada( double *x, double *par );
 
 
+double CrystalBall( double x, double N, double mu, double sig, double n, double alpha );
+double CrystalBall( double *x, double *par );
+
 
 
 #endif
