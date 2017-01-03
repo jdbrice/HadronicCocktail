@@ -10,6 +10,13 @@
 using namespace jdb;
 
 
+
+/* Provides a union between multiple types of "distribution" backers
+ *
+ * Supplies a single interface to a distribution backed by one of multiple objects.
+ * Currently supports TH1 and TF1 as backers.
+ * 
+ */
 class KinematicDistribution : public IObject
 {
 public:

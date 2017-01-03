@@ -1,6 +1,11 @@
 #ifndef DECAY_CHANNEL_INFO_H
 #define DECAY_CHANNEL_INFO_H
 
+#include "IObject.h"
+using namespace jdb;
+
+
+
 
 class DecayChannelInfo : public IObject
 {
@@ -28,6 +33,7 @@ public:
 	}
 
 	void loadInfo( XmlConfig &_cfg, string _nodePath ){
+		_nodePath = _cfg.q( _nodePath );
 		DEBUG( classname(), "(_cfg=" << _cfg.getFilename() << ", nodePath=" << _nodePath << ")" );
 		this->name       = _cfg.getString( _nodePath + ":name", "NA" );
 		this->parentName = _cfg.getString( _nodePath + ":parent", "NA" );
@@ -47,6 +53,12 @@ public:
 	string name;
 	string parentName;
 	vector<string> productNames;
+
+	static DecayChannelInfo get( XmlConfig &_cfg, string _np, string _name ){
+		DecayChannelInfo dci;
+		dci.loadInfo( _cfg, _np + ".DecayChannel{name==" + _name + " }" );
+		return dci;
+	}
 
 protected:
 

@@ -30,6 +30,14 @@ public:
 	ParticleDecayer( ParticleLibrary &_plcLib, FunctionLibrary &_funLib ) {
 		this->plcLib = _plcLib;
 		this->funLib = _funLib;
+
+		this->pdfPhi      = this->funLib.get( "decay_product_phi" );
+		this->pdfCosTheta = this->funLib.get( "decay_product_costheta" );
+
+		if ( nullptr == this->pdfPhi )
+			this->pdfPhi = shared_ptr<TF1>( new TF1( "decay_product_phi", "1 * ( x > 0 && x < 2.0 * TMath::Pi() )" ) );
+		if ( nullptr == this->pdfCosTheta )
+			this->pdfCosTheta = shared_ptr<TF1>( new TF1( "decay_product_costheta", " 1 * ( x >= -1 && x <= 1 )" ) );
 	}
 	
 	/*ParticleDecayer Dtor
@@ -151,6 +159,9 @@ protected:
 	// used in dalitz decays only
 	shared_ptr<TF1> dileptonMassDistribution = nullptr;
 
+	// alias to PDFs used in plc decays
+	shared_ptr<TF1> pdfCosTheta;
+	shared_ptr<TF1> pdfPhi;
 	double lastSampledMass;
 
 
@@ -236,9 +247,8 @@ protected:
 
 		double E_d = _parent_lv.M()/2.;
 		double p = sqrt(E_d*E_d - M_d1*M_d1);
-
-		double costheta = gRandom->Uniform(-1.,1.);
-		double phi = gRandom->Uniform(0,TMath::Pi()*2);
+		double costheta = this->pdfCosTheta->GetRandom(); //gRandom->Uniform(-1.,1.);
+		double phi = this->pdfPhi->GetRandom(); //gRandom->Uniform(0,TMath::Pi()*2);
 
 		// make sure that the magnitude of the mom vector is correct!
 		// May allow these distributions to be input?
@@ -286,19 +296,19 @@ protected:
 		DEBUG( classname(), "beta2 = " << beta2 );
 		DEBUG( classname(), "lambda = " << lambda );
 
-		double costheta = ( 2.0 * gRandom->Rndm() ) - 1.0;
+		double costheta = this->pdfCosTheta->GetRandom();//( 2.0 * gRandom->Rndm() ) - 1.0;
 		
 		// if the neutral partical hass mass == 0 ( ie a photon) then we need to take care of the polarization
 		if ( n.isPhoton() ){
 			while( ( 1.0 + lambda * costheta * costheta ) < ( 2.0 * gRandom->Rndm() ) ){
-				costheta = ( 2.0 * gRandom->Rndm() ) - 1.0;
+				costheta = this->pdfCosTheta->GetRandom();
 			}
 		}
 
 		double sintheta = sqrt( ( 1.0 + costheta ) * (1.0 - costheta) );
-		double phi = 2.0 * acos(-1.) * gRandom->Rndm();
-		double sinphi = sin( phi );
-		double cosphi = cos( phi );
+		double phi      = this->pdfPhi->GetRandom();
+		double sinphi   = sin( phi );
+		double cosphi   = cos( phi );
 
 		DEBUG( classname(), "costheta = " << costheta );
 		DEBUG( classname(), "sintheta = " << sintheta );
@@ -327,9 +337,9 @@ protected:
 		DEBUG( classname(), "E3 = " << E3 );
 		DEBUG( classname(), "p3 = " << p3 );
 
-		costheta  = ( 2.0 * gRandom->Rndm() ) - 1.;
+		costheta  = this->pdfCosTheta->GetRandom();//( 2.0 * gRandom->Rndm() ) - 1.;
 		sintheta  = sqrt( (1.0 + costheta ) * ( 1.0 - costheta ) );
-		phi       = 2.0 * acos(-1.0) * gRandom->Rndm();
+		phi       = this->pdfPhi->GetRandom();
 		sinphi    = sin( phi );
 		cosphi    = cos( phi );
 

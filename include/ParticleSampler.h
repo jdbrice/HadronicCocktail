@@ -42,6 +42,7 @@ public:
 		kdPhi.set( nullptr, this->funLib.get("Phi" ) );
 		kdPhi.set( this->histoLib.get( _plcInfo.name + "_phi" ), this->funLib.get( _plcInfo.name + "_phi" ) );
 
+		gRandom->SetSeed(0);
 
 	}
 
@@ -78,6 +79,10 @@ public:
 
 		lv.SetPtEtaPhiM( pT, eta, phi, this->plcInfo.mass );
 		return lv;
+	}
+
+	ParticleInfo plc() const {
+		return this->plcInfo;
 	}
 
 protected:
