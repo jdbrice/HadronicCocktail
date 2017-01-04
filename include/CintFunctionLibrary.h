@@ -19,21 +19,26 @@ double PlcGamma( double m, double mReso, double gamma0, double ml, double l );
  *
  * @return 	PhaseSpace factor
  */ 
-double PhasSpaceMassive( double Mll, double M0, double Mn );
+
+double PhaseSapceMassless( double Mll, double M0 );
+double PhaseSpaceMassless( double *x, double *par );
+double PhaseSpaceMassive( double Mll, double M0, double Mn );
 double PhaseSpaceMassive( double *x, double *par );
 double FormFactor2( double Mll, double G0, double iL2 );
 double FormFactor2( double *x, double *par );
 
-double QED( double Mll, double ml );
+double QED( double Mll, double ml, double Nd );
 double QED( double *x, double *par );
 
-double KrollWada( double Mll, double M0, double Mn, double ml, double G0, double iL2 );
+double KrollWada( double Mll, double M0, double Mn, double ml, double G0, double iL2, double Nd );
 double KrollWada( double *x, double *par );
 
 
 double CrystalBall( double x, double N, double mu, double sig, double n, double alpha );
 double CrystalBall( double *x, double *par );
 
+double CrystalBall2( double x, double N, double mu, double sig, double n, double alpha, double m, double beta );
+double CrystalBall2( double *x, double *par );
 
 
 #endif

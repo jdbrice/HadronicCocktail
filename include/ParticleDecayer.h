@@ -400,8 +400,10 @@ protected:
 			massDistribution->SetParameter( 0, this->parent.width );
 			massDistribution->SetParameter( 1, this->parent.mass );
 
-			massDistribution->SetRange( 0, 5 ); // TODO: make configurable
-			massDistribution->SetNpx(10000);
+			massDistribution->SetRange( this->parent.mass - 10 * this->parent.width, this->parent.mass + 10 * this->parent.width ); // TODO: make configurable
+			massDistribution->SetNpx(50000);
+
+			massDistribution->Write();
 		}
 	} // makeMassDistribution
 
@@ -413,25 +415,61 @@ protected:
 		// If the function library has the mass distribution then use it. If not build it as we think it should be
 		if ( this->funLib.get( fname ) ){
 			dileptonMassDistribution = this->funLib.get( fname );
-			dileptonMassDistribution->SetRange( 0, 5 ); // TODO: make configurable
-			dileptonMassDistribution->SetNpx(10000);	// TODO: make configurable
+			
+			// if we load from config this should be set
+			// dileptonMassDistribution->SetRange( 0, 5 ); // TODO: make configurable
+			dileptonMassDistribution->SetNpx(50000);	// TODO: make configurable
+			dileptonMassDistribution->Write();
 			INFO( classname(), "Loaded the dilepton mass distribution for " << parent.name << " from the function library (ie Overrode default)" );
 			return;
 		}
 
 
-		dileptonMassDistribution = shared_ptr< TF1 >( new TF1( fname.c_str(), KrollWada, 0, 10, 5 ) );
+		dileptonMassDistribution = shared_ptr< TF1 >( new TF1( fname.c_str(), KrollWada, 0, 10, 6 ) );
 		
 
-		// double KrollWada( double Mll, double M0, double Mn, double ml, double G0, double iL2 );
+		// double KrollWada( double Mll, double M0, double Mn, double ml, double G0, double iL2, double Nd );
 		dileptonMassDistribution->SetParameter( 0, this->parent.mass );
 		dileptonMassDistribution->SetParameter( 1, this->neutral().mass );
 		dileptonMassDistribution->SetParameter( 2, this->lepton1().mass );
 		dileptonMassDistribution->SetParameter( 3, this->parent.gamma2 );
 		dileptonMassDistribution->SetParameter( 4, this->parent.invLambda2 );
+		dileptonMassDistribution->SetParameter( 5, this->parent.Nd );
 
 		dileptonMassDistribution->SetRange( 0, 5 ); // TODO: make configurable
-		dileptonMassDistribution->SetNpx(10000);
+		dileptonMassDistribution->SetNpx(50000);
+		dileptonMassDistribution->Write();
+
+
+		// DEBUG ONLY
+		if ( Logger::getGlobalLogLevel() >= Logger::llDebug ){
+
+			TF1 * fPS = new TF1( (this->parent.name + "_PS" ).c_str(), PhaseSpaceMassive, 0, 10, 2 );
+			fPS->SetRange( 0, 5 );
+			fPS->SetParameters( this->parent.mass, this->neutral().mass );
+			fPS->SetNpx( 50000 );
+			fPS->Write();
+
+			double psm  = PhaseSpaceMassive( 0.75, this->parent.mass, this->neutral().mass );
+			DEBUG( classname(), "PS( 0.75, " << this->parent.mass << ", " << this->neutral().mass << " ) = " << psm );
+
+			TF1 * fQED = new TF1( (this->parent.name + "_QED" ).c_str(), QED, 0, 10, 2 );
+			fQED->SetRange( 0.0, 5 );
+			DEBUG( classname(), "QED( " << this->lepton1().mass << ", " << this->parent.Nd <<") @ (0.22) = " << QED( 0.22, this->lepton1().mass, this->parent.Nd ) );
+
+			fQED->SetParameters( this->lepton1().mass, this->parent.Nd );
+			fQED->SetNpx( 50000 );
+			fQED->Write();
+
+			DEBUG( classname(), "FormFactor2( 0.72, " << this->parent.gamma2 << ", " << this->parent.invLambda2 << " ) = " << FormFactor2( 0.72, this->parent.gamma2, this->parent.invLambda2 ) );
+			TF1 * fFF = new TF1( (this->parent.name + "_FF" ).c_str(), FormFactor2, 0, 5, 2 );
+			fFF->SetRange( 0, 5 );
+			fFF->SetParameters( this->parent.gamma2, this->parent.invLambda2 );
+			fFF->SetNpx( 50000 );
+			fFF->Write();
+
+		}
+
 
 	} //makeDileptonMassDistribution
 
