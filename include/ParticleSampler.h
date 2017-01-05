@@ -42,7 +42,6 @@ public:
 		kdPhi.set( nullptr, this->funLib.get("Phi" ) );
 		kdPhi.set( this->histoLib.get( _plcInfo.name + "_phi" ), this->funLib.get( _plcInfo.name + "_phi" ) );
 
-		gRandom->SetSeed(0);
 
 	}
 

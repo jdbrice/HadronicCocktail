@@ -9,21 +9,21 @@
 		<Logger color="true" globalLogLevel="info" />
 
 		<output>
-			<TFile url="MuonCocktail_{cm.ActiveChannels.ActiveChannel[0]:name}.root" />
-			<!-- <TFile url="MuonCocktail_All.root" /> -->
+			<!-- <TFile url="MuonCocktail_{cm.ActiveChannels.ActiveChannel[0]:name}.root" /> -->
+			<TFile url="MuonCocktail_All.root" />
 
 		</output>
 
 		<Make QA="false" />
 		
 		<ActiveChannels>
-			<!-- <ActiveChannel name="eta_gammamumu_dalitz" n="1000000" weight="1.0" />
-			<ActiveChannel name="etaprime_gammamumu_dalitz" n="1000000" weight="1.0" />
-			<ActiveChannel name="omega_pi0mumu_dalitz" n="1000000" weight="1.0"/>
-			<ActiveChannel name="omega_mumu" n="100000" weight="1.0"/>
-			<ActiveChannel name="phi_mumu" n="100000" weight="1.0" />
-			<ActiveChannel name="eta_mumu" n="100000" weight="1.0" /> -->
-			<ActiveChannel name="jpsi_mumu" n="100000" weight="1.0" />
+			<!-- <ActiveChannel name="eta_gammamumu_dalitz" n="10000" weight="1.3857" /> -->
+			<!-- <ActiveChannel name="etaprime_gammamumu_dalitz" n="100000" weight="0.06696" /> -->
+			<!-- <ActiveChannel name="omega_pi0mumu_dalitz" n="100000" weight="0.4745"/> -->
+			<ActiveChannel name="omega_mumu" n="100000" weight="0.3285"/>
+			<ActiveChannel name="phi_mumu" n="100000" weight="0.15498" />
+			<!-- <ActiveChannel name="eta_mumu" n="10000" weight="0.025926" /> -->
+			<!-- <ActiveChannel name="jpsi_mumu" n="100000" weight="4524399.0" /> -->
 		</ActiveChannels>		
 
 		<DecayChannels>
@@ -40,7 +40,7 @@
 
 		<KinematicFilters>
 			<Parent>
-				<Range name="pT" min="0.1" max="inf"/>
+				<Range name="pT" min="1.6" max="inf"/>
 				<Range name="eta" min="-0.8" max="0.8" />
 				<Range name="phi" min="-4" max="4" />
 				<Range name="y" min="-0.8" max="0.8" />

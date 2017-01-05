@@ -48,6 +48,10 @@ public:
 		return true;
 	}
 
+	bool fail( TLorentzVector &lv ){
+		return !pass( lv );
+	}
+
 protected:
 
 	CutCollection ccol;

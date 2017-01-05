@@ -28,8 +28,10 @@ public:
 	void set( shared_ptr<TH1> _h, shared_ptr<TF1> _f = nullptr ){
 		if ( nullptr != _h )
 			this->h = _h;
-		if ( nullptr != _f )
+		if ( nullptr != _f ){
 			this->f = _f;
+			INFO( classname(), "TF1<" << this->f->GetExpFormula() << ">" );
+		}
 	}
 
 

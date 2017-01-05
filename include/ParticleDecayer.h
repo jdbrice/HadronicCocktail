@@ -34,10 +34,13 @@ public:
 		this->pdfPhi      = this->funLib.get( "decay_product_phi" );
 		this->pdfCosTheta = this->funLib.get( "decay_product_costheta" );
 
-		if ( nullptr == this->pdfPhi )
-			this->pdfPhi = shared_ptr<TF1>( new TF1( "decay_product_phi", "1 * ( x > 0 && x < 2.0 * TMath::Pi() )" ) );
-		if ( nullptr == this->pdfCosTheta )
-			this->pdfCosTheta = shared_ptr<TF1>( new TF1( "decay_product_costheta", " 1 * ( x >= -1 && x <= 1 )" ) );
+		if ( nullptr == this->pdfPhi ){
+			ERROR( classname(), "MUST provide " << quote( "decay_product_phi" ) << " function" );
+		}
+		if ( nullptr == this->pdfCosTheta ){
+			ERROR( classname(), "MUST provide " << quote( "decay_product_costheta" ) << " function" );
+		}
+
 	}
 	
 	/*ParticleDecayer Dtor
@@ -88,6 +91,10 @@ public:
 	}
 
 	virtual void decay( TLorentzVector _lv ){
+
+		if ( nullptr == this->pdfCosTheta || nullptr == this->pdfPhi ){
+			return;
+		}
 		
 		DEBUG( classname(), "lv( P=" << dts(_lv.Px()) << "," << dts(_lv.Py()) << "," << dts(_lv.Pz()) << ", M=" << dts( _lv.M() ) << ")" );
 		int nProducs = products.size();
@@ -269,8 +276,11 @@ protected:
 		// Note this is slightly different than Bingchu/Shuai's code
 		// That code gets d2's P correct but mass wrong
 		// this method gets the entire 4-vector correct
+
 		d1.lv = daughter1;
 		d2.lv = daughter2;
+
+		
 	}
 
 

@@ -1,0 +1,90 @@
+
+
+[6:36]  
+used PYTHIA6 linked to ROOT: PYTHIA version 6.416
+
+
+ccbar:
+Use Generateccbar.cpp to create the pp--->ccbar-->ee(mumu)  sample.
+
+./GENERATOR  RandomNumberGeneratorSeed >& blah.log &
+
+
+Merge the files together(make a list...eh) and use.  It will be normalized and scaled in StudyTree/ . The product is then applied to the cocktail.
+
+
+
+Walk through of Generateccbar.cpp:
+l43: set ROOTS = 200 or whatever the desired pp cms is.
+l44: turns on/off pt smearing for reconstruction of the tracks.  not really necessary, but if you use it, be sure an update to the run of interest.
+l125:  mode 1 is minimum bias which is a must (slightly different shape), mode 4 is charm trigger, which is a nice way of testing everything, slightly different shape.
+
+Ignore XINTUNE and CDFATUNE, they were only appropriate for older versions of PYTHIA6.
+
+l156-157, these are the appropriate tunes.
+
+l159-164  turn on the charm(charmbar) hadrons. (might want to turn off everything else, it might save time? not sure that affects the shape or not, so didnt bother)
+
+
+l166-171, sets the random number seed; sets pp and energy; lists settings.
+
+l176:  output tree setup.
+
+l197: look to see if there are two strings results from c/cbar.
+l210:  looking for the electrons,  make sure that they are final state.  Then ensuring they came from a D or Lambda.
+
+
+Go through, reconstruct the pair.  Weight it based on branching ratios(GetBR).
+    Do the same inside the STAR acceptance.  You'll normalize the STAR acceptance distribution to the full acceptance count in the StudyTree portion.
+
+pytree_$SEED.root should be your output for each run.
+
+
+collect them and merge them into something like ccbar.root
+
+
+
+StudyTree:
+./Bin4Charm ccbar.root
+
+Cycle once to get the distributions of Phi, Eta, pT.  so you can randomize phi/eta/pt in the second to study uncorrelated pairs...(systematics).
+
+Cycle second time:
+  make pairs outside acceptance, inside acceptance
+    same thing but make pairs with randomized phi, phi+eta, or phi+eta+pt.
+
+line 402:  scaling...
+for Au+Au
+Npart -- is actually nbinary and is from the common pages. eg: http://www.star.bnl.gov/protected/common/common2010/centrality/39GeV/table/table_Ncoll_vs_centrality_systematicerror.txt
+
+
+N_bin* sigma_cc/sigma_mb  * 1/NumberOfccbareeFullAcceptance  *BranchingRatioe-*BranchingRatioe+  of your dNee/dM distribution
+
+Branching ratios should be taken care of before scaling(when adding each pair)
+1/NumberOfccbar normalizes the distribution.
+sigma_cc/sigma_mb* Nbinary scale up to AuAu.
+
+for p+p;  check out pg 33 https://drupal.star.bnl.gov/STAR/system/files/dilepton_run9_note.pdf
+
+would be something like 1/Ncountsinfullacceptance*sig_cc/sig_mb*BRe-*BRe+
+[aside: and looking through the code saved for the pp200 paper, looks like their might be an error in the ccbar calculation--but cannot be certain.]
+
+
+
+I imagine bbar will be a similar setup.
+
+
+DrellYan:
+
+Very similar.  Except that you can get away with a different production setup, which makes it much quicker.
+I also do some weird cross-section scaling because there is no guidance on sigma_pp for DY at 27/39/62, so didnt want to spend too much time on it.
+you can use the cross-sections used in the 200gev paper?
+Looks like the 200GeV paper might have used a slightly different kT parameterization than i used in DY, but i can go through my notes later if you want to double check.
+
+
+sig_mb at 200 = 42mb i believe
+sig_DY at 200 = 42nb
+ncoll = 291.9
+
+[6:36]  
+we can talk about it later if ya want

@@ -3,9 +3,10 @@
 void CocktailMaker::initialize(){
 	DEBUG( classname(), "Initialize" );
 
-	INFO( classname(), "Initialize RANDOM seed" );
+	int seed = config.getInt( "SEED", 0 );
+	INFO( classname(), "Initialize RANDOM SEED = " << seed );
 	gRandom = new TRandom3();
-	gRandom->SetSeed( 0 );
+	gRandom->SetSeed( seed );
 
 	makeQA = config.getBool( nodePath + ".Make:QA", true );
 
@@ -36,9 +37,17 @@ void CocktailMaker::initialize(){
 
 		if ( makeQA ){
 			book->cd(name);
+			book->clone( "", "pT_vs_phi", name, "parent_pT_vs_phi" );
 			book->clone( "", "pT", name, "parent_pT" );
+			book->clone( "", "pX", name, "parent_pX" );
+			book->clone( "", "pY", name, "parent_pY" );
 			book->clone( "", "eta", name, "parent_eta" );
 			book->clone( "", "phi", name, "parent_phi" );
+			book->clone( "", "phi", name, "parent_phi_pass" );
+			book->clone( "", "pT", name, "parent_pT_pass" );
+			book->clone( "", "pX", name, "parent_pX_pass" );
+			book->clone( "", "pY", name, "parent_pY_pass" );
+
 			book->clone( "", "mass", name, "parent_mass" );
 			book->clone( "", "mass", name, "parent_sampledMass" );
 			book->clone( "", "mass", name, "parent_rawRecoMass" );
@@ -106,12 +115,20 @@ void CocktailMaker::make(){
 		int i = 0;
 		tp.showProgress( i );
 		i = 1;
+		int t = 1;
 		while ( i < N ){
-			
+			t++;
 		
 			TLorentzVector lv = namedPlcSamplers[name].sample();
+
+			book->get( "parent_phi", name )->Fill( lv.Phi() );
+			book->get( "parent_pX", name  )->Fill( lv.Px() );
+			book->get( "parent_pY", name  )->Fill( lv.Py() );
+			book->get( "parent_pT", name  )->Fill( lv.Pt() );
+
+			book->get( "parent_pT_vs_phi", name  )->Fill( lv.Phi(), lv.Pt() );
 			
-			if ( !parentFilter.pass( lv ) ) continue;
+			if ( parentFilter.fail( lv ) ) continue;
 
 			
 			namedPlcDecayers[ name ].decay( lv );
@@ -119,14 +136,14 @@ void CocktailMaker::make(){
 			TLorentzVector l1lv = namedPlcDecayers[ name ].getLepton1().lv;
 			TLorentzVector l2lv = namedPlcDecayers[ name ].getLepton2().lv;
 
-			if ( !daughterFilter.pass( l1lv ) || !daughterFilter.pass(l2lv) ) continue;
+			if ( daughterFilter.fail( l1lv ) || daughterFilter.fail(l2lv) ) continue;
 
 			tp.showProgress( i );
 
 			postDecay( name, lv, namedPlcDecayers[ name ] );
 			i++;
 		}
-		cout << "" << endl;
+		cout << "Efficiency: " << (float)i / t << endl;
 
 	}// active channel loop
 
@@ -161,9 +178,11 @@ void CocktailMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDe
 
 
 	if ( makeQA ){
-		book->get( "parent_pT", _name )->Fill( _parent.Pt() );
+		book->get( "parent_pT_pass", _name )->Fill( _parent.Pt() );
+		book->get( "parent_pX_pass", _name )->Fill( _parent.Px() );
+		book->get( "parent_pY_pass", _name )->Fill( _parent.Py() );
 		book->get( "parent_eta", _name )->Fill( _parent.Eta() );
-		book->get( "parent_phi", _name )->Fill( _parent.Phi() );
+		book->get( "parent_phi_pass", _name )->Fill( _parent.Phi() );
 		book->get( "parent_mass", _name )->Fill( _parent.M() );
 		book->get( "parent_sampledMass", _name )->Fill( _pd.getSampledMass() );
 		book->get( "parent_rawRecoMass", _name )->Fill( (l1lv + l2lv).M() );
