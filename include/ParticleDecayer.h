@@ -143,6 +143,10 @@ public:
 	int getNProducts(){
 		return products.size();
 	}
+
+	ParticleInfo getParentInfo(){
+		return parent;
+	}
 	
 protected:
 	FunctionLibrary funLib;

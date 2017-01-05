@@ -9,7 +9,7 @@ void CocktailNTupleMaker::initialize(){
 	// setup the ntuple
 	book->cd();
 	ntuple = new TNtuple( "llCocktail", "Dilepton cocktail tuple format",
-		"pPdgM:pPt:pEta:pPhi:pM:l1PtMc:l1PtRc:l1Eta:l1Phi:l1M:l2PtMc:l2PtRc:l2Eta:l2Phi:l2M:nPtMc:nEta:nPhi:nM:Mll:weight" );
+		"pPdgM:pPt:pEta:pPhi:pM:l1PtMc:l1PtRc:l1Eta:l1Phi:l1M:l2PtMc:l2PtRc:l2Eta:l2Phi:l2M:nPtMc:nEta:nPhi:nM:Mll:weight:pMcId:decay" );
 	
 	// parent pdg Mass
 	// parent 4-vector
@@ -20,6 +20,8 @@ void CocktailNTupleMaker::initialize(){
 	// neutral 4-vector (if available)
 	// Reco dilepton Mass 
 	// weight assigned at time of generation - utility for all-in-one scaling
+	// parent MC Id 
+	// decay type 2=twobody, 3=dalitz
 }
 
 
@@ -31,7 +33,7 @@ void CocktailNTupleMaker::postDecay( string _name, TLorentzVector &_parent, Part
 	TLorentzVector l2lv = _pd.getLepton2().lv;
 	
 	// initialize the tuple data to 0
-	Float_t data[21] = {0};
+	Float_t data[23] = {0};
 
 
 	// fill the ntuple data
@@ -63,6 +65,8 @@ void CocktailNTupleMaker::postDecay( string _name, TLorentzVector &_parent, Part
 
 	data[19] = rplv.M();
 	data[20] = namedWeight[ _name ];
+	data[21] = _pd.getParentInfo().mcId;
+	data[22] = _pd.getNProducts();
 
 	ntuple->Fill( data );
 
