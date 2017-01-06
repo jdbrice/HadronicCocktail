@@ -225,10 +225,10 @@ void CocktailMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDe
 
 		book->get( "mass", "" )->Fill( _pd.getSampledMass(), namedWeight[ _name ] );
 
-		book->get( "parent_recoMass", _name )->Fill( rplv.M() );
+		book->get( "parent_recoMass", _name )->Fill( rplv.M(), namedWeight[ _name ] );
 
-		book->get( "recoMass", "" )->Fill( rplv.M() );
-		book->get( "recoMass_vs_pT", "" )->Fill( rplv.M(), rplv.Pt() );
+		book->get( "recoMass", "" )->Fill( rplv.M(), namedWeight[ _name ] );
+		book->get2D( "recoMass_vs_pT", "" )->Fill( rplv.M(), rplv.Pt(), namedWeight[ _name ] );
 	}
 
 }

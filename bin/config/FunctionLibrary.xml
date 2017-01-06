@@ -25,6 +25,12 @@
 	<TF1 name="decay_product_phi" formula="1 * ( x > 0 && x < 2.0 * TMath::Pi() )" min="0" max="7.0" />
 	<TF1 name="decay_product_costheta" formula="1 * ( x >= -1 && x <= 1 )" min="-1" max="1" />
 
-	<TF1 name="eta_pT" formula="TsallisBlastWave" beta_max="0" T="0.0964" n="0" q="1.0926" norm="40" ymin="-0.5" ymax="0.5" min="1" max="10"/>
+	
+
+	<TF1 name="eta_pT" formula="TsallisBlastWave" beta_max="0" T="0.0964" n="0" q="1.0926" norm="40" ymin="-0.8" ymax="0.8" min="1" max="10"/>
+	<TF1 name="etaprime_pT" formula="TsallisBlastWave" beta_max="0" T="0.0964" n="0" q="1.0926" norm="40" ymin="-0.8" ymax="0.8" min="1" max="10"/>
+	<TF1 name="phi_pT" formula="TsallisBlastWave" beta_max="0" T="0.0964" n="0" q="1.0926" norm="40" ymin="-0.8" ymax="0.8" min="1" max="10"/>
+	<TF1 name="omega_pT" formula="TsallisBlastWave" beta_max="0" T="0.0964" n="0" q="1.0926" norm="40" ymin="-0.8" ymax="0.8" min="1" max="10"/>
+	<TF1 name="jpsi_pT" formula="TsallisBlastWave" beta_max="0" T="0.0964" n="0" q="1.0926" norm="40" ymin="-0.8" ymax="0.8" min="1" max="10"/>
 
 </Mesons>
