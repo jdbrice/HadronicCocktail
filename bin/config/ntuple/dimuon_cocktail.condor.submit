@@ -5,8 +5,31 @@
 Executable = /home/jdb12/work/HadronicCocktail/bin/hadronicCocktail.app
 Initialdir = /home/jdb12/work/HadronicCocktail/bin/
 
+# Phi -> mumu
 Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/phi_mumu.xml --jobIndex=$(Process) --SEED=9836311 --N=10000
-Queue 1
+Queue 100
 
-# 8994701
-# 2853439
+# omega -> mumu
+Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/omega_mumu.xml --jobIndex=$(Process) --SEED=4159768 --N=10000
+Queue 100
+
+# eta -> mumu
+Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/eta_mumu.xml --jobIndex=$(Process) --SEED=8994701 --N=10000
+Queue 100
+
+# J/Psi -> mumu
+Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/eta_mumu.xml --jobIndex=$(Process) --SEED=7522502 --N=10000
+Queue 100
+
+# omega -> pi0mumu
+Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/omega_pi0mumu.xml --jobIndex=$(Process) --SEED=4806094 --N=10000
+Queue 100
+
+# eta -> gammamumu
+Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/eta_gammamumu.xml --jobIndex=$(Process) --SEED=9030314 --N=10000
+Queue 100
+
+# eta' -> gammamumu
+Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/etaprime_gammamumu.xml --jobIndex=$(Process) --SEED=1480117 --N=10000
+Queue 100
+
