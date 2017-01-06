@@ -25,8 +25,9 @@ public:
 	~ParticleLibrary() {}
 
 	void loadParticles( XmlConfig &_cfg, string _nodePath ){
-
+		DEBUG( classname(), "" );
 		vector<string> paths = _cfg.childrenOf( _nodePath, "Particle" );
+		INFO( classname(), "Found " << paths.size() << plural( paths.size(), " Particle", " Particles" ) << " at " << quote( _nodePath ) );
 		for ( string path : paths ){
 			loadParticle( _cfg, path );
 		}

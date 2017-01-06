@@ -2,6 +2,7 @@
 <config>
 
 	<!-- MUON decay Channels -->
+
 	<DecayChannel name="omega_pi0mumu_dalitz" parent="omega" >
 		<DecayProduct name="pi0" />
 		<DecayProduct name="muon" />

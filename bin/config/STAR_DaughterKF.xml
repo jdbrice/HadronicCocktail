@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<Daughter>
+		<Range name="pT" min="0.0" max="inf"/>
+		<Range name="eta" min="-5.8" max="5.8" />
+		<Range name="phi" min="-4" max="4" />
+		<Range name="y" min="-5.8" max="5.8" />
+	</Daughter>	
+</config>

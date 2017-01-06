@@ -4,6 +4,7 @@
 #include "IObject.h"
 #include "XmlConfig.h"
 #include "CutCollection.h"
+#include "HistoBook.h"
 using namespace jdb;
 
 
@@ -34,22 +35,33 @@ public:
 		phi = ccol["phi"];
 	}
 
-	bool pass( TLorentzVector &lv ){
+	bool pass( TLorentzVector &lv, TH1D *_h = nullptr  ){
 		// INFO( classname(), "lv( Pt=" << dts(lv.Pt()) << ",Eta=" << dts(lv.Eta()) << ",Phi" << dts(lv.Phi()) << ", M=" << dts( lv.M() ) << ")" );
+
+		if ( nullptr != _h ){
+			_h->Fill( 0 );
+		}
 
 		// do this first so that TLorentzVector::Eta does not complaine when pT==0
 		if ( !pT->inInclusiveRange( lv.Pt() ) )
 			return false;
 
-		if ( 	!eta->inInclusiveRange( lv.Eta() ) ||
-				!y->inInclusiveRange( lv.Rapidity() ) ||
-				!phi->inInclusiveRange( lv.Phi() ) )
-			return false;
+		if ( nullptr != _h ){ _h->Fill( 1 ); }
+
+		if ( !eta->inInclusiveRange( lv.Eta() ) ) return false;
+		if ( nullptr != _h ){ _h->Fill( 2 ); }
+
+		if ( !y->inInclusiveRange( lv.Rapidity() ) ) return false;
+		if ( nullptr != _h ){ _h->Fill( 3 ); }
+
+		if ( !phi->inInclusiveRange( lv.Phi() ) )  return false;
+		if ( nullptr != _h ){ _h->Fill( 4 ); }
+
 		return true;
 	}
 
-	bool fail( TLorentzVector &lv ){
-		return !pass( lv );
+	bool fail( TLorentzVector &lv, TH1D *_h = nullptr ){
+		return !pass( lv, _h );
 	}
 
 protected:

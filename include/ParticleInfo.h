@@ -38,7 +38,7 @@ public:
 	}
 
 	ParticleInfo( XmlConfig &_cfg, string _nodePath ){
-		DEBUG( classname(), "(cfg=" << _cfg.getFilename() << ", nodePath=" << _nodePath << ")" );
+		INFO( classname(), "(cfg=" << _cfg.getFilename() << ", nodePath=" << _nodePath << ")" );
 		this->name       = _cfg.getString( _nodePath + ":name", "NA" );
 		this->mcId       = _cfg.getInt(    _nodePath + ":mcId", 0 );
 		this->mass       = _cfg.getDouble( _nodePath + ":mass", 0 );
@@ -46,6 +46,8 @@ public:
 		this->gamma2     = _cfg.getDouble( _nodePath + ":gamma2", 0 );
 		this->invLambda2 = _cfg.getDouble( _nodePath + ":invLambda2", 0 );
 		this->Nd         = _cfg.getInt(    _nodePath + ":Nd", 2 );
+
+		INFO( classname(), toString() );
 	}
 
 	string toString(){

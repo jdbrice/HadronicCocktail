@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	
+	<Task name="phi->mumu" type="CocktailNTupleMaker" config="config/ntuple/phi_mumu.xml" nodePath="cm" />
+	<Task name="jpsi->mumu" type="CocktailNTupleMaker" config="config/ntuple/jpsi_mumu.xml" nodePath="cm" />
+	<Task name="omega->mumu" type="CocktailNTupleMaker" config="config/ntuple/omega_mumu.xml" nodePath="cm" />
+	<Task name="eta->mumu" type="CocktailNTupleMaker" config="config/ntuple/eta_mumu.xml" nodePath="cm" />
+
+	<Task name="eta->gamma+mumu" type="CocktailNTupleMaker" config="config/ntuple/eta_gammamumu.xml" nodePath="cm" />
+	<Task name="eta'->gamma+mumu" type="CocktailNTupleMaker" config="config/ntuple/etaprime_gammamumu.xml" nodePath="cm" />
+	<Task name="omega->pi0+mumu" type="CocktailNTupleMaker" config="config/ntuple/omega_pi0mumu.xml" nodePath="cm" />
+
+</config>

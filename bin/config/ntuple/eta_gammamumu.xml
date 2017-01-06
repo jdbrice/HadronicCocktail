@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<Include url="ntuple.xml">
+		<CHANNEL>eta_gammamumu_dalitz</CHANNEL>
+		<WEIGHT>1.3857</WEIGHT>
+	</Include>
+</config>

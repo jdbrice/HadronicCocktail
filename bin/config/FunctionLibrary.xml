@@ -13,15 +13,18 @@
 
 
 
-	<TF1 name="CERES" formula="pow(cosh(3*x/4./sqrt(log([0]/2./[1]))/(1-pow(x,2)/2./[0]*[2])),-2.)" p0="200" p1="0.938" p2="0" min="-2" max="2" />
+	<TF1 name="CERES" formula="pow(cosh(3*x/4./sqrt(log([0]/2./[1]))/(1-pow(x,2)/2./[0]*[2])),-2.)" p0="200" p1="0.938" p2="0" min="-0.8" max="0.8" />
 	<TF1 name="Phi" formula=" 1 * ( x > 0 && x < 2.0 * TMath::Pi() )" min="0" max="7" />
 	<!-- <TF1 name="eta_pT" formula="1" min="0" max="10" /> -->
 	<TF1 name="default_pT" formula="x*[0]*pow((exp(-([1]*x+[2]*pow(x,2)))+x/[3]),-[4])" p0="504.5" p1="0.52" p2="0.16" p3="0.7" p4="8.27" min="0.1" max="10" />
 
 	<TF1 name="pT_Resolution" formula="sqrt([0]*[0]*x*x+[1]*[1])" p0="6.0e-3" p1="1.55e-02" min="0" max="100"/>
+	<TF1 name="pT_Shape" formula="CrystalBall2" N="1." mu="-1e-3" sig="0.01" n="1.29" alpha="1.75" m="2.92" beta="1.84" />
 
 
 	<TF1 name="decay_product_phi" formula="1 * ( x > 0 && x < 2.0 * TMath::Pi() )" min="0" max="7.0" />
 	<TF1 name="decay_product_costheta" formula="1 * ( x >= -1 && x <= 1 )" min="-1" max="1" />
+
+	<TF1 name="eta_pT" formula="TsallisBlastWave" beta_max="0" T="0.0964" n="0" q="1.0926" norm="40" ymin="-0.5" ymax="0.5" min="1" max="10"/>
 
 </Mesons>

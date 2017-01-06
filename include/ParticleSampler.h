@@ -32,16 +32,42 @@ public:
 		this->plcInfo  = _plcInfo;
 
 		// look for distributions
+		
 		kdPt.set( nullptr, this->funLib.get( "default_pT" ) ); // default in case nex ones are nullptr
+		INFO( classname(), "Looking for TF1 " << quote( _plcInfo.name + "_pT" ) << " = " << this->funLib.get( _plcInfo.name + "_pT" ) << " exp : " << this->funLib.functionExpression( _plcInfo.name + "_pT" ) );
 		kdPt.set( this->histoLib.get( _plcInfo.name + "_pT" ), this->funLib.get( _plcInfo.name + "_pT" ) );
+		
+		
+		// set the particle's mass if given a TBW
+		if ( "TsallisBlastWave" ==  this->funLib.functionExpression( _plcInfo.name + "_pT" ) ){
+			INFO( classname(), "Setting TsallisBlastWave mass param to " << _plcInfo.mass );
+			shared_ptr<TF1> f = this->funLib.get( _plcInfo.name + "_pT" );
+			
+			f->ReleaseParameter(0);
+			f->SetParameter( 0, _plcInfo.mass );
+			f->FixParameter( 0, _plcInfo.mass );
+			INFO( classname(), "Checking mass is set to " <<  f->GetParameter( 0 ) << " [GeV/c]" );
+		}
+
 
 		kdRapidity.set( nullptr, this->funLib.get("CERES" ) );
+		kdRapidity.getTF1()->SetParameter( 2, this->plcInfo.mass ); // set the plc mass in CERES parameterization
 		kdRapidity.set( this->histoLib.get( _plcInfo.name + "_rapidity" ), this->funLib.get( _plcInfo.name + "_rapidity" ) );
-		kdRapidity.getTF1()->SetParameter( 2, this->plcInfo.mass ); // set the plc mass
+		
 
 		kdPhi.set( nullptr, this->funLib.get("Phi" ) );
 		kdPhi.set( this->histoLib.get( _plcInfo.name + "_phi" ), this->funLib.get( _plcInfo.name + "_phi" ) );
 
+		// after things have settled write out the functions, since these may be built as a double check
+		kdPt.getTF1()->Write();
+		kdRapidity.getTF1()->Write();
+		kdPhi.getTF1()->Write();
+
+		INFO( classname(), "Initialize the kinematic distributions" );
+		kdPt.sample();
+		kdRapidity.sample();
+		kdPhi.sample();
+		INFO( classname(), "Complete");
 
 	}
 

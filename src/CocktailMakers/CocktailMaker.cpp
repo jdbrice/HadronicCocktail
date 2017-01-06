@@ -38,6 +38,7 @@ void CocktailMaker::initialize(){
 		if ( makeQA ){
 			book->cd(name);
 			book->clone( "", "pT_vs_phi", name, "parent_pT_vs_phi" );
+			book->clone( "", "kfParent", name, "kfParent" );
 			book->clone( "", "pT", name, "parent_pT" );
 			book->clone( "", "pX", name, "parent_pX" );
 			book->clone( "", "pY", name, "parent_pY" );
@@ -58,10 +59,12 @@ void CocktailMaker::initialize(){
 			book->clone( "", "pT", name, "l1_pT" );
 			book->clone( "", "eta", name, "l1_eta" );
 			book->clone( "", "phi", name, "l1_phi" );
+			book->clone( "", "kfLepton1", name, "kfLepton1" );
 
 			book->clone( "", "pT", name, "l2_pT" );
 			book->clone( "", "eta", name, "l2_eta" );
 			book->clone( "", "phi", name, "l2_phi" );
+			book->clone( "", "kfLepton2", name, "kfLepton2" );
 		} // if makeQA
 	}
 
@@ -74,7 +77,13 @@ void CocktailMaker::initialize(){
 	INFO( classname(), "Found " << activeChannels.size() << " active decay " << plural( activeChannels.size(), "channel", "channels" ) );
 
 	for ( string name : activeChannels ){
-		INFO( classname(), "Loading DecayChannelInfo for " << name << " from " <<  config.q( nodePath + ".DecayChannels{name==" + name + "}" ) );
+		string path = config.q( nodePath + ".DecayChannels{name==" + name + "}" );
+		INFO( classname(), "Loading DecayChannelInfo for " << name << " from " <<  path );
+		if ( "" == path ){
+			ERROR( classname(), "CANNOT FIND DecayInfo for " << name << " at " << quote( path ) );
+			activeChannels.clear();
+			break;
+		}
 		DecayChannelInfo dci( config, config.q( nodePath + ".DecayChannels{name==" + name + "}" ) );
 		namedDecayInfo[ name ] = dci;
 		
@@ -96,8 +105,16 @@ void CocktailMaker::initialize(){
 	gErrorIgnoreLevel = kError;
 
 	momResolution = funLib.get( "pT_Resolution" );
-	momShape = shared_ptr<TF1>( new TF1( "momShape", CrystalBall2, -1, 1, 7 ) );
-	momShape->SetParameters(1., -1e-3, 0.01, 1.29, 1.75, 2.92, 1.84);
+	momShape      = funLib.get( "pT_Shape" );
+	if ( nullptr == momShape ){
+		ERROR( classname(), "MUST proved a function for the Momentum Smearing Shape with name " << quote( "pT_Shape" ) << ". Using default CrystalBall shape with made-up parameters" );
+		momShape = shared_ptr<TF1>( new TF1( "momShape", CrystalBall2, -1, 1, 7 ) );
+		momShape->SetParameters(1., -1e-3, 0.01, 1.29, 1.75, 2.92, 1.84);	
+	}
+
+	momShape->Write();
+	momResolution->Write();
+	
 
 
 }
@@ -109,6 +126,10 @@ void CocktailMaker::make(){
 	
 
 	for ( string name : activeChannels ){
+
+		TH1D * hkfParent = (TH1D*)book->get( "kfParent", name );
+		TH1D * hkfLepton1 = (TH1D*)book->get( "kfLepton1", name );
+		TH1D * hkfLepton2 = (TH1D*)book->get( "kfLepton2", name );
 		
 		int N = namedN[ name ];
 		TaskProgress tp( "Generating " + ts(N) + " " + name , N );
@@ -116,19 +137,21 @@ void CocktailMaker::make(){
 		tp.showProgress( i );
 		i = 1;
 		int t = 1;
-		while ( i < N ){
+		while ( i < N && t < N * 1000000 ){
 			t++;
 		
 			TLorentzVector lv = namedPlcSamplers[name].sample();
 
-			book->get( "parent_phi", name )->Fill( lv.Phi() );
-			book->get( "parent_pX", name  )->Fill( lv.Px() );
-			book->get( "parent_pY", name  )->Fill( lv.Py() );
-			book->get( "parent_pT", name  )->Fill( lv.Pt() );
+			if ( makeQA ){
+				book->get( "parent_phi", name )->Fill( lv.Phi() );
+				book->get( "parent_pX", name  )->Fill( lv.Px() );
+				book->get( "parent_pY", name  )->Fill( lv.Py() );
+				book->get( "parent_pT", name  )->Fill( lv.Pt() );
 
-			book->get( "parent_pT_vs_phi", name  )->Fill( lv.Phi(), lv.Pt() );
+				book->get( "parent_pT_vs_phi", name  )->Fill( lv.Phi(), lv.Pt() );
+			}
 			
-			if ( parentFilter.fail( lv ) ) continue;
+			if ( parentFilter.fail( lv, hkfParent ) ) continue;
 
 			
 			namedPlcDecayers[ name ].decay( lv );
@@ -136,7 +159,7 @@ void CocktailMaker::make(){
 			TLorentzVector l1lv = namedPlcDecayers[ name ].getLepton1().lv;
 			TLorentzVector l2lv = namedPlcDecayers[ name ].getLepton2().lv;
 
-			if ( daughterFilter.fail( l1lv ) || daughterFilter.fail(l2lv) ) continue;
+			if ( daughterFilter.fail( l1lv, hkfLepton1 ) || daughterFilter.fail(l2lv, hkfLepton2) ) continue;
 
 			tp.showProgress( i );
 
@@ -146,8 +169,6 @@ void CocktailMaker::make(){
 		cout << "Efficiency: " << (float)i / t << endl;
 
 	}// active channel loop
-
-	
 	
 }
 

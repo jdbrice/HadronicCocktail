@@ -30,7 +30,6 @@ public:
 			this->h = _h;
 		if ( nullptr != _f ){
 			this->f = _f;
-			INFO( classname(), "TF1<" << this->f->GetExpFormula() << ">" );
 		}
 	}
 

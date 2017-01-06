@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<Histo name="kfParent" title=";Cut; N events" bins_x="bins.kfPass"/>
+	<Histo name="kfLepton1" title=";Cut; N events" bins_x="bins.kfPass"/>
+	<Histo name="kfLepton2" title=";Cut; N events" bins_x="bins.kfPass"/>
+
+	<Histo name="pX" title=";pX [GeV/c]; dN/dpX" bins_x="bins.pT_signed"/>
+	<Histo name="pY" title=";pY [GeV/c]; dN/dpY" bins_x="bins.pT_signed"/>
+	<Histo name="pT" title=";pT [GeV/c]; dN/dpT" bins_x="bins.pT"/>
+	<Histo name="pT_vs_phi" title=";phi;pT [GeV/c]" bins_x="bins.phi" bins_y="bins.pT" />
+	<Histo name="eta" title=";eta [GeV/c]; dN/deta" bins_x="bins.eta"/>
+	<Histo name="phi" title=";phi [GeV/c]; dN/dphi" bins_x="bins.phi"/>
+	<Histo name="mass" title=";M_{#mu#mu} [GeV/c^{2}]; dN/dM [c^{2}/GeV]" bins_x="bins.mass" />
+	<Histo name="mass_vs_pT" title=";M_{#mu#mu} [GeV/c^{2}]; p_{T} [GeV/c]" bins_x="bins.mass" bins_y="bins.pT" />
+</config>
