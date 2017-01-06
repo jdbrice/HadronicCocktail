@@ -1,0 +1,12 @@
+#########################
+# DiMuon Cocktail
+#########################
+
+Executable = /home/jdb12/work/HadronicCocktail/bin/hadronicCocktail.app
+Initialdir = /home/jdb12/work/HadronicCocktail/bin/
+
+Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/phi_mumu.xml --jobIndex=$(Process) --SEED=9836311 --N=10000
+Queue 1
+
+# 8994701
+# 2853439
