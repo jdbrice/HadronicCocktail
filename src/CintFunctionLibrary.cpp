@@ -4,6 +4,9 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
+// ROOT
+#include "TF1.h"
+
 double BreitWigner( double Mll, double Mreso, double gamma ){
 	return 2.0 * gamma / (   pow( Mll - Mreso, 2.0 ) + pow( gamma / 2.0, 2.0 )   );
 }
@@ -163,4 +166,105 @@ double CrystalBall2( double x, double N, double mu, double sig, double n, double
 
 double CrystalBall2( double *x, double *par ){
 	return CrystalBall2( x[0], par[0], par[1], par[2], par[3], par[4], par[5], par[6] );
+}
+
+TF1 *fTsallisBlastWave_Integrand_r   = nullptr;
+TF1 *fTsallisBlastWave_Integrand_phi = nullptr;
+TF1 *fTsallisBlastWave_Integrand_y   = nullptr;
+
+double TsallisBlastWave_Integrand_y( const double *x, double* p ) {
+	double y = x[0];
+	fTsallisBlastWave_Integrand_r->SetParameter( 6, y );
+	double integral = fTsallisBlastWave_Integrand_phi->Integral( -TMath::Pi(), TMath::Pi() );
+	return TMath::CosH(y) * integral;
+}
+
+double TsallisBlastWave_Integrand_phi(const double *x, double* p){
+	double phi = x[0];
+	fTsallisBlastWave_Integrand_r->SetParameter(7, phi);
+	double integral = fTsallisBlastWave_Integrand_r->Integral(0., 1.);
+	return integral;
+}
+
+double TsallisBlastWave_Integrand_r(const double *x, const double *p){
+	/* 
+	 x[0] -> r (radius)
+	 p[0] -> mT (transverse mass)
+	 p[1] -> pT (transverse momentum)
+	 p[2] -> beta_max (surface velocity)
+	 p[3] -> T (freezout temperature)
+	 p[4] -> n (velocity profile)
+	 p[5] -> q
+	 p[6] -> y (rapidity)
+	 p[7] -> phi (azimuthal angle)
+	*/
+
+	double r        = x[0];
+	double mt       = p[0];
+	double pt       = p[1];
+	double beta_max = p[2];
+	double temp_1   = 1. / p[3];
+	double n        = p[4];
+	double q        = p[5];
+	double y        = p[6];
+	double phi      = p[7];
+
+	if (q <= 1.) return r;
+
+	double beta = beta_max * TMath::Power(r, n);
+	double rho = TMath::ATanH(beta);
+
+	double part1 = mt * TMath::CosH(y) * TMath::CosH(rho);
+	double part2 = pt * TMath::SinH(rho) * TMath::Cos(phi);
+	double part3 = part1 - part2;
+	double part4 = 1 + (q - 1.) * temp_1 * part3;
+	double expo  = -1. / (q - 1.);
+	//  printf("part1=%f, part2=%f, part3=%f, part4=%f, expo=%f\n", part1, part2, part3, part4, expo);
+	double part5 = TMath::Power(part4, expo);
+
+	return r * part5;
+}
+
+double TsallisBlastWave_Func(const double *x, const double *p){
+  /* dN/dpt */
+  
+  double pt       = x[0];
+  double mass     = p[0];
+  double mt       = TMath::Sqrt(pt * pt + mass * mass);
+  double beta_max = p[1];
+  double temp     = p[2];
+  double n        = p[3];
+  double q        = p[4];
+  double norm     = p[5];
+  double ymin     = p[6];
+  double ymax     = p[7];
+
+  if (nullptr == fTsallisBlastWave_Integrand_r)
+    fTsallisBlastWave_Integrand_r = new TF1("fTsallisBlastWave_Integrand_r", TsallisBlastWave_Integrand_r, 0., 1., 8);
+  if (nullptr == fTsallisBlastWave_Integrand_phi)
+    fTsallisBlastWave_Integrand_phi = new TF1("fTsallisBlastWave_Integrand_phi", TsallisBlastWave_Integrand_phi, -TMath::Pi(), TMath::Pi(), 0);
+  if (nullptr == fTsallisBlastWave_Integrand_y)
+    fTsallisBlastWave_Integrand_y = new TF1("fTsallisBlastWave_Integrand_y", TsallisBlastWave_Integrand_y, -0.5, 0.5, 0);
+
+  fTsallisBlastWave_Integrand_r->SetParameters(mt, pt, beta_max, temp, n, q, 0., 0.);
+  double integral = fTsallisBlastWave_Integrand_y->Integral(ymin, ymax);
+  return norm * mt * integral;
+}
+
+TF1 *TsallisBlastWave(const char *name, double mass, double beta_max, double temp, double n, double q, double norm, double ymin, double ymax){
+  
+  TF1 *fTsallisBlastWave = new TF1(name, TsallisBlastWave_Func, 0., 10., 8);
+  fTsallisBlastWave->SetParameters(mass, beta_max, temp, n, q, norm, ymin, ymax);
+  fTsallisBlastWave->SetParNames("mass", "beta_max", "T", "n", "q", "norm");
+  fTsallisBlastWave->FixParameter(0, mass);
+  
+  fTsallisBlastWave->FixParameter(6, ymin);
+  fTsallisBlastWave->FixParameter(7, ymax);
+
+  fTsallisBlastWave->SetParLimits(1, 0.01, 0.99);
+  fTsallisBlastWave->SetParLimits(2, 0.01, 1.);
+  fTsallisBlastWave->SetParLimits(3, 0.1, 10.);
+  fTsallisBlastWave->SetParLimits(4, 1., 10.);
+
+  return fTsallisBlastWave;
 }

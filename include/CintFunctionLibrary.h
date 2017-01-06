@@ -1,6 +1,9 @@
 #ifndef CINT_FUNCTION_LIBRARY_H
 #define CINT_FUNCTION_LIBRARY_H
 
+class TF1;
+#include "TMath.h"
+
 double BreitWigner( double Mll, double M0, double G0 );
 double BreitWigner( double *x, double *par );
 
@@ -39,6 +42,16 @@ double CrystalBall( double *x, double *par );
 
 double CrystalBall2( double x, double N, double mu, double sig, double n, double alpha, double m, double beta );
 double CrystalBall2( double *x, double *par );
+
+extern TF1 *fTsallisBlastWave_Integrand_r;
+extern TF1 *fTsallisBlastWave_Integrand_phi;
+extern TF1 *fTsallisBlastWave_Integrand_y;
+
+double TsallisBlastWave_Integrand_y( const double *x, double* p );
+double TsallisBlastWave_Integrand_phi(const double *x, double* p);
+double TsallisBlastWave_Integrand_r(const double *x, const double *p);
+double TsallisBlastWave_Func(const double *x, const double *p);
+TF1 *TsallisBlastWave(const char *name, double mass, double beta_max = 0.9, double temp = 0.1, double n = 1., double q = 2., double norm = 1.e6, double ymin=-0.5, double ymax=0.5);
 
 
 #endif
