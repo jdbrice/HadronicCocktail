@@ -6,6 +6,9 @@ void CocktailMaker::initialize(){
 	int seed = config.getInt( "SEED", 0 );
 	INFO( classname(), "Initialize RANDOM SEED = " << seed );
 	gRandom = new TRandom3();
+	if ( jobIndex >= 0  ){
+		seed = seed * ( jobIndex + 1 );
+	}
 	gRandom->SetSeed( seed );
 
 	makeQA = config.getBool( nodePath + ".Make:QA", true );

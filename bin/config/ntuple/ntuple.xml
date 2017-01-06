@@ -14,7 +14,7 @@
 		<Logger color="true" globalLogLevel="info" />
 
 		<output>
-			<TFile url="MuonCocktail_{cm.ActiveChannels.ActiveChannel[0]:name}.root" />
+			<TFile url="MuonCocktail_{cm.ActiveChannels.ActiveChannel[0]:name}_{jobIndex}.root" />
 		</output>
 
 		<Make QA="true" />
