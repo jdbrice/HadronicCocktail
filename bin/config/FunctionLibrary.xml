@@ -19,7 +19,7 @@
 	<TF1 name="default_pT" formula="x*[0]*pow((exp(-([1]*x+[2]*pow(x,2)))+x/[3]),-[4])" p0="504.5" p1="0.52" p2="0.16" p3="0.7" p4="8.27" min="0.1" max="10" />
 
 	<TF1 name="pT_Resolution" formula="sqrt([0]*[0]*x*x+[1]*[1])" p0="6.0e-3" p1="1.55e-02" min="0" max="100"/>
-	<TF1 name="pT_Shape" formula="CrystalBall2" N="1." mu="-1e-3" sig="0.01" n="1.29" alpha="1.75" m="2.92" beta="1.84" />
+	<TF1 name="pT_Shape" formula="CrystalBall2" N="1." mu="-1e-3" sig="0.01" n="1.29" alpha="1.75" m="2.92" beta="1.84" min="-10" max="10"/>
 
 
 	<TF1 name="decay_product_phi" formula="1 * ( x > 0 && x < 2.0 * TMath::Pi() )" min="0" max="7.0" />

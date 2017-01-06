@@ -18,7 +18,7 @@ Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/eta_mumu.xml --j
 Queue 100
 
 # J/Psi -> mumu
-Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/eta_mumu.xml --jobIndex=$(Process) --SEED=7522502 --N=10000
+Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/jpsi_mumu.xml --jobIndex=$(Process) --SEED=7522502 --N=10000
 Queue 100
 
 # omega -> pi0mumu
