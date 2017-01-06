@@ -66,6 +66,14 @@ protected:
 
 	virtual void make();
 	virtual void postDecay( string _name, TLorentzVector &_parent, ParticleDecayer &_pd );
+
+	virtual void overrideConfig() {
+		DEBUG( classname(), "" );
+
+		if ( !config.exists( "jobIndex" ) || config.getInt( "jobIndex" ) == -1 ){
+			config.set( "jobIndex", "all" );
+		}
+	}
 	
 };
 
