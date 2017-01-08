@@ -7,6 +7,9 @@
 // ROOT
 #include "TF1.h"
 
+
+
+
 double BreitWigner( double Mll, double Mreso, double gamma ){
 	return 2.0 * gamma / (   pow( Mll - Mreso, 2.0 ) + pow( gamma / 2.0, 2.0 )   );
 }
@@ -75,7 +78,6 @@ double QED( double Mll, double ml, double Nd ){
 
 	const double alpha = 1.0/137.036;
 	const double Pi    = 3.14159265;
-	const double a = (alpha * 2.0 / 3.0 ) / ( Pi * Mll );
 	
 	double a1 = (1.0+2.0*ml*ml/(Mll*Mll));
     double a2 = sqrt( 1.0 - 4 * ml*ml / ( Mll*Mll )  );
@@ -106,28 +108,74 @@ double PlcGamma( double Mll, double Mreso, double gamma0, double Ml, double l ){
 	return gamma0 * ( Mreso / Mll ) * pow( a/b, sp );
 }
 
-// TODO: convert this to a combination of BW * PS
-double RhoMassDistribution( double *x, double *par ){
-	// massRho = 0.77549
- //    massRho2 = massRho**2
-    
- //    GammaEm = GammaE(m)
- //    return m * massRho * GammaE(m) / ( ( massRho2 - m*m )**2 + massRho2*( GammaE(m)+GammaE(m)*Gamma2)) * PS( pT,T,m ) 
+double Gamma( double Mll, double ml, double gamma0, double Mreso ){
+	if ( Mll - 2 * ml < 0 )
+		return 0;
+	if ( Mreso - 2 * ml < 0 )
+		return 0;
 
-    double Mll = x[0];
-    
-    double Mreso = 0.77549; // rho mass in [GeV/c^2]
-    double gamma0 = 0.1491; // intrinsic width of rho for ee channel [GeV/c^2]
-    double gamma2 = 4.72e-5;
-    double Ml = par[0];
-    double pT = par[1];
-    double T  = par[2];
-    double g  = PlcGamma( Mll, Mreso, gamma0, Ml, 0 );
-
-    return Mll * Mreso * g / ( pow( Mreso*Mreso - Mll*Mll, 2.0 ) + Mreso*Mreso * ( g+g*gamma2)) * PhaseSpace( x, &par[1] );
-
-
+	return gamma0 * ( Mreso / Mll ) * sqrt( (Mll*Mll - 4 * ml * ml) / (Mreso*Mreso - 4 * ml * ml) );
 }
+
+// TODO: convert this to a combination of BW * PS
+// double RhoMassDistribution( double *x, double *par ){
+// 	// massRho = 0.77549
+//  //    massRho2 = massRho**2
+    
+//  //    GammaEm = GammaE(m)
+//  //    return m * massRho * GammaE(m) / ( ( massRho2 - m*m )**2 + massRho2*( GammaE(m)+GammaE(m)*Gamma2)) * PS( pT,T,m ) 
+
+//     double Mll = x[0];
+    
+//     double Mreso = 0.77549; // rho mass in [GeV/c^2]
+//     double gamma0 = 0.1491; // intrinsic width of rho for ee channel [GeV/c^2]
+//     double gamma2 = 4.72e-5;
+//     double Ml = par[0];
+//     double pT = par[1];
+//     double T  = par[2];
+//     double g  = PlcGamma( Mll, Mreso, gamma0, Ml, 0 );
+
+//     return Mll * Mreso * g / ( pow( Mreso*Mreso - Mll*Mll, 2.0 ) + Mreso*Mreso * pow( g+g*gamma2, 2.0 )) * PhaseSpace( x, &par[1] );
+
+
+// }
+
+double PhaseSpaceVacuumRho( double Mll, double pT, double T ){
+	double E = sqrt( Mll*Mll + pT*pT );
+	return (Mll / E ) * exp( - E / T );
+}
+
+
+double PhaseSpaceVacuumRho( double E, double T ){
+	return (1.0 / E) * exp( -E/T );
+}
+
+double PhaseSpaceVacuumRho( double *x, double *p ){
+	return PhaseSpaceVacuumRho( x[0], p[0] );
+}
+
+
+double MassVacuumRho( double Mll, double pT, double ml, double gamma0, double gamma2, double T ){
+
+	const double mass_vacuum_rho   = 0.77549; 		// GeV/c^2
+	const double m2 = pow( mass_vacuum_rho, 2.0 );
+	const double mass_charged_pion = 0.13957018;	// GeV/c^2
+	double gammall   = Gamma( Mll, ml, gamma0, mass_vacuum_rho );
+	double gammapipi = Gamma( Mll, mass_charged_pion, gamma0, mass_vacuum_rho );
+
+	double a = Mll * mass_vacuum_rho * gammall;
+	double b = pow( m2 - Mll*Mll, 2.0 );
+	double c = m2 * pow( gammapipi + gammall * gamma2, 2.0 );
+
+	double PS = PhaseSpaceVacuumRho( Mll, pT, T );
+	
+	return (a / ( b + c ) ) * PS;
+}
+
+double MassVacuumRho( double *x, double *par ){
+	return MassVacuumRho( x[0], par[0], par[1], par[2], par[3], par[4] );
+}
+
 
 double CrystalBall( double x, double N, double mu, double sig, double n, double alpha ){
 
@@ -255,7 +303,7 @@ TF1 *TsallisBlastWave(const char *name, double mass, double beta_max, double tem
   
   TF1 *fTsallisBlastWave = new TF1(name, TsallisBlastWave_Func, 0., 10., 8);
   fTsallisBlastWave->SetParameters(mass, beta_max, temp, n, q, norm, ymin, ymax);
-  fTsallisBlastWave->SetParNames("mass", "beta_max", "T", "n", "q", "norm");
+  fTsallisBlastWave->SetParNames("mass", "beta_max", "T", "n", "q", "norm", "ymin", "ymax");
   fTsallisBlastWave->FixParameter(0, mass);
   
   fTsallisBlastWave->FixParameter(6, ymin);

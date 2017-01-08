@@ -19,14 +19,36 @@
  */
 class ParticleDecayer : public IObject
 {
+protected:
+	FunctionLibrary funLib;
+	ParticleLibrary plcLib;
+
+	DecayChannelInfo dcInfo;
+
+
+	ParticleInfo parent;
+	vector<ParticleInfo> products;
+
+	// parent particle's mass distribution
+	shared_ptr<TF1> massDistribution = nullptr;
+	int massDimensions 				 = 1;
+	// used in dalitz decays only
+	shared_ptr<TF1> dileptonMassDistribution = nullptr;
+
+	// alias to PDFs used in plc decays
+	shared_ptr<TF1> pdfCosTheta;
+	shared_ptr<TF1> pdfPhi;
+	double lastSampledMass;
+
+
 public:
 	virtual const char* classname() const { return "ParticleDecayer"; }
-	
+
 	/*ParticleDecayer Ctor
 	 *
 	 */
 	ParticleDecayer() {}
-	
+
 	ParticleDecayer( ParticleLibrary &_plcLib, FunctionLibrary &_funLib ) {
 		this->plcLib = _plcLib;
 		this->funLib = _funLib;
@@ -42,7 +64,7 @@ public:
 		}
 
 	}
-	
+
 	/*ParticleDecayer Dtor
 	 *
 	 */
@@ -95,17 +117,26 @@ public:
 		if ( nullptr == this->pdfCosTheta || nullptr == this->pdfPhi ){
 			return;
 		}
-		
+
 		DEBUG( classname(), "lv( P=" << dts(_lv.Px()) << "," << dts(_lv.Py()) << "," << dts(_lv.Pz()) << ", M=" << dts( _lv.M() ) << ")" );
 		int nProducs = products.size();
+		bool pTPS = false;
+		if ( this->massDistribution->GetParNumber( "pT" ) >= 0 ) pTPS = true;
+
 		if ( nProducs == 2 ){
 			DEBUG( classname(), "Two Body Decay" );
 			if ( products[0].mass != products[1].mass ){
 				ERROR( classname(), "Two Body Decay requested for particles of different mass" );
 			} else {
 
+				double pM = 0;
+				if ( false == pTPS )
+					pM = sampleParentMass();
+				else 
+					pM = sampleParentMass( _lv.Pt() );
+
 				// sample the parent mass and set the lv
-				_lv.SetXYZM(  _lv.Px(), _lv.Py(), _lv.Pz(), sampleParentMass() );
+				_lv.SetXYZM(  _lv.Px(), _lv.Py(), _lv.Pz(), pM );
 				lastSampledMass = _lv.M();
 				twoBodyDecay( _lv );
 			}
@@ -116,7 +147,7 @@ public:
 
 			int iCatch = 0;
 			while ( false == checkDalitzEnergyConservation( _lv, M_ll ) && iCatch < 1000 ){
-				M_ll = sampleDileptonMass();				
+				M_ll = sampleDileptonMass();
 				iCatch++;
 			}
 
@@ -154,29 +185,25 @@ public:
 	ParticleInfo getParentInfo(){
 		return parent;
 	}
+
+	void writeDistributions() {
+
+		if ( nullptr != massDistribution )
+			massDistribution->Write();
+		// else if ( nullptr != massDistribution && 2 == massDimensions ){
+		// 	shared_ptr<TF2> f2 = 
+		// }
+			
+		if ( nullptr != dileptonMassDistribution )
+			dileptonMassDistribution->Write();
+		return;
+	}
 	
+
 protected:
-	FunctionLibrary funLib;
-	ParticleLibrary plcLib;
 
-	DecayChannelInfo dcInfo;
+	ParticleInfo &lepton1(){
 
-
-	ParticleInfo parent;
-	vector<ParticleInfo> products;
-
-	// parent particle's mass distribution
-	shared_ptr<TF1> massDistribution = nullptr;
-	// used in dalitz decays only
-	shared_ptr<TF1> dileptonMassDistribution = nullptr;
-
-	// alias to PDFs used in plc decays
-	shared_ptr<TF1> pdfCosTheta;
-	shared_ptr<TF1> pdfPhi;
-	double lastSampledMass;
-
-
-	ParticleInfo &lepton1( ) {
 		for ( ParticleInfo &pi : products ){
 			if (pi.isLepton())
 				return pi;
@@ -184,6 +211,8 @@ protected:
 		ERROR( classname(), "Cannot find lepton" );
 		return products[0];
 	}
+
+
 	ParticleInfo &lepton2( ) {
 		int nLeptons = 0;
 		for ( ParticleInfo &pi : products ){
@@ -197,6 +226,7 @@ protected:
 		ERROR( classname(), "Cannot find two leptons" );
 		return products[0];
 	}
+
 	ParticleInfo &neutral() {
 		for ( ParticleInfo &pi : products ){
 			if ( false == pi.isLepton() ){
@@ -208,10 +238,16 @@ protected:
 	}
 
 
-	double sampleParentMass(){
+	double sampleParentMass( double pT = -1.0 ){
 		if ( nullptr == massDistribution )
 			return 0;
 
+		// Some distributions (like VacuumRho) depend on pT
+		if ( pT >= 0.0 && massDimensions == 2 ) {
+			// INFOC( "pT = " << pT );
+			massDistribution->SetParameter( 0, pT );
+			// return massDistribution->GetRandom();
+		}
 		return massDistribution->GetRandom();
 	}
 
@@ -279,12 +315,7 @@ protected:
 
 		d1.lv = daughter1;
 		d2.lv = daughter2;
-
-		
 	}
-
-
-	
 
 	/* Dalitz Decay
 	 *
@@ -311,7 +342,7 @@ protected:
 		DEBUG( classname(), "lambda = " << lambda );
 
 		double costheta = this->pdfCosTheta->GetRandom();//( 2.0 * gRandom->Rndm() ) - 1.0;
-		
+
 		// if the neutral partical hass mass == 0 ( ie a photon) then we need to take care of the polarization
 		if ( n.isPhoton() ){
 			while( ( 1.0 + lambda * costheta * costheta ) < ( 2.0 * gRandom->Rndm() ) ){
@@ -347,7 +378,7 @@ protected:
 
 		double E3 = ( pdgMass*pdgMass + n.mass * n.mass - _M_ll * _M_ll ) / ( 2.0 * pdgMass );
 		double p3 = sqrt( (E3 + n.mass)  * (E3 - n.mass) );
-		
+
 		DEBUG( classname(), "E3 = " << E3 );
 		DEBUG( classname(), "p3 = " << p3 );
 
@@ -389,58 +420,66 @@ protected:
 
 
 	void makeMassDistribution(){
-		INFO( classname(), "Making mass distribution for " << this->parent.toString() );
+		INFOC( "Making mass distribution for " << this->parent.toString() );
 		string fname = this->parent.name + "_mass";
-		
+
 		// If the function library has the mass distribution then use it. If not build it as we think it should be
-		if ( this->funLib.get( fname ) ){
+		if ( this->funLib.get( fname ) && "rho" != this->parent.name){
 			massDistribution = this->funLib.get( fname );
-			massDistribution->SetRange( 0, 5 ); // TODO: make configurable
-			massDistribution->SetNpx(10000);
-			INFO( classname(), "Loaded the mass distribution for " << parent.name << " from the function library" );
+			massDistribution->SetNpx(500);
+			INFOC( "Loaded the mass distribution for " << parent.name << " from the function library" );
 			return;
 		}
 
 
 		// we use a special form for rho
 		if ( "rho" == this->parent.name ){
-			// TODO: add support for rho meson
-			ERROR( classname(), "Rho Meson is not yet supported, you can add support by providing rho_mass to FunctionLibrary" );
+			massDistribution = funLib.get( "rho_mass" );
+			if ( nullptr == massDistribution ){
+				ERROR( classname(), "Support rho meson by adding a function to the function library with the name " << quote("rho_mass") );
+				INFOC( "Available builtin Rho Mass Distributions:" );
+				INFOC( "VacuumRhoMass" );
+				return;
+			}
+
+			// we need to set the parameters from the particleInfo
+			// massDistribution->SetParameter( "pT", 0.1 );	// must be set before each sampling
+			massDistribution->SetParameter( "ml", lepton1().mass );
+			massDistribution->SetParameter( "gamma0", this->parent.mass );
+			massDistribution->SetParameter( "gamma2", this->parent.gamma2 );
+
+			// pT is X and m is Y
+			massDimensions = 2;
 		} else {
 			// use a breit wigner shape
 			massDistribution = shared_ptr<TF1>( new TF1( fname.c_str(), BreitWigner, 0, 10, 2 ) );
-			
+
 			// Set the BreitWigner to use the width and mass of this plc
 			massDistribution->SetParameter( 0, this->parent.width );
 			massDistribution->SetParameter( 1, this->parent.mass );
 
 			massDistribution->SetRange( this->parent.mass - 10 * this->parent.width, this->parent.mass + 10 * this->parent.width ); // TODO: make configurable
+			// absurdly high resolution ( < 1 MeV/bin) but it only needs to compute CDF once since these should be true 1D functions
 			massDistribution->SetNpx(50000);
-
-			massDistribution->Write();
 		}
 	} // makeMassDistribution
 
 	void makeDileptonMassDistribution(){
-		
-		INFO( classname(), "Making mass distribution for " << this->parent.toString() );
+
+		INFOC( "Making mass distribution for " << this->parent.toString() );
 		string fname = this->parent.name + "_massDilepton";
-		
+
 		// If the function library has the mass distribution then use it. If not build it as we think it should be
 		if ( this->funLib.get( fname ) ){
 			dileptonMassDistribution = this->funLib.get( fname );
-			
-			// if we load from config this should be set
-			// dileptonMassDistribution->SetRange( 0, 5 ); // TODO: make configurable
 			dileptonMassDistribution->SetNpx(50000);	// TODO: make configurable
-			dileptonMassDistribution->Write();
-			INFO( classname(), "Loaded the dilepton mass distribution for " << parent.name << " from the function library (ie Overrode default)" );
+			INFOC( "Loaded the dilepton mass distribution for " << parent.name << " from the function library (ie Overrode default)" );
 			return;
 		}
 
 
 		dileptonMassDistribution = shared_ptr< TF1 >( new TF1( fname.c_str(), KrollWada, 0, 10, 6 ) );
-		
+
 
 		// double KrollWada( double Mll, double M0, double Mn, double ml, double G0, double iL2, double Nd );
 		dileptonMassDistribution->SetParameter( 0, this->parent.mass );
@@ -456,6 +495,7 @@ protected:
 
 
 		// DEBUG ONLY
+		// export all of the parts
 		if ( Logger::getGlobalLogLevel() >= Logger::llDebug ){
 
 			TF1 * fPS = new TF1( (this->parent.name + "_PS" ).c_str(), PhaseSpaceMassive, 0, 10, 2 );
@@ -486,21 +526,6 @@ protected:
 
 
 	} //makeDileptonMassDistribution
-
-
-	/*Calculates the phase space for a 2-body decay
-	 *
-	 */
-	// static twoBodyDecay( ... );
-	/*Calculates the phase space for a 3-body dalitz decay
-	 *
-	 */
-	// static dalitzDecay( ... );
-
-	/*Calculates boost from parent and applies to daughter
-	 *
-	 */
-	// static TLorentzVector applyBoost( TLorentzVector parent, TLorentzVector daughter )
 
 
 };

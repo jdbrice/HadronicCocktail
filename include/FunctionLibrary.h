@@ -3,12 +3,14 @@
 
 // ROOT
 #include "TF1.h"
+#include "TF2.h"
 
 // STL
 #include <vector>
 #include <map>
 #include <cmath>
 #include <functional>
+#include <memory>
 
 // Project
 #include "CintFunctionLibrary.h"
@@ -31,12 +33,32 @@ public:
 
 	void loadFunction( XmlConfig &_cfg, string _nodePath, string _name = "" ){
 		INFO( classname(), "Loading from " << _nodePath );
+		
+		bool foundBuiltin = loadBuiltin( _cfg, _nodePath );
+		if ( foundBuiltin ) return;
+
+		XmlFunction xf1;
+		xf1.set( _cfg, _nodePath );
+		f1s.push_back( xf1.getTF1() );
+
+		string name = _cfg.getString( _nodePath + ":name" );
+		INFO( "Loading Function " << name );
+		if ( "" != name ){
+			f1sByName[ name ] = xf1.getTF1();
+		}
+
+		INFO( classname(), "Compiled: " << f1s[f1s.size()-1]->GetFormula()->GetExpFormula() );
+	}
+
+	bool loadBuiltin( XmlConfig &_cfg, string _nodePath ){
+		
 		string &np = _nodePath;
 
+		string formula = _cfg.getString( _nodePath + ":formula" );
+		string name = _cfg.getString( _nodePath + ":name" );
+
 		// Speial Cases - functions backed by C++ code
-		if ( "TsallisBlastWave" == _cfg.getString( _nodePath + ":formula" ) ){
-			
-			string name = _cfg.getString( _nodePath + ":name" );
+		if ( "TsallisBlastWave" == formula ){
 			double m        = 0;	// gets overwritten by ParticleSampler
 			double beta_max = _cfg.getDouble( np+":beta_max" , 0 );
 			double temp     = _cfg.getDouble( np+":temp"     , _cfg.getDouble( np+":T" , 0 ) );
@@ -52,14 +74,13 @@ public:
 
 			f1s.push_back( f1 );
 			f1sByName[ name ] = f1;
-			builtInByName[ name ] = _cfg.getString( _nodePath + ":formula" );
+			builtInByName[ name ] = formula;
 
 			f1->SetRange( _cfg.getDouble( np+":min"     , 0.0 ), _cfg.getDouble( np+":max"     , 10.0 ) );
 
-			return;
-		} else if ( "CrystalBall2" == _cfg.getString( _nodePath + ":formula" ) ){
+			return true;
+		} else if ( "CrystalBall2" == formula ){
 
-			string name = _cfg.getString( _nodePath + ":name" );
 			double N     = _cfg.getDouble( np+":N"     , 0 );
 			double mu    = _cfg.getDouble( np+":mu"    , 0 );
 			double sig   = _cfg.getDouble( np+":sig"   , 0 );
@@ -70,41 +91,45 @@ public:
 
 			shared_ptr<TF1> f1 = shared_ptr<TF1>( new TF1( name.c_str(), CrystalBall2, -1, 1, 7 ) );
 			f1->SetParameters( N, mu, sig, n, alpha, m, beta );
+			f1->SetParNames( "N", "mu", "sig", "n", "alpha", "m", "beta" );
+			INFO( classname(), name << " : DuobleCrystalBall<N=" << N << ",mu=" << mu << ",sig=" << sig << ",n=" << n << ",alpha=" << alpha << ",m=" << m << ",beta=" << beta << ">" );
 
 			f1s.push_back( f1 );
 			f1sByName[ name ] = f1;
-			builtInByName[ name ] = _cfg.getString( _nodePath + ":formula" );
+			builtInByName[ name ] = formula;
 
 			f1->SetRange( _cfg.getDouble( np+":min"     , -1.0 ), _cfg.getDouble( np+":max"     , 1.0 ) );
-			return;
+			return true;
+		} else if ( "MassVacuumRho" == formula ) {
+
+			double T 	= _cfg.getDouble( np+":temp", _cfg.getDouble( np+":T", 160 ) );
+			double pT   = _cfg.getDouble( np+":pT", 0.1 );	// this gets overwritten but it lets me control which one is written out when debugging 
+			// other params are picked up from the particle info
+
+			shared_ptr<TF1> f1 = shared_ptr<TF1>( new TF1( name.c_str(), MassVacuumRho, 0, 10, 5 ) );	
+			f1->SetParNames( "pT", "ml", "gamma0", "gamma2", "T" );
+			// reasonable defaults, but everything but T gets overwritten
+			f1->SetParameters( pT, 0.105, 0.1491, 4.55e-5, T);
+
+			f1s.push_back( f1 );
+			f1sByName[ name ] = f1;
+
+			builtInByName[ name ] = formula;
+
+
+			f1->SetRange( _cfg.getDouble( np+":min"     , 0.0 ), _cfg.getDouble( np+":max"     , 5.0 ) );	
+			f1->SetNpx( _cfg.getInt( np+":Npx", 500 ) );
+
+			return true;
 		}
 
 
-		XmlFunction xf1;
-		xf1.set( _cfg, _nodePath );
-		f1s.push_back( xf1.getTF1() );
-
-		string name = _cfg.getString( _nodePath + ":name" );
-		INFO( "Loading Function " << name );
-		if ( "" != name ){
-			f1sByName[ name ] = xf1.getTF1();
-		}
-
-		INFO( classname(), "Compiled: " << f1s[f1s.size()-1]->GetFormula()->GetExpFormula() );
-	}
-
-	void loadBuiltin(){
-		INFO( classname(), "Loading built in functions" );
-		// f1s.push_back( shared_ptr<TF1>( new TF1( "BreitWigner", BreitWigner, 0, 100, 2 ) ) );
-		// f1sByName[ "BreitWigner" ] = f1s[ f1s.size() - 1 ];
-
-		// builtInMap[ "TsallisBlastWave" ] = TsallisBlastWave_Func;
+		return false; 
+		
 	}
 
 	void loadAll( XmlConfig &_cfg, string _nodePath ){
 		INFO( classname(), "Loading all Functions @ " << _nodePath );
-		
-		loadBuiltin();
 
 		vector<string> paths = _cfg.childrenOf( _nodePath, "TF1" );
 		for ( string path : paths ){

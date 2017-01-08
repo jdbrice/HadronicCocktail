@@ -13,13 +13,17 @@ Queue 100
 Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/omega_mumu.xml --jobIndex=$(Process) --SEED=4159768 --N=10000
 Queue 100
 
+# rho -> mumu
+Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/rho_mumu.xml --jobIndex=$(Process) --SEED=7345387 --N=10000
+Queue 100
+
 # eta -> mumu
 Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/eta_mumu.xml --jobIndex=$(Process) --SEED=8994701 --N=10000
 Queue 100
 
 # J/Psi -> mumu
-Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/jpsi_mumu.xml --jobIndex=$(Process) --SEED=7522502 --N=10000
-Queue 100
+# Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/jpsi_mumu.xml --jobIndex=$(Process) --SEED=7522502 --N=10000
+# Queue 100
 
 # omega -> pi0mumu
 Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/omega_pi0mumu.xml --jobIndex=$(Process) --SEED=4806094 --N=10000

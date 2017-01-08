@@ -3,7 +3,7 @@
 
 
 	<Task name="Cocktail Maker" type="CocktailNTupleMaker" config="" nodePath="cm" />
-	<Logger color="true" globalLogLevel="info" />
+	<Logger color="false" globalLogLevel="info" />
 
 	<SEED>0</SEED>
 	<N>5000</N>
@@ -11,13 +11,13 @@
 	<WEIGHT>0.025926</WEIGHT>
 
 	<cm>
-		<Logger color="true" globalLogLevel="info" />
+		<Logger color="false" globalLogLevel="info" />
 
 		<output>
 			<TFile url="MuonCocktail_{cm.ActiveChannels.ActiveChannel[0]:name}_{jobIndex}.root" />
 		</output>
 
-		<Make QA="true" />
+		<Make QA="true" TF1="false"/>
 		
 		<ActiveChannels>
 			<ActiveChannel name="{CHANNEL}" n="{N}" weight="{WEIGHT}" />

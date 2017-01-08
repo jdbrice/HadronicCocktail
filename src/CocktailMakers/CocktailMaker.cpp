@@ -15,10 +15,14 @@ void CocktailMaker::initialize(){
 	gRandom->SetSeed( seed );
 
 	makeQA = config.getBool( nodePath + ".Make:QA", true );
+	makeTF1 = config.getBool( nodePath + ".Make:TF1", false );
 
 	initializeHistoBook( config, nodePath, "" );
+	
 	book->cd();
-	book->makeAll( config, nodePath + ".histograms" );
+	if ( makeQA ){
+		book->makeAll( config, nodePath + ".histograms" );
+	}
 
 	maxN = 0;
 
@@ -103,8 +107,9 @@ void CocktailMaker::initialize(){
 		namedPlcSamplers[ name ] = ps;
 	}
 
-	INFO( classname(), "Initializing parent kinematic filter");
+	INFO( classname(), "Initializing PARENT kinematic filter");
 	parentFilter.load( config, nodePath + ".KinematicFilters.Parent" );
+	INFO( classname(), "Initializing DAUGHTER kinematic filter");
 	daughterFilter.load( config, nodePath + ".KinematicFilters.Daughter" );
 
 
@@ -118,11 +123,17 @@ void CocktailMaker::initialize(){
 		momShape->SetParameters(1., -1e-3, 0.01, 1.29, 1.75, 2.92, 1.84);	
 	}
 
-	momShape->Write();
-	momResolution->Write();
+	if ( makeTF1 ){
+		momShape->Write();
+		momResolution->Write();
+
+		for ( string name : activeChannels ){
+			book->cd(name);
+			namedPlcDecayers[ name ].writeDistributions();
+			namedPlcSamplers[ name ].writeDistributions();
+		}
+	} // makeTF1
 	
-
-
 }
 
 
@@ -147,6 +158,7 @@ void CocktailMaker::make(){
 			t++;
 		
 			TLorentzVector lv = namedPlcSamplers[name].sample();
+			
 
 			if ( makeQA ){
 				book->get( "parent_phi", name )->Fill( lv.Phi() );
@@ -161,6 +173,7 @@ void CocktailMaker::make(){
 
 			
 			namedPlcDecayers[ name ].decay( lv );
+			
 
 			TLorentzVector l1lv = namedPlcDecayers[ name ].getLepton1().lv;
 			TLorentzVector l2lv = namedPlcDecayers[ name ].getLepton2().lv;

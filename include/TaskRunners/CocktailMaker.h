@@ -46,6 +46,7 @@ protected:
 	shared_ptr<TF1>				  momShape;
 
 	bool makeQA = true;
+	bool makeTF1 = false;
 
 	// RECO 4-vectors
 	TLorentzVector rl1lv, rl2lv, rplv;

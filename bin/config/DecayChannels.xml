@@ -37,6 +37,11 @@
 		<DecayProduct name="muon" />
 	</DecayChannel>
 
+	<DecayChannel name="rho_mumu" parent="rho" >
+		<DecayProduct name="muon" />
+		<DecayProduct name="muon" />
+	</DecayChannel>
+
 	<DecayChannel name="jpsi_mumu" parent="jpsi" >
 		<DecayProduct name="muon" />
 		<DecayProduct name="muon" />

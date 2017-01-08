@@ -43,10 +43,11 @@ public:
 			INFO( classname(), "Setting TsallisBlastWave mass param to " << _plcInfo.mass );
 			shared_ptr<TF1> f = this->funLib.get( _plcInfo.name + "_pT" );
 			
-			f->ReleaseParameter(0);
-			f->SetParameter( 0, _plcInfo.mass );
-			f->FixParameter( 0, _plcInfo.mass );
-			INFO( classname(), "Checking mass is set to " <<  f->GetParameter( 0 ) << " [GeV/c]" );
+			int iPar = f->GetParNumber( "mass" );
+			f->ReleaseParameter(iPar);
+			f->SetParameter( iPar, _plcInfo.mass );
+			f->FixParameter( iPar, _plcInfo.mass );
+			INFO( classname(), "Checking mass is set to " <<  f->GetParameter( iPar ) << " [GeV/c]" );
 		}
 
 
@@ -58,11 +59,7 @@ public:
 		kdPhi.set( nullptr, this->funLib.get("Phi" ) );
 		kdPhi.set( this->histoLib.get( _plcInfo.name + "_phi" ), this->funLib.get( _plcInfo.name + "_phi" ) );
 
-		// after things have settled write out the functions, since these may be built as a double check
-		kdPt.getTF1()->Write();
-		kdRapidity.getTF1()->Write();
-		kdPhi.getTF1()->Write();
-
+	
 		INFO( classname(), "Initialize the kinematic distributions" );
 		kdPt.sample();
 		kdRapidity.sample();
@@ -108,6 +105,13 @@ public:
 
 	ParticleInfo plc() const {
 		return this->plcInfo;
+	}
+
+	void writeDistributions(){
+		// after things have settled write out the functions, since these may be built as a double check
+		kdPt.getTF1()->Write();
+		kdRapidity.getTF1()->Write();
+		kdPhi.getTF1()->Write();
 	}
 
 protected:

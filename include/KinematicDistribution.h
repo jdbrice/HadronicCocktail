@@ -44,6 +44,7 @@ public:
 		} 
 
 		ERROR( classname(), "No valid backer for distribution" );
+		return 0.0;
 	}
 
 	shared_ptr<TF1> getTF1(){

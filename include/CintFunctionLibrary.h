@@ -9,7 +9,7 @@ double BreitWigner( double *x, double *par );
 
 double PhaseSpace( double *x, double *par );
 double PlcGamma( double m, double mReso, double gamma0, double ml, double l );
-
+double Gamma( double Mll, double ml, double gamma0, double Mreso );
 
 /* Phase space for Dalits to massive neutral particle
  * 
@@ -35,6 +35,14 @@ double QED( double *x, double *par );
 
 double KrollWada( double Mll, double M0, double Mn, double ml, double G0, double iL2, double Nd );
 double KrollWada( double *x, double *par );
+
+// RHO
+double PhaseSpaceVacuumRho( double Mll, double pT, double T );
+double PhaseSpaceVacuumRho( double E, double T );
+double PhaseSpaceVacuumRho( double *x, double *p );
+
+double MassVacuumRho( double Mll, double pT, double ml, double gamma0, double gamma2, double T );
+double MassVacuumRho( double *x, double *par );
 
 
 double CrystalBall( double x, double N, double mu, double sig, double n, double alpha );
