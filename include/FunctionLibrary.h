@@ -57,6 +57,8 @@ public:
 		string formula = _cfg.getString( _nodePath + ":formula" );
 		string name = _cfg.getString( _nodePath + ":name" );
 
+		shared_ptr<TF1> f1 = nullptr;
+
 		// Speial Cases - functions backed by C++ code
 		if ( "TsallisBlastWave" == formula ){
 			double m        = 0;	// gets overwritten by ParticleSampler
@@ -68,17 +70,7 @@ public:
 			double ymin     = _cfg.getDouble( np+":ymin"     , -0.5 );
 			double ymax     = _cfg.getDouble( np+":ymax"     , 0.5 );
 			INFO( classname(), name << " : TBW<m=" << 0 << ",beta_max=" << beta_max << ",T=" << temp << ",n=" << n << ",q=" << q << ",norm=" << norm <<",ymin=" << ymin << ",ymax=" << ymax << ">");
-			shared_ptr<TF1> f1 = shared_ptr<TF1>(  
-									TsallisBlastWave( 	name.c_str(), m, beta_max, temp, n, q, norm, ymin, ymax )  
-								);
-
-			f1s.push_back( f1 );
-			f1sByName[ name ] = f1;
-			builtInByName[ name ] = formula;
-
-			f1->SetRange( _cfg.getDouble( np+":min"     , 0.0 ), _cfg.getDouble( np+":max"     , 10.0 ) );
-
-			return true;
+			f1 = shared_ptr<TF1>(  TsallisBlastWave( 	name.c_str(), m, beta_max, temp, n, q, norm, ymin, ymax )  );
 		} else if ( "CrystalBall2" == formula ){
 
 			double N     = _cfg.getDouble( np+":N"     , 0 );
@@ -89,36 +81,30 @@ public:
 			double m     = _cfg.getDouble( np+":m"     , 0 );
 			double beta  = _cfg.getDouble( np+":beta"  , 0 );
 
-			shared_ptr<TF1> f1 = shared_ptr<TF1>( new TF1( name.c_str(), CrystalBall2, -1, 1, 7 ) );
+			f1 = shared_ptr<TF1>( new TF1( name.c_str(), CrystalBall2, -1, 1, 7 ) );
 			f1->SetParameters( N, mu, sig, n, alpha, m, beta );
 			f1->SetParNames( "N", "mu", "sig", "n", "alpha", "m", "beta" );
 			INFO( classname(), name << " : DuobleCrystalBall<N=" << N << ",mu=" << mu << ",sig=" << sig << ",n=" << n << ",alpha=" << alpha << ",m=" << m << ",beta=" << beta << ">" );
-
-			f1s.push_back( f1 );
-			f1sByName[ name ] = f1;
-			builtInByName[ name ] = formula;
-
-			f1->SetRange( _cfg.getDouble( np+":min"     , -1.0 ), _cfg.getDouble( np+":max"     , 1.0 ) );
-			return true;
 		} else if ( "MassVacuumRho" == formula ) {
 
 			double T 	= _cfg.getDouble( np+":temp", _cfg.getDouble( np+":T", 160 ) );
 			double pT   = _cfg.getDouble( np+":pT", 0.1 );	// this gets overwritten but it lets me control which one is written out when debugging 
 			// other params are picked up from the particle info
 
-			shared_ptr<TF1> f1 = shared_ptr<TF1>( new TF1( name.c_str(), MassVacuumRho, 0, 10, 5 ) );	
+			f1 = shared_ptr<TF1>( new TF1( name.c_str(), MassVacuumRho, 0, 10, 5 ) );	
 			f1->SetParNames( "pT", "ml", "gamma0", "gamma2", "T" );
 			// reasonable defaults, but everything but T gets overwritten
 			f1->SetParameters( pT, 0.105, 0.1491, 4.55e-5, T);
+		}
+
+		if ( nullptr != f1 ){
+			f1->SetRange( _cfg.getDouble( np+":min"     , 0.0 ), _cfg.getDouble( np+":max"     , 5.0 ) );	
+			f1->SetNpx( _cfg.getInt( np+":Npx", 500 ) );
 
 			f1s.push_back( f1 );
 			f1sByName[ name ] = f1;
-
 			builtInByName[ name ] = formula;
 
-
-			f1->SetRange( _cfg.getDouble( np+":min"     , 0.0 ), _cfg.getDouble( np+":max"     , 5.0 ) );	
-			f1->SetNpx( _cfg.getInt( np+":Npx", 500 ) );
 
 			return true;
 		}

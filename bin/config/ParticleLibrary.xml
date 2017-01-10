@@ -25,5 +25,7 @@
 	<Particle name="electron" mcId="11" mass="0.000511" width="0" />
 	<Particle name="muon" mcId="13" mass="0.1056583745" width="0" />
 
+	<!-- For made-up decays -->
+	<Particle name="X" mcId="0" mass="0" width="0" />
 
 </Mesons>

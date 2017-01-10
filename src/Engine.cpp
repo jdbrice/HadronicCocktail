@@ -10,9 +10,9 @@ using namespace jdb;
 #include <exception>
 
 
-// TaskRunners
-#include "TaskRunners/CocktailMaker.h"
-#include "TaskRunners/CocktailNTupleMaker.h"
+// CocktailMakers
+#include "CocktailMakers/CocktailMaker.h"
+#include "CocktailMakers/CocktailNTupleMaker.h"
 
 
 // UnitTests
@@ -34,7 +34,7 @@ int main( int argc, char* argv[] ) {
 	TaskFactory::registerTaskRunner<UnitTestHistogramLibrary>( "UnitTestHistogramLibrary" );
 
 
-	// TaskRunners
+	// CocktailMakers
 	TaskFactory::registerTaskRunner<CocktailMaker>( "CocktailMaker" );	
 	TaskFactory::registerTaskRunner<CocktailNTupleMaker>( "CocktailNTupleMaker" );	
 

@@ -243,11 +243,11 @@ protected:
 			return 0;
 
 		// Some distributions (like VacuumRho) depend on pT
-		if ( pT >= 0.0 && massDimensions == 2 ) {
-			// INFOC( "pT = " << pT );
-			massDistribution->SetParameter( 0, pT );
-			// return massDistribution->GetRandom();
-		}
+		// if ( pT >= 0.0 && massDimensions == 2 ) {
+		// 	// INFOC( "pT = " << pT );
+		// 	massDistribution->SetParameter( 0, pT );
+		// 	// return massDistribution->GetRandom();
+		// }
 		return massDistribution->GetRandom();
 	}
 

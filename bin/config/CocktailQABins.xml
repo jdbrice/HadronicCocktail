@@ -6,4 +6,5 @@
 	<eta width="0.01" min="-1.0" max="1.0" />
 	<phi width="0.05" min="-4.0" max="4.0" />
 	<mass width="0.01" min="0" max="5" />
+	<weight nBins="240" min="0" max="1.2" />
 </config>

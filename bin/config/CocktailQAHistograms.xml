@@ -12,4 +12,6 @@
 	<Histo name="phi" title=";phi [GeV/c]; dN/dphi" bins_x="bins.phi"/>
 	<Histo name="mass" title=";M_{#mu#mu} [GeV/c^{2}]; dN/dM [c^{2}/GeV]" bins_x="bins.mass" />
 	<Histo name="mass_vs_pT" title=";M_{#mu#mu} [GeV/c^{2}]; p_{T} [GeV/c]" bins_x="bins.mass" bins_y="bins.pT" />
+	<Histo name="pT_vs_weight" title="; pT [GeV/c]; weight" bins_x="bins.pT" bins_y="bins.weight" />
+	<Histo name="mass_vs_weight" title=";M_{#mu#mu} [GeV/c^{2}]; weight" bins_x="bins.mass" bins_y="bins.weight" />
 </config>

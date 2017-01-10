@@ -19,6 +19,8 @@ using namespace std;
 #include "ParticleDecayer.h"
 #include "ParticleSampler.h"
 #include "KinematicFilter.h"
+#include "EfficiencyWeight.h"
+
 
 
 class CocktailMaker : public TaskRunner, public IHistoBookMaker
@@ -50,6 +52,9 @@ protected:
 
 	// RECO 4-vectors
 	TLorentzVector rl1lv, rl2lv, rplv;
+
+	shared_ptr<EfficiencyWeight> efficiency;
+	double wEff = 1.0;
 
 public:
 	virtual const char* classname() const { return "CocktailMaker"; }

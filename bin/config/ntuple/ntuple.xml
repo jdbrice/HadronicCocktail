@@ -17,7 +17,7 @@
 			<TFile url="MuonCocktail_{cm.ActiveChannels.ActiveChannel[0]:name}_{jobIndex}.root" />
 		</output>
 
-		<Make QA="true" TF1="false"/>
+		<Make QA="true" TF1="true"/>
 		
 		<ActiveChannels>
 			<ActiveChannel name="{CHANNEL}" n="{N}" weight="{WEIGHT}" />

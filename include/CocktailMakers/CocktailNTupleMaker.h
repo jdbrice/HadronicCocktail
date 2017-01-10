@@ -2,7 +2,7 @@
 #define COCKTAIL_NTUPLE_MAKER_H
 
 // Project
-#include "TaskRunners/CocktailMaker.h"
+#include "CocktailMakers/CocktailMaker.h"
 
 // ROOT
 #include "TFile.h"

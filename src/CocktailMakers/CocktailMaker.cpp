@@ -1,4 +1,5 @@
-#include "TaskRunners/CocktailMaker.h"
+#include "CocktailMakers/CocktailMaker.h"
+#include "EfficiencyWeightF1D.h"
 
 void CocktailMaker::initialize(){
 	DEBUG( classname(), "Initialize" );
@@ -48,6 +49,7 @@ void CocktailMaker::initialize(){
 		if ( makeQA ){
 			book->cd(name);
 			book->clone( "", "pT_vs_phi", name, "parent_pT_vs_phi" );
+			book->clone( "", "pT_vs_weight", name, "parent_pT_vs_weight" );
 			book->clone( "", "kfParent", name, "kfParent" );
 			book->clone( "", "pT", name, "parent_pT" );
 			book->clone( "", "pX", name, "parent_pX" );
@@ -60,21 +62,28 @@ void CocktailMaker::initialize(){
 			book->clone( "", "pY", name, "parent_pY_pass" );
 
 			book->clone( "", "mass", name, "parent_mass" );
+			book->clone( "", "mass", name, "parent_weightedMass" );
 			book->clone( "", "mass", name, "parent_sampledMass" );
 			book->clone( "", "mass", name, "parent_rawRecoMass" );
 			book->clone( "", "mass_vs_pT", name, "parent_rawRecoMass_vs_pT" );
+			book->clone( "", "mass_vs_pT", name, "parent_mass_vs_l1_pT" );
+			book->clone( "", "mass_vs_pT", name, "parent_mass_vs_l2_pT" );
+			book->clone( "", "mass_vs_pT", name, "parent_mass_vs_lpT" );
 			book->clone( "", "mass", name, "parent_recoMass" );
 			book->clone( "", "mass_vs_pT", name, "parent_recoMass_vs_pT" );
+			book->clone( "", "mass_vs_weight", name, "parent_mass_vs_weight" );
 
 			book->clone( "", "pT", name, "l1_pT" );
 			book->clone( "", "eta", name, "l1_eta" );
 			book->clone( "", "phi", name, "l1_phi" );
 			book->clone( "", "kfLepton1", name, "kfLepton1" );
+			book->clone( "", "pT_vs_weight", name, "l1_pT_vs_weight" );
 
 			book->clone( "", "pT", name, "l2_pT" );
 			book->clone( "", "eta", name, "l2_eta" );
 			book->clone( "", "phi", name, "l2_phi" );
 			book->clone( "", "kfLepton2", name, "kfLepton2" );
+			book->clone( "", "pT_vs_weight", name, "l2_pT_vs_weight" );
 		} // if makeQA
 	}
 
@@ -133,6 +142,16 @@ void CocktailMaker::initialize(){
 			namedPlcSamplers[ name ].writeDistributions();
 		}
 	} // makeTF1
+
+
+
+	if ( nullptr != funLib.get( "eff_pT" ) && 
+		 nullptr != funLib.get( "eff_pT" ) && 
+		 nullptr != funLib.get( "eff_pT" ) ){
+		efficiency = shared_ptr<EfficiencyWeightF1D>( new EfficiencyWeightF1D( funLib ) );
+		efficiency->writeDistributions();
+	}
+
 	
 }
 
@@ -194,7 +213,9 @@ void CocktailMaker::make(){
 void CocktailMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDecayer &_pd ){
 	TLorentzVector l1lv = _pd.getLepton1().lv;
 	TLorentzVector l2lv = _pd.getLepton2().lv;
-
+	TLorentzVector lllv = l1lv;
+	if ( l2lv.Pt() > l1lv.Pt() )
+		lllv = l2lv;
 
 	// TLorentzVector r1lv;
 	double ptRes = momResolution->Eval( l1lv.Pt() ) * 100.0;
@@ -216,32 +237,51 @@ void CocktailMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDe
 
 	rplv = rl1lv + rl2lv;
 
+	double weight = 1.0;
+	// Efficiency weighting if applicable
+	if ( nullptr != efficiency ){
+		wEff  = efficiency->weight( l1lv.Pt(), l1lv.Eta(), l1lv.Phi() );
+		wEff *= efficiency->weight( l2lv.Pt(), l2lv.Eta(), l2lv.Phi() );
+		weight = wEff;
+	}
 
 	if ( makeQA ){
+		TLorentzVector plv = l1lv + l2lv;
+		
 		book->get( "parent_pT_pass", _name )->Fill( _parent.Pt() );
 		book->get( "parent_pX_pass", _name )->Fill( _parent.Px() );
 		book->get( "parent_pY_pass", _name )->Fill( _parent.Py() );
 		book->get( "parent_eta", _name )->Fill( _parent.Eta() );
 		book->get( "parent_phi_pass", _name )->Fill( _parent.Phi() );
-		book->get( "parent_mass", _name )->Fill( _parent.M() );
+		book->get( "parent_mass", _name )->Fill( plv.M() );
+		book->get( "parent_mass_vs_l1_pT", _name )->Fill( plv.M(), l1lv.Pt() );
+		book->get( "parent_mass_vs_l2_pT", _name )->Fill( plv.M(), l2lv.Pt() );
+		book->get( "parent_mass_vs_lpT", _name )->Fill( plv.M(), lllv.Pt() );
+		book->get( "parent_weightedMass", _name )->Fill( plv.M(), weight );
+		
 		book->get( "parent_sampledMass", _name )->Fill( _pd.getSampledMass() );
-		book->get( "parent_rawRecoMass", _name )->Fill( (l1lv + l2lv).M() );
+		book->get( "parent_rawRecoMass", _name )->Fill( plv.M() );
+		book->get2D( "parent_rawRecoMass_vs_pT", _name )->Fill( plv.M(), plv.Pt() );
+		book->get2D( "parent_pT_vs_weight", _name )->Fill( plv.Pt(), weight );
+		book->get2D( "parent_mass_vs_weight", _name )->Fill( plv.M(), weight );
 
 		book->get( "l1_pT",  _name )->Fill( l1lv.Pt() );
+		book->get2D( "l1_pT_vs_weight",  _name )->Fill( l1lv.Pt(), weight );
 		book->get( "l1_eta", _name )->Fill( l1lv.Eta() );
 		book->get( "l1_phi", _name )->Fill( l1lv.Phi() );
 
 		book->get( "l2_pT",  _name )->Fill( l2lv.Pt() );
+		book->get2D( "l2_pT_vs_weight",  _name )->Fill( l2lv.Pt(), weight );
 		book->get( "l2_eta", _name )->Fill( l2lv.Eta() );
 		book->get( "l2_phi", _name )->Fill( l2lv.Phi() );
 
 
-		book->get( "mass", "" )->Fill( _pd.getSampledMass(), namedWeight[ _name ] );
+		book->get( "mass", "" )->Fill( _pd.getSampledMass(), weight );
 
-		book->get( "parent_recoMass", _name )->Fill( rplv.M(), namedWeight[ _name ] );
+		book->get( "parent_recoMass", _name )->Fill( rplv.M(), weight );
 
-		book->get( "recoMass", "" )->Fill( rplv.M(), namedWeight[ _name ] );
-		book->get2D( "recoMass_vs_pT", "" )->Fill( rplv.M(), rplv.Pt(), namedWeight[ _name ] );
+		book->get( "recoMass", "" )->Fill( rplv.M(), weight );
+		book->get2D( "recoMass_vs_pT", "" )->Fill( rplv.M(), rplv.Pt(), weight );
 	}
 
 }
