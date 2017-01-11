@@ -74,10 +74,12 @@ void CocktailMaker::initialize(){
 			book->clone( "", "mass_vs_weight", name, "parent_mass_vs_weight" );
 
 			book->clone( "", "pT", name, "l1_pT" );
+			book->clone( "", "R_vs_pT", name, "l1_R_vs_pT" );
 			book->clone( "", "eta", name, "l1_eta" );
 			book->clone( "", "phi", name, "l1_phi" );
 			book->clone( "", "kfLepton1", name, "kfLepton1" );
 			book->clone( "", "pT_vs_weight", name, "l1_pT_vs_weight" );
+
 
 			book->clone( "", "pT", name, "l2_pT" );
 			book->clone( "", "eta", name, "l2_eta" );
@@ -173,7 +175,7 @@ void CocktailMaker::make(){
 		tp.showProgress( i );
 		i = 1;
 		int t = 1;
-		while ( i < N && t < N * 1000000 ){
+		while ( i < N ){
 			t++;
 		
 			TLorentzVector lv = namedPlcSamplers[name].sample();
@@ -241,7 +243,7 @@ void CocktailMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDe
 	// Efficiency weighting if applicable
 	if ( nullptr != efficiency ){
 		wEff  = efficiency->weight( l1lv.Pt(), l1lv.Eta(), l1lv.Phi() );
-		wEff *= efficiency->weight( l2lv.Pt(), l2lv.Eta(), l2lv.Phi() );
+		wEff *= efficiency->weight( l2lv.Pt(), l2lv.Eta(), l2lv.Phi() + 0.2 );
 		weight = wEff;
 	}
 
@@ -268,12 +270,14 @@ void CocktailMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDe
 		book->get( "l1_pT",  _name )->Fill( l1lv.Pt() );
 		book->get2D( "l1_pT_vs_weight",  _name )->Fill( l1lv.Pt(), weight );
 		book->get( "l1_eta", _name )->Fill( l1lv.Eta() );
-		book->get( "l1_phi", _name )->Fill( l1lv.Phi() );
+		book->get( "l1_phi", _name )->Fill( l1lv.Phi(), weight );
 
 		book->get( "l2_pT",  _name )->Fill( l2lv.Pt() );
 		book->get2D( "l2_pT_vs_weight",  _name )->Fill( l2lv.Pt(), weight );
 		book->get( "l2_eta", _name )->Fill( l2lv.Eta() );
-		book->get( "l2_phi", _name )->Fill( l2lv.Phi() );
+		book->get( "l2_phi", _name )->Fill( l2lv.Phi(), weight );
+
+		book->get( "l1_R_vs_pT", _name ) ->Fill( l1lv.Pt(), l1lv.Pt() / (0.3 * 0.5) );
 
 
 		book->get( "mass", "" )->Fill( _pd.getSampledMass(), weight );
