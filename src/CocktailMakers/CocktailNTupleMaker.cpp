@@ -1,6 +1,10 @@
 #include "CocktailMakers/CocktailNTupleMaker.h"
 
 
+string CocktailNTupleMaker::ntupleSchema = "pPdgM:pPt:pEta:pPhi:pM:l1PtMc:l1PtRc:l1Eta:l1Phi:l1M:l2PtMc:l2PtRc:l2Eta:l2Phi:l2M:nPtMc:nEta:nPhi:nM:Mll:weight:pMcId:decay";
+string CocktailNTupleMaker::ntupleName = "llCocktail";
+
+
 void CocktailNTupleMaker::initialize(){
 	CocktailMaker::initialize();
 
@@ -8,8 +12,8 @@ void CocktailNTupleMaker::initialize(){
 	// file = new TFile( config.getXString( nodePath + ".output.TFile:url" ).c_str(), "RECREATE" );
 	// setup the ntuple
 	book->cd();
-	ntuple = new TNtuple( "llCocktail", "Dilepton cocktail tuple format",
-		"pPdgM:pPt:pEta:pPhi:pM:l1PtMc:l1PtRc:l1Eta:l1Phi:l1M:l2PtMc:l2PtRc:l2Eta:l2Phi:l2M:nPtMc:nEta:nPhi:nM:Mll:weight:pMcId:decay" );
+	ntuple = new TNtuple( CocktailNTupleMaker::ntupleName.c_str(), "Dilepton cocktail tuple format",
+		CocktailNTupleMaker::ntupleSchema.c_str() );
 	
 	// parent pdg Mass
 	// parent 4-vector

@@ -14,6 +14,9 @@ using namespace jdb;
 #include "CocktailMakers/CocktailMaker.h"
 #include "CocktailMakers/CocktailNTupleMaker.h"
 
+#include "CocktailMakers/Blender.h"
+#include "CocktailMakers/ConvertCCbar.h"
+
 
 // UnitTests
 #include "UnitTestFunctionLibrary.h"
@@ -37,6 +40,9 @@ int main( int argc, char* argv[] ) {
 	// CocktailMakers
 	TaskFactory::registerTaskRunner<CocktailMaker>( "CocktailMaker" );	
 	TaskFactory::registerTaskRunner<CocktailNTupleMaker>( "CocktailNTupleMaker" );	
+
+	TaskFactory::registerTaskRunner<Blender>( "Blender" );
+	TaskFactory::registerTaskRunner<ConvertCCbar>( "ConvertCCbar" );
 
 	TaskEngine engine( argc, argv );
 

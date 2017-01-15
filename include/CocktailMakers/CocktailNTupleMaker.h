@@ -19,6 +19,9 @@ public:
 
 	virtual void initialize();
 
+	static string ntupleSchema;
+	static string ntupleName;
+
 
 protected:
 	virtual void postDecay( string _name, TLorentzVector &_parent, ParticleDecayer &_pd );
