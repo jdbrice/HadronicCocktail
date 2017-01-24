@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 
+	<LIST>lists/eta_gammamumu.lis</LIST>
 
 	<Task name="Cocktail Blender" type="Blender" config="" nodePath="blend" />
 	<Logger color="true" globalLogLevel="info" />
@@ -10,17 +11,20 @@
 
 		<EventLoop progress="true" />
 
+		<Efficiency apply="true" />
+
 		<input>
-			<dst treeName="llCocktail" url="cocktail.lis" maxFiles="-1"/>
-			<ccbar url="./ccbar_cocktail.root" />
+			<dst treeName="llCocktail" url="{LIST}" maxFiles="-1" splitBy="10"/>
+			<!-- <ccbar url="./ccbar_cocktail.root" /> -->
 		</input>
 
 		<output>
-			<TFile url="FinalCocktail.root" />
+			<TFile url="/data/star2/jdb12/Run15PP200/Cocktail/components/eff_{blend.Efficiency:apply}_{jobIndex}.root" />
 		</output>
 
 		<!-- Cross sections in [mb] -->
 		<CrossSections ccbar="0.9" minbias="42" />
+		<!-- <MomentumSmearing>false</MomentumSmearing> -->
 
 		<histograms>
 			<Histo name="dNdM" title=";M_{#mu#mu};dN/dM [c^{2}/GeV]" bins_x="bins.mass"  />
@@ -42,50 +46,31 @@
 			<Histo name="pre_pRapidity" title="; y; dN/dy" bins_x="bins.rapidity" />
 		</histograms>
 
-		<ActiveChannels>
-			<ActiveChannel name="eta_mumu" pMcId="221" decay="2" dndy="1.7e-1" br="5.8e-6" />
-			<ActiveChannel name="eta_gammamumu" pMcId="221" decay="3" dndy="1.7e-1" br="3.1e-4" />
-
-			<ActiveChannel name="omega_mumu" pMcId="223" decay="2" dndy="1.33e-1" br="9.0e-5" />
-			<ActiveChannel name="omega_pi0mumu" pMcId="223" decay="3" dndy="1.33e-1" br="1.3e-4" />
-
-			<ActiveChannel name="rho_mumu" pMcId="113" decay="2" dndy="2.22e-1" br="4.55e-5" />
-			<ActiveChannel name="phi_mumu" pMcId="333" decay="2" dndy="1.73e-2" br="2.87e-4" />
-
-			<ActiveChannel name="etaprime_gammamumu_dalitz" pMcId="331" decay="3" dndy="4.07e-2" br="1.08e-4" />
-
-			<ActiveChannel name="ccbar_mumu" pMcId="4" decay="2" dndy="1" br="1" />
-
-
-		</ActiveChannels>
-
-		<!-- <Cuts>
-			<Range name="l1PtRc" min="1.0" max="1e5" />
-			<Range name="l2PtRc" min="1.0" max="1e5" />
-			
-			<Range name="l1Eta" min="-0.8" max="0.8" />
-			<Range name="l2Eta" min="-0.8" max="0.8" />
-
-			<Range name="pEta" min="-0.8" max="0.8" />
-			<Range name="pRapidity" min="-0.8" max="0.8" />
-		</Cuts> -->
-
 
 		<FunctionLibrary>
 			<Include url="config/FunctionLibrary.xml" />
 		</FunctionLibrary>
+		<HistogramLibrary>
+			<Include url="config/HistogramLibrary.xml" />
+		</HistogramLibrary>
+
 		<KinematicFilters>
-			<Include url="../STAR_KinematicAcceptance.xml" />
+			<!-- <Include url="../STAR_Dielectron.xml" /> -->
+			<Include url="STAR_KinematicAcceptance.xml" />
 		</KinematicFilters>
 
 	</blend>
 
 
 	<bins>
-		<mass width="0.010" min="0" max="5" />
+		<mass width="0.020" min="0" max="5" />
 		<pT width="0.010" min="0" max="5" />
 		<eta nBins="200" min="-1.0" max="1.0" />
 		<rapidity nBins="200" min="-1.0" max="1.0" />
 	</bins>
+
+	<ActiveChannels>
+		<ActiveChannel name="eta_gammamumu" pMcId="221" decay="3" dndy="1.7e-1" br="3.1e-4" />
+	</ActiveChannels>
 
 </config>

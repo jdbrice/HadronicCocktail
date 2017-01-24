@@ -7,9 +7,10 @@
 		<Range name="y" min="-0.8" max="0.8" />
 	</Parent>	
 	<Daughter>
+		<Range name="leadingPt" min="1.25" max="inf" />
 		<Range name="pT" min="1.0" max="inf"/>
 		<Range name="eta" min="-0.8" max="0.8" />
-		<Range name="phi" min="-4" max="4" />
-		<Range name="y" min="-0.8" max="0.8" />
+		<!-- <Range name="phi" min="-4" max="4" /> -->
+		<!-- <Range name="y" min="-0.8" max="0.8" /> -->
 	</Daughter>	
 </config>

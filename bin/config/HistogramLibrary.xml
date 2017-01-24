@@ -5,6 +5,7 @@
 	<!-- Attributes -->
 	<!-- name : name of particle that will use this distribution -->
 
-	<TH1 url="config/pT.root" hName="omega" name="omega_pT" />
+	<TH1 url="/data/star2/jdb12/Run15PP200/Params/efficiency_tables.root" hName="eff_5_PtEta" name="eff_mup" />
+	<TH1 url="/data/star2/jdb12/Run15PP200/Params/efficiency_tables.root" hName="eff_6_PtEta" name="eff_mum" />
 
 </KinematicDistributions>

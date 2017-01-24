@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<Include url="template.xml">
+		<LIST>lists/jpsi_mumu.lis</LIST>
+	</Include>
+	<ActiveChannels>
+		<ActiveChannel name="jpsi_mumu" pMcId="443" decay="2" dndy="2.44e-5" br="5.961e-2" />
+	</ActiveChannels>
+</config>

@@ -11,11 +11,11 @@
 		<EventLoop progress="true" />
 
 		<input>
-			<dst treeName="ccbar" url="ccbar.lis" maxFiles="100"/>
+			<dst treeName="ccbar" url="lists/ccbar_pythia.lis" splitBy="100"/>
 		</input>
 
 		<output>
-			<TFile url="ccbar_cocktail.root" />
+			<TFile url="/data/star2/jdb12/Run15PP200/Cocktail/ccbar/ccbar_cocktail_{jobIndex}.root" />
 		</output>
 
 		<histograms>

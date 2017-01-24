@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<Include url="template.xml">
+		<LIST>lists/omega_pi0mumu.lis</LIST>
+	</Include>
+	<ActiveChannels>
+		<ActiveChannel name="omega_pi0mumu" pMcId="223" decay="3" dndy="1.33e-1" br="1.3e-4" />
+	</ActiveChannels>
+</config>

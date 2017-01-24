@@ -22,17 +22,19 @@ public:
 	virtual void load( XmlConfig &_config, string _nodePath ){
 		ccol.init( _config, _nodePath );
 
-		ccol.setDefault( "pT", 0, 100000 );
-		ccol.setDefault( "eta", -10, 10 );
-		ccol.setDefault( "phi", -10, 10 );
-		ccol.setDefault( "y", -10, 10 );
+		ccol.setDefault( "leadingPt" , 0   , 100000 );
+		ccol.setDefault( "pT"        , 0   , 100000 );
+		ccol.setDefault( "eta"       , -10 , 10 );
+		ccol.setDefault( "phi"       , -10 , 10 );
+		ccol.setDefault( "y"         , -10 , 10 );
 
 		ccol.report();
 
-		pT  = ccol["pT"];
-		eta = ccol["eta"];
-		y   = ccol["y"];
-		phi = ccol["phi"];
+		leadingPt = ccol[ "leadingPt" ];
+		pT        = ccol["pT"];
+		eta       = ccol["eta"];
+		y         = ccol["y"];
+		phi       = ccol["phi"];
 	}
 
 	bool pass( TLorentzVector &lv, TH1D *_h = nullptr  ){
@@ -64,14 +66,33 @@ public:
 		return !pass( lv, _h );
 	}
 
+	bool pass( TLorentzVector &lv1, TLorentzVector &lv2 ){
+		if ( !pass( lv1 ) ) return false;
+		if ( !pass( lv2 ) ) return false;
+		if ( !leadingPt->inInclusiveRange( lv1.Pt() ) && !leadingPt->inInclusiveRange( lv2.Pt() ) )
+			return false;
+
+		return true;
+	}
+
+	bool fail( TLorentzVector &lv1, TLorentzVector &lv2 ){
+		return !pass( lv1, lv2 );
+	}
+
+	double deltaY() {
+		return y->max - y->min;
+	}
+
 protected:
 
 	CutCollection ccol;
 	// alias
+	shared_ptr<XmlRange> leadingPt;
 	shared_ptr<XmlRange> pT;
 	shared_ptr<XmlRange> eta;
 	shared_ptr<XmlRange> y;
 	shared_ptr<XmlRange> phi;
+
 	
 };
 

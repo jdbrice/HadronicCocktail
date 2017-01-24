@@ -14,7 +14,7 @@
 		<Logger color="false" globalLogLevel="info" />
 
 		<output>
-			<TFile url="MuonCocktail_{cm.ActiveChannels.ActiveChannel[0]:name}_{jobIndex}.root" />
+			<TFile url="/data/star1/jdb12/dilepton/Cocktail/MuonCocktail_{cm.ActiveChannels.ActiveChannel[0]:name}_{jobIndex}.root" />
 		</output>
 
 		<Make QA="true" TF1="true"/>

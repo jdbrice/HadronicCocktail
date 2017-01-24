@@ -199,7 +199,7 @@ void CocktailMaker::make(){
 			TLorentzVector l1lv = namedPlcDecayers[ name ].getLepton1().lv;
 			TLorentzVector l2lv = namedPlcDecayers[ name ].getLepton2().lv;
 
-			if ( daughterFilter.fail( l1lv, hkfLepton1 ) || daughterFilter.fail(l2lv, hkfLepton2) ) continue;
+			// if ( daughterFilter.fail( l1lv, hkfLepton1 ) || daughterFilter.fail(l2lv, hkfLepton2) ) continue;
 
 			tp.showProgress( i );
 

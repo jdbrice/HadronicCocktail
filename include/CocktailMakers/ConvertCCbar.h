@@ -93,14 +93,14 @@ protected:
 		data[3]  = pairPhi;
 		data[4]  = pairMass;
 
-		data[5]  = pParentId;
-		data[6]  = pPt;
+		data[5]  = pPt;
+		data[6]  = pParentId;
 		data[7]  = pEta;
 		data[8]  = pPhi;
 		data[9]  = pMass;
 
-		data[10] = nParentId;
-		data[11] = nPt;
+		data[10] = nPt;
+		data[11] = nParentId;
 		data[12] = nEta;
 		data[13] = nPhi;
 		data[14] = nMass;
