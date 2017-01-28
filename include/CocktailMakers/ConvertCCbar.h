@@ -81,8 +81,8 @@ protected:
 		float weight = 1.0;
 		weight *= (br1 * br2);
 		DEBUGC( "weight = " << br1 << "*" << br2 << " = " << weight );
-		weight *= (1.0 / Ncc);
-		weight *= (sig_cc / sig_mb);
+		// weight *= (1.0 / Ncc);
+		// weight *= (sig_cc / sig_mb);
 
 		
 

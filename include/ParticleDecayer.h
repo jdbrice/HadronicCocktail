@@ -445,7 +445,7 @@ protected:
 			// we need to set the parameters from the particleInfo
 			// massDistribution->SetParameter( "pT", 0.1 );	// must be set before each sampling
 			massDistribution->SetParameter( "ml", lepton1().mass );
-			massDistribution->SetParameter( "gamma0", this->parent.mass );
+			massDistribution->SetParameter( "gamma0", this->parent.width );
 			massDistribution->SetParameter( "gamma2", this->parent.gamma2 );
 
 			// pT is X and m is Y

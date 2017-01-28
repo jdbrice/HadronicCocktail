@@ -6,12 +6,16 @@
 	<Task name="Cocktail Blender" type="Blender" config="" nodePath="blend" />
 	<Logger color="true" globalLogLevel="info" />
 
+	<N>100</N>
+	<EFF>false</EFF>
+	<PSMEAR>true</PSMEAR>
+
 	<blend>
 		<Logger color="true" globalLogLevel="info" />
 
 		<EventLoop progress="true" />
 
-		<Efficiency apply="false" />
+		<Efficiency apply="{EFF}" />
 		
 		<input>
 			<dst treeName="llCocktail" url="{LIST}" maxFiles="-1" splitBy="2"/>
@@ -19,19 +23,19 @@
 		</input>
 
 		<output>
-			<TFile url="/data/star2/jdb12/Run15PP200/Cocktail/components/{ActiveChannels.ActiveChannel[0]:name}_{jobIndex}.root" />
+			<TFile url="/data/star2/jdb12/Run15PP200/Cocktail/components/STAR_ee_{ActiveChannels.ActiveChannel[0]:name}_{jobIndex}.root" />
 		</output>
 
 		<!-- Cross sections in [mb] -->
 		<CrossSections ccbar="0.9" minbias="42" />
-		<!-- <MomentumSmearing>false</MomentumSmearing> -->
+		<MomentumSmearing>{PSMEAR}</MomentumSmearing>
 
 		<histograms>
 			<Histo name="dNdM" title=";M_{#mu#mu};dN/dM [c^{2}/GeV]" bins_x="bins.mass"  />
 			<Histo name="dNdM_pT" title=";M_{#mu#mu};pT [GeV/c]" bins_x="bins.mass" bins_y="bins.pT" />
 			<Histo name="mc_dNdM_pT" title=";M_{#mu#mu};pT [GeV/c]" bins_x="bins.mass" bins_y="bins.pT" />
 
-			<Histo name="pT" title=";pT [GeV/c];dN/dpT [c/GeV]" bins_x="bins.pT" />
+			<!-- <Histo name="pT" title=";pT [GeV/c];dN/dpT [c/GeV]" bins_x="bins.pT" /> -->
 			<Histo name="pRapidity" title="; y; dN/dy" bins_x="bins.rapidity" />
 			
 			<Histo name="l1PtRc" title=";l1 p_{T}^{Rc} [GeV/c];dN/dpT [c/GeV]" bins_x="bins.pT" />
@@ -74,8 +78,9 @@
 		</HistogramLibrary>
 
 		<KinematicFilters>
-			<!-- <Include url="../STAR_Dielectron.xml" /> -->
+			<Include url="../STAR_Dielectron.xml" />
 			<!-- <Include url="../STAR_MTD.xml" /> -->
+			<!-- <Include url="../FullAccMidRap.xml" /> -->
 		</KinematicFilters>
 
 	</blend>

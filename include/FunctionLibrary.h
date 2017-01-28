@@ -47,7 +47,7 @@ public:
 			f1sByName[ name ] = xf1.getTF1();
 		}
 
-		INFO( classname(), "Compiled: " << f1s[f1s.size()-1]->GetFormula()->GetExpFormula() );
+		// INFO( classname(), "Compiled: " << f1s[f1s.size()-1]->GetFormula()->GetExpFormula() );
 	}
 
 	bool loadBuiltin( XmlConfig &_cfg, string _nodePath ){

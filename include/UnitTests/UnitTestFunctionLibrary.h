@@ -34,7 +34,7 @@ public:
 		TF1 * fBW2 = new TF1( "fBW2", "2.0 * [0] / ( pow( x - [1], 2.0 ) + pow( [0] / 2.0, 2.0 ) )" );
 		TF1 * ftest = new TF1( "test", "fBW2 * x" );
 
-		cout << ftest->GetFormula()->GetExpFormula() << endl;;
+		// cout << ftest->GetFormula()->GetExpFormula() << endl;;
 		// TF1 * ftest2 = new TF1( "ftest2", "" );
 		// 
 		// 

@@ -45,11 +45,11 @@ public:
 		}
 
 		// do this first so that TLorentzVector::Eta does not complaine when pT==0
-		if ( !pT->inInclusiveRange( lv.Pt() ) )
+		if ( !pT->inInclusiveRange( lv.Pt() ) || lv.Pt() != lv.Pt() )
 			return false;
 
 		if ( nullptr != _h ){ _h->Fill( 1 ); }
-
+		
 		if ( !eta->inInclusiveRange( lv.Eta() ) ) return false;
 		if ( nullptr != _h ){ _h->Fill( 2 ); }
 

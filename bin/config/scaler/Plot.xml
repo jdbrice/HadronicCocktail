@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+	<Task name="skimmer" type="VegaXmlPlotter" config="" nodePath="" />
+	<Logger color="true" globalLogLevel="info" />
+
+	<Data name="dd" url="/data/star2/jdb12/Run15PP200/Cocktail/Scaled_STAR_MTD.root" />
+
+	<Margins left="0.10" right="0.01" top="0.1" bottom="0.15" />
+	<TLatex x="0.65" y="0.86" text="Run15 pp at #sqrt{{s}} = 200 GeV" size="0.03"/>
+
+
+	<Transform>
+		<Add save_as="sum" data="" name="Scaled_eta_mumu, Scaled_eta_gammamumu, Scaled_omega_mumu, Scaled_omega_pi0mumu, Scaled_rho_mumu, Scaled_phi_mumu, Scaled_etaprime_gammamumu, Scaled_ccbar_mumu"/>
+	</Transform>
+
+	<Plot>
+
+		
+
+		<Histo name="Scaled_ccbar_mumu" data="dd" style="smooth" >
+			
+			<style yr="1e-11, 0.5e-6" xr="0, 1.5" linecolor="#0B99BC"/>
+		</Histo>
+
+		<Histo name="Scaled_eta_mumu" data="dd" style="smooth" >
+			<style draw="same hist c" linecolor="#83BF17"/>
+		</Histo>
+
+		
+		<Histo name="Scaled_omega_mumu" data="dd" style="smooth" >
+			<style draw="same hist c" linecolor="#0000FF" />
+		</Histo>
+		<Histo name="Scaled_omega_pi0mumu" data="dd" style="smooth" >
+			<style draw="same hist c" linecolor="#59C8DF" />
+		</Histo>
+		<Histo name="Scaled_rho_mumu" data="dd" style="smooth" >
+			<style draw="same hist c" linecolor="#737495" />
+		</Histo>
+		<Histo name="Scaled_phi_mumu" data="dd" style="smooth" >
+			<style draw="same hist c" linecolor="#D14D28" />
+		</Histo>
+		<Histo name="Scaled_eta_gammamumu" data="dd" style="smooth" >
+			<style draw="same hist c" linecolor="#FF0000" />
+		</Histo>
+		<Histo name="Scaled_etaprime_gammamumu" data="dd" style="smooth" >
+			<style draw="same hist c" linecolor="#73503C"/>
+		</Histo>
+		
+		<Histo name="sum" data="dd" style="smooth" >
+			<style draw="same hist c" linecolor="black" />
+		</Histo>
+
+
+		<Export url="Cocktail.pdf" />
+	</Plot>
+
+
+	<smooth draw="hist c" linewidth="2" linecolor="black" optstat="0" logy="0"/>
+
+
+
+
+</config>
+

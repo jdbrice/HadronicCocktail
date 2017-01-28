@@ -155,13 +155,43 @@ double PhaseSpaceVacuumRho( double *x, double *p ){
 }
 
 
+
+double GammaRho(double mass){
+	const double Gamma0 = 0.1491;
+	const double Massrho		= 0.77549;
+const double Masspi0 		= 0.1349766;
+	if(mass>2.*Masspi0) 
+		return Gamma0*Massrho/mass*TMath::Power((mass*mass-4.*Masspi0*Masspi0)/(Massrho*Massrho-4.*Masspi0*Masspi0),1.5);
+	else
+		return 0;
+}
+
+//-------------------------------------------------------
+double GammaE(double mass, double MassLepton)
+{
+	const double Gamma0 = 0.1491;
+	const double Massrho		= 0.77549;
+	const double Masspi0 		= 0.1349766;
+	if(mass>2.*MassLepton) 
+		return Gamma0*Massrho/mass*TMath::Power((mass*mass-4.*MassLepton*MassLepton)/(Massrho*Massrho-4.*MassLepton*MassLepton),0.5);
+	else
+		return 0;
+}
+
 double MassVacuumRho( double Mll, double pT, double ml, double gamma0, double gamma2, double T ){
+
+	const double Massrho   = 0.77549;
+	double m = Mll;
+	double Gamma2 = 4.55e-5;
+	return m*Massrho*GammaE(m, ml)/(TMath::Power((Massrho*Massrho-m*m),2.)+Massrho*Massrho*(GammaRho(m)+GammaE(m, ml)*Gamma2)*(GammaRho(m)+GammaE(m, ml)*Gamma2))*PhaseSpaceVacuumRho(m,pT,T)*1e2;
+
 
 	const double mass_vacuum_rho   = 0.77549; 		// GeV/c^2
 	const double m2 = pow( mass_vacuum_rho, 2.0 );
-	const double mass_charged_pion = 0.13957018;	// GeV/c^2
+	const double mass_pion0 = 0.1349766;	// GeV/c^2
+
 	double gammall   = Gamma( Mll, ml, gamma0, mass_vacuum_rho );
-	double gammapipi = Gamma( Mll, mass_charged_pion, gamma0, mass_vacuum_rho );
+	double gammapipi = Gamma( Mll, mass_pion0, gamma0, mass_vacuum_rho );
 
 	double a = Mll * mass_vacuum_rho * gammall;
 	double b = pow( m2 - Mll*Mll, 2.0 );
@@ -169,7 +199,7 @@ double MassVacuumRho( double Mll, double pT, double ml, double gamma0, double ga
 
 	double PS = PhaseSpaceVacuumRho( Mll, pT, T );
 	
-	return (a / ( b + c ) ) * PS;
+	return (a / ( b + c ) ) * PS * 1e2;
 }
 
 double MassVacuumRho( double *x, double *par ){

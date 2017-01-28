@@ -11,6 +11,7 @@ using namespace jdb;
 
 
 // CocktailMakers
+#include "CocktailMakers/Scaler.h"
 #include "CocktailMakers/CocktailMaker.h"
 #include "CocktailMakers/CocktailNTupleMaker.h"
 
@@ -43,6 +44,8 @@ int main( int argc, char* argv[] ) {
 
 	TaskFactory::registerTaskRunner<Blender>( "Blender" );
 	TaskFactory::registerTaskRunner<ConvertCCbar>( "ConvertCCbar" );
+
+	TaskFactory::registerTaskRunner<Scaler>( "Scaler" );
 
 	TaskEngine engine( argc, argv );
 

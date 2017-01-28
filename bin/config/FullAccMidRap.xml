@@ -4,7 +4,7 @@
 		<Range name="y" min="-0.5" max="0.5" />
 	</Parent>	
 	<Daughter>
-		<Range name="leadingPt" min="1.0" max="inf" />
-		<Range name="pT" min="1.0" max="inf"/>
+		<Range name="leadingPt" min="0.0" max="inf" />
+		<Range name="pT" min="0.0" max="inf"/>
 	</Daughter>	
 </config>

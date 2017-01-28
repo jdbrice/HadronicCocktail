@@ -63,6 +63,7 @@ public:
 
 		// my own, non-tree variabls
 		tvars[ "pRapidity" ]     = &pRapidity;
+		tvars[ "rMll" ]          = &rMll;
 
 
 		// load the active channel info
@@ -87,6 +88,7 @@ public:
 			rp << "\tActiveChannel[" <<n<<"("<<key<<")] dN/dy=" << dndy[n] << ", BR=" << br[n] << ", scale=" << scale[ n ] << endl;
 		}
 		INFOC( "\n" << rp.str() );
+		INFOC( "======================ACTIVE CHANNELS=====================" );
 
 		ccol.init( config, nodePath + ".Cuts" );
 		INFOC( "===================CUTS===================");
@@ -122,10 +124,13 @@ public:
 		eff_mup = histoLib.get( "eff_mup" );
 		eff_mum = histoLib.get( "eff_mum" );
 
+
+
 		applyEfficiency = config.getBool( nodePath + ".Efficiency:apply", false );
 		INFOC( "=================Efficiency==================" );
 		INFOC( "" << bts( applyEfficiency) );
 		INFOC( "=================Efficiency==================" );
+
 
 	}
 
@@ -137,6 +142,8 @@ protected:
 		for ( auto kv : scale ){
 			for ( string hn : { "mc_dNdM_pT", "dNdM_pT", "dNdM", "pRapidity", "pEta", "pre_pRapidity", "pre_pEta", "l1PtRc", "l2PtRc", "pre_l1PtRc", "pre_l2PtRc", "l1Eta", "l2Eta", "pre_l1Eta", "pre_l2Eta" } ){
 				book->clone( hn, hn + "_" + kv.first );
+
+				book->get( hn )->SetDirectory( nullptr );
 			}
 			
 		}
@@ -152,16 +159,24 @@ protected:
 
 		string name = nameForPlcDecay[ key ];
 
+		// only needed for X->mumu
+		if ( pM < l1M + l2M ) return;
+		TLorentzVector lv, lv1, lv2;
+		lv.SetPtEtaPhiM( pPt, pEta, pPhi, Mll );
+		if ( parentFilter.fail( lv ) ) return;	// must not have momentum cuts!
+		
 		// count N for taking care of possible different num of each component
 		Nobs[ name ] ++;
 
-		TLorentzVector lv, lv1, lv2;
-		lv.SetPtEtaPhiM( pPt, pEta, pPhi, Mll );
+		
+		
 		pRapidity = lv.Rapidity();
 
+		
 		lv1.SetPtEtaPhiM( l1PtMc, l1Eta, l1Phi, l1M );
 		lv2.SetPtEtaPhiM( l2PtMc, l2Eta, l2Phi, l2M );
 
+		
 		book->fill( "pre_l1PtRc_" + name, l1PtRc );
 		book->fill( "pre_l2PtRc_" + name, l2PtRc );
 		book->fill( "pre_l1Eta_" + name, l1Eta );
@@ -171,12 +186,9 @@ protected:
 
 
 
-		// for ( auto kv : tvars ) {
-		// 	if ( ccol.has( kv.first ) ){
-		// 		if ( !ccol[ kv.first ]->inInclusiveRange( (*kv.second) ) ) return;
-		// 	}
-		// }
+		
 
+		
 		// redo mom smearing
 		TLorentzVector rlv1, rlv2;
 		double ptRes = momResolution->Eval( l1PtMc );// * 100.0;
@@ -196,13 +208,25 @@ protected:
 			l2Eta,
 			l2Phi,
 			l2M );
+		
 
 		TLorentzVector rlv = rlv1 + rlv2;
+		rMll = tlv.M();
 		// redo mom smearing
 		
+
+		// Cuts, specifically for pair pT
+		for ( auto kv : tvars ) {
+			if ( ccol.has( kv.first ) ){
+				if ( !ccol[ kv.first ]->inInclusiveRange( (*kv.second) ) ) return;
+			}
+		}
+
+
 		// Apply kinematic filter
 		if ( daughterFilter.fail( rlv1, rlv2 ) ) return;
 
+		
 		// if ( rlv.Pt() < 2.5 ) return;
 
 		double fullWeight = 1.0;
@@ -237,34 +261,35 @@ protected:
 	virtual void postEventLoop(){
 		TreeAnalyzer::postEventLoop();
 
-		double Nmb = config.getDouble( nodePath + "nMinBias", 1 );
+		// double Nmb = config.getDouble( nodePath + "nMinBias", 1 );
 
-		// scale each component and add to total
-		for ( auto kv : scale ){
-			string hn = "dNdM_" + kv.first;
+		// // scale each component and add to total
+		// for ( auto kv : scale ){
+		// 	string hn = "dNdM_" + kv.first;
 
-			if ( "ccbar_mumu" == kv.first ){
+		// 	if ( "ccbar_mumu" == kv.first ){
 				
-				// we want the histograms without weight
+		// 		// we want the histograms without weight
 
 
-				book->get( "dNdM" )->Add( book->get( hn ) );
-				continue;
-			}
+		// 		book->get( "dNdM" )->Add( book->get( hn ) );
+		// 		continue;
+		// 	}
 
-			int _Nobs = Nobs[ kv.first ];
-			if ( 0 == _Nobs ){
-				ERRORC( "0 " << kv.first << " observed !!!" );
-				continue;
-			}
+		// 	int _Nobs = Nobs[ kv.first ];
+		// 	if ( 0 == _Nobs ){
+		// 		ERRORC( "0 " << kv.first << " observed !!!" );
+		// 		continue;
+		// 	}
 
-			// dN/dy * BR * (1.0 / N)
-			double sf = kv.second * (1.0 / _Nobs);
-			INFOC( "Scale for " << quote(kv.first) << " : " << kv.second << "*" << "1.0/" << _Nobs << " = " << (kv.second * 1.0 / _Nobs) );
-			book->get( hn )->Scale( sf );
+		// 	// dN/dy * BR * (1.0 / N)
+		// 	double sf = kv.second * (1.0 / _Nobs) * ( 1.0 / ((float)NJobs) ) ;
+		// 	INFOC( "Scale for " << quote(kv.first) << " : " << kv.second << "*" << "1.0/" << _Nobs << " = " << (kv.second * 1.0 / _Nobs) );
+		// 	book->get( hn )->Scale( sf );
+		// 	book->get( "dNdM_pT_" + kv.first )->Scale( sf );
 
-			book->get( "dNdM" )->Add( book->get( hn ) );
-		}
+		// 	book->get( "dNdM" )->Add( book->get( hn ) );
+		// }
 	}
 
 	double efficiencyWeight( TLorentzVector &_lv, int _charge ){
@@ -320,6 +345,7 @@ protected:
 
 	// My own dynamically calculated vars
 	Float_t pRapidity;
+	Float_t rMll;
 
 
 	map<string, Float_t*> tvars;

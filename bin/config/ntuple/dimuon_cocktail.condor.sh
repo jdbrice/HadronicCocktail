@@ -5,9 +5,14 @@
 Executable = /home/jdb12/work/HadronicCocktail/bin/prod.app
 Initialdir = /home/jdb12/work/HadronicCocktail/bin/
 
+# X -> mumu
+Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/X_mumu.xml --jobIndex=$(Process) --SEED=30435624 --N=500000 --maxJobIndex=800
+Queue 800
+
+
 # rho -> mumu
-# Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/rho_mumu.xml --jobIndex=$(Process) --SEED=7345387 --N=500000 --maxJobIndex=200
-# Queue 200
+# Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/rho_mumu.xml --jobIndex=$(Process) --SEED=234587102 --N=500000 --maxJobIndex=500
+# Queue 500
 
 # # Phi -> mumu
 # Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/phi_mumu.xml --jobIndex=$(Process) --SEED=9836311 --N=500000
@@ -22,8 +27,8 @@ Initialdir = /home/jdb12/work/HadronicCocktail/bin/
 # Queue 200
 
 # J/Psi -> mumu
-Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/jpsi_mumu.xml --jobIndex=$(Process) --SEED=75132502 --N=500000 --maxJobIndex=200
-Queue 200
+# Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/jpsi_mumu.xml --jobIndex=$(Process) --SEED=75132502 --N=500000 --maxJobIndex=200
+# Queue 200
 
 # # omega -> pi0mumu
 # Arguments = /home/jdb12/work/HadronicCocktail/bin/config/ntuple/omega_pi0mumu.xml --jobIndex=$(Process) --SEED=4806094 --N=500000
