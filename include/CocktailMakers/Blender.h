@@ -26,6 +26,8 @@ public:
 	virtual void initialize(){
 		TreeAnalyzer::initialize();
 
+		gErrorIgnoreLevel = kError;
+
 		//add the ccbar tree file if present
 		if ( config.exists( nodePath + ".input.ccbar:url" ) ){
 			INFOC( "Adding CCbar from : " << config.getString( nodePath + ".input.ccbar:url" ) );
@@ -64,6 +66,7 @@ public:
 		// my own, non-tree variabls
 		tvars[ "pRapidity" ]     = &pRapidity;
 		tvars[ "rMll" ]          = &rMll;
+		tvars[ "tPt" ]           = &rPt;
 
 
 		// load the active channel info
@@ -123,12 +126,17 @@ public:
 		histoLib.loadAll( config, nodePath+".HistogramLibrary" );
 		eff_mup = histoLib.get( "eff_mup" );
 		eff_mum = histoLib.get( "eff_mum" );
+		eff_pid = histoLib.get( "eff_pid" );
 
 
 
 		applyEfficiency = config.getBool( nodePath + ".Efficiency:apply", false );
 		INFOC( "=================Efficiency==================" );
 		INFOC( "" << bts( applyEfficiency) );
+		INFOC( "mu+  : " << eff_mup );
+		INFOC( "mu-  : " << eff_mum );
+		INFOC( "pid  : " << eff_pid );
+		INFOC( "trig : " );
 		INFOC( "=================Efficiency==================" );
 
 
@@ -139,124 +147,247 @@ protected:
 	virtual void preEventLoop(){
 		TreeAnalyzer::preEventLoop();
 
-		for ( auto kv : scale ){
-			for ( string hn : { "mc_dNdM_pT", "dNdM_pT", "dNdM", "pRapidity", "pEta", "pre_pRapidity", "pre_pEta", "l1PtRc", "l2PtRc", "pre_l1PtRc", "pre_l2PtRc", "l1Eta", "l2Eta", "pre_l1Eta", "pre_l2Eta" } ){
-				book->clone( hn, hn + "_" + kv.first );
 
-				book->get( hn )->SetDirectory( nullptr );
+		vector<string> states = { "FullAcc_", "RapCut_", "AccCut_" };
+		vector<string> histos = { "dNdM", "dNdM_pT", "PtRc", "PtMc", "Eta", "rapidity", "Eta_vs_l2Eta" };
+		vector<string> ls     = { "l1", "l2", "w" };
+
+		for ( string s : states ){
+			for ( string hn : histos ){
+				book->clone( hn, s + hn );
+				for ( string l : ls ){
+					if ( "w" != l && ("dNdM" == hn || "dNdM_pT" == hn) ) continue;
+					// if ( "w" == l && "dNdM" != hn && "dNdM_pT" == hn ) continue;
+					book->clone( hn, s + l + hn );
+				}
 			}
-			
 		}
+
+		
+		// for ( auto kv : scale ){
+		// 	for ( string hn : { "FullAcc_dNdM_pT", "mc_dNdM_pT", "dNdM_pT", "dNdM", "pRapidity", "pEta", "pre_pRapidity", "pre_pEta", "l1PtRc", "l2PtRc", "l1PtMc", "l2PtMc", "pre_l1PtRc", "pre_l2PtRc", "pre_l1PtMc", "pre_l2PtMc", "l1Eta", "l2Eta", "pre_l1Eta", "pre_l2Eta" } ){
+		// 		book->clone( hn, hn + "_" + kv.first );
+
+		// 		book->get( hn )->SetDirectory( nullptr );
+		// 	}
+		// }
 	}
+
+
+
+	virtual void fillState( 	string _s, 
+								TLorentzVector &_lvMc, TLorentzVector &_lvRc, 
+								TLorentzVector &_lvMc1, TLorentzVector &_lvRc1, 
+								TLorentzVector &_lvMc2, TLorentzVector &_lvRc2,
+								double _w = 1.0 ){
+
+		book->fill( _s + "dNdM", _lvRc.M() );
+		book->fill( _s + "dNdM_pT", _lvRc.M(), _lvRc.Pt() );
+		book->fill( _s + "wdNdM", _lvRc.M(), _w );
+		book->fill( _s + "wdNdM_pT", _lvRc.M(), _lvRc.Pt(), _w );
+		book->fill( _s + "PtRc", _lvRc.Pt() );
+		book->fill( _s + "PtMc", _lvMc.Pt() );
+		book->fill( _s + "l1PtRc", _lvRc1.Pt() );
+		book->fill( _s + "l2PtRc", _lvRc2.Pt() );
+		book->fill( _s + "l1PtMc", _lvMc1.Pt() );
+		book->fill( _s + "l2PtMc", _lvMc2.Pt() );
+
+		book->fill( _s + "Eta", _lvRc.Eta() );
+		book->fill( _s + "Eta_vs_l2Eta", _lvRc.Eta(), _lvRc2.Eta() );
+		book->fill( _s + "l1Eta", _lvRc1.Eta() );
+		book->fill( _s + "l1Eta_vs_l2Eta", _lvRc1.Eta(), _lvRc2.Eta() );
+		book->fill( _s + "l2Eta", _lvRc2.Eta() );
+		book->fill( _s + "rapidity", _lvRc.Rapidity() );
+		book->fill( _s + "l1rapidity", _lvRc1.Rapidity() );
+		book->fill( _s + "l2rapidity", _lvRc2.Rapidity() );
+
+	}
+
 
 	virtual void analyzeEvent(){
 		if( nullptr == momShape || nullptr == momResolution ) return;
-		
+
 		string key = ts((int)pMcId) +"_" + ts((int)decay);
-		
-
 		if ( 0 == nameForPlcDecay.count( key ) ) return;
-
 		string name = nameForPlcDecay[ key ];
+
+		double w = 1.0;
+		if ( "ccbar_mumu" == name )
+			w = weight;		// keep the pre calculated BR scaling in ccbar, otherwise ignore
 
 		// only needed for X->mumu
 		if ( pM < l1M + l2M ) return;
-		TLorentzVector lv, lv1, lv2;
-		lv.SetPtEtaPhiM( pPt, pEta, pPhi, Mll );
-		if ( parentFilter.fail( lv ) ) return;	// must not have momentum cuts!
 		
-		// count N for taking care of possible different num of each component
-		Nobs[ name ] ++;
+		TLorentzVector mclv, mclv1, mclv2;
+		mclv.SetPtEtaPhiM( pPt, pEta, pPhi, pM );
+		mclv1.SetPtEtaPhiM( l1PtMc, l1Eta, l1Phi, l1M );
+		mclv2.SetPtEtaPhiM( l2PtMc, l2Eta, l2Phi, l2M );
 
-		
-		
-		pRapidity = lv.Rapidity();
-
-		
-		lv1.SetPtEtaPhiM( l1PtMc, l1Eta, l1Phi, l1M );
-		lv2.SetPtEtaPhiM( l2PtMc, l2Eta, l2Phi, l2M );
-
-		
-		book->fill( "pre_l1PtRc_" + name, l1PtRc );
-		book->fill( "pre_l2PtRc_" + name, l2PtRc );
-		book->fill( "pre_l1Eta_" + name, l1Eta );
-		book->fill( "pre_l2Eta_" + name, l2Eta );
-		book->fill( "pre_pEta_" + name, pEta );
-		book->fill( "pre_pRapidity_" + name, pRapidity );
-
-
-
-		
-
-		
-		// redo mom smearing
-		TLorentzVector rlv1, rlv2;
-		double ptRes = momResolution->Eval( l1PtMc );// * 100.0;
+		// =============================== MOMENTUM SMEARING ===============================
+		TLorentzVector rclv, rclv1, rclv2;
+		double ptRes = momResolution->Eval( mclv1.Pt() );// * 100.0;
 		double rndCrystalBall = grnd.Gaus( 0, 1.0 );//momShape->GetRandom();
 		if ( false == momSmearing ) rndCrystalBall = 0.0;
-		rlv1.SetPtEtaPhiM( 
-			l1PtMc * (1 + rndCrystalBall * ptRes  ) ,
-			l1Eta,
-			l1Phi,
-			l1M );
 		
-		ptRes = momResolution->Eval( l2PtMc );// * 100.0;
+		rclv1.SetPtEtaPhiM(  mclv1.Pt() * (1 + rndCrystalBall * ptRes  ) , mclv1.Eta(), mclv1.Phi(), mclv1.M() );
+		
+		ptRes = momResolution->Eval( mclv2.Pt() );// * 100.0;
 		rndCrystalBall = grnd.Gaus( 0, 1.0 );//momShape->GetRandom();
 		if ( false == momSmearing ) rndCrystalBall = 0.0;
-		rlv2.SetPtEtaPhiM( 
-			l2PtMc * (1 + rndCrystalBall * ptRes  ) ,
-			l2Eta,
-			l2Phi,
-			l2M );
+
+		rclv2.SetPtEtaPhiM( mclv2.Pt() * (1 + rndCrystalBall * ptRes  ) , mclv2.Eta(), mclv2.Phi(), mclv2.M() );
+		rclv = rclv1 + rclv2;
+		// =============================== MOMENTUM SMEARING ===============================
 		
 
-		TLorentzVector rlv = rlv1 + rlv2;
-		rMll = tlv.M();
-		// redo mom smearing
-		
 
-		// Cuts, specifically for pair pT
-		for ( auto kv : tvars ) {
-			if ( ccol.has( kv.first ) ){
-				if ( !ccol[ kv.first ]->inInclusiveRange( (*kv.second) ) ) return;
-			}
-		}
-
-
-		// Apply kinematic filter
-		if ( daughterFilter.fail( rlv1, rlv2 ) ) return;
-
-		
-		// if ( rlv.Pt() < 2.5 ) return;
-
-		double fullWeight = 1.0;
-		if ( "ccbar_mumu" == name )
-			fullWeight = weight;
-
+		// <=============================== EFFICIENCY ===============================>
 		if ( applyEfficiency ){
-			// INFOC( "l1PtRc = " << l1PtRc );
-			// INFOC( "l2PtRc = " << l2PtRc );
 			int c = 1;
 			if ( grnd.Rndm( ) > 0.5  ) c = -1;
 
-			double ew1 = efficiencyWeight( lv1, c );
-			double ew2 = efficiencyWeight( lv2, -1 * c );
-			fullWeight *= (ew1*ew2);
+			double ew1 = efficiencyWeight( mclv1, c );
+			double ew2 = efficiencyWeight( mclv2, -1 * c );
+
+			double pidw1 = pidEfficiencyWeight( mclv1 );
+			double pidw2 = pidEfficiencyWeight( mclv2 );
+			w *= (ew1*ew2) * ( pidw1*pidw2 );
 		}
+		// </=============================== EFFICIENCY ===============================>
+
+		fillState( "FullAcc_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
+
+		if ( !ccol.has( "rapidity" ) || ccol["rapidity"]->inInclusiveRange( rclv.Rapidity() ) ){
+			fillState( "RapCut_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
+
+			// check the kinematic filters
+			if ( daughterFilter.pass( rclv1, rclv2 ) && parentFilter.pass( rclv ) ){
+				fillState( "AccCut_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
+
+			} // PASS kinematic filters
+		} // PASS rapidity cut on parent
+	} // analyzeEvent
+
+
+
+
+
+
+
+
+	// virtual void analyzeEvent(){
+	// 	if( nullptr == momShape || nullptr == momResolution ) return;
+		
+		
+
+	// 	double fullWeight = 1.0;
+	// 	if ( "ccbar_mumu" == name )
+	// 		fullWeight = weight;
+
+
+	// 	// only needed for X->mumu
+	// 	if ( pM < l1M + l2M ) return;
+	// 	TLorentzVector lv, lv1, lv2;
+	// 	lv.SetPtEtaPhiM( pPt, pEta, pPhi, Mll );
+	// 	pRapidity = lv.Rapidity();
+
+	// 	book->fill( "pre_pEta_" + name, pEta );
+	// 	book->fill( "pre_pRapidity_" + name, pRapidity );
+	// 	book->fill( "pre_l1PtRc_" + name, l1PtMc );
+	// 	book->fill( "pre_l2PtRc_" + name, l2PtMc );
+	// 	book->fill( "pre_l1PtMc_" + name, l1PtMc );
+	// 	book->fill( "pre_l2PtMc_" + name, l2PtMc );
+	// 	book->fill( "pre_l1Eta_" + name, l1Eta );
+	// 	book->fill( "pre_l2Eta_" + name, l2Eta );
+	// 	book->fill( "FullAcc_dNdM_pT_" + name, pM, pPt, fullWeight );
+
+	// 	if ( parentFilter.fail( lv ) ) return;	// must not have momentum cuts!
+		
+	// 	// count N for taking care of possible different num of each component
+	// 	Nobs[ name ] ++;
 
 		
-		book->fill( "dNdM_" + name, rlv.M(), fullWeight );
-		book->fill( "dNdM_pT_" + name, rlv.M(), rlv.Pt(), fullWeight );
-		book->fill( "mc_dNdM_pT_" + name, pM, lv.Pt(), fullWeight );
 		
-		book->fill( "l1PtRc_" + name, l1PtRc );
-		book->fill( "l2PtRc_" + name, l2PtRc );
-		book->fill( "l1Eta_" + name, l1Eta );
-		book->fill( "l2Eta_" + name, l2Eta );
-		book->fill( "pEta_" + name, pEta );
-		book->fill( "pRapidity_" + name, pRapidity );
+		
 
-	}
+		
+	// 	lv1.SetPtEtaPhiM( l1PtMc, l1Eta, l1Phi, l1M );
+	// 	lv2.SetPtEtaPhiM( l2PtMc, l2Eta, l2Phi, l2M );
+
+		
+
+		
+
+
+	// 	// redo mom smearing
+	// 	TLorentzVector rlv1, rlv2;
+	// 	double ptRes = momResolution->Eval( l1PtMc );// * 100.0;
+	// 	double rndCrystalBall = grnd.Gaus( 0, 1.0 );//momShape->GetRandom();
+	// 	if ( false == momSmearing ) rndCrystalBall = 0.0;
+	// 	rlv1.SetPtEtaPhiM( 
+	// 		l1PtMc * (1 + rndCrystalBall * ptRes  ) ,
+	// 		l1Eta,
+	// 		l1Phi,
+	// 		l1M );
+		
+	// 	ptRes = momResolution->Eval( l2PtMc );// * 100.0;
+	// 	rndCrystalBall = grnd.Gaus( 0, 1.0 );//momShape->GetRandom();
+	// 	if ( false == momSmearing ) rndCrystalBall = 0.0;
+	// 	rlv2.SetPtEtaPhiM( 
+	// 		l2PtMc * (1 + rndCrystalBall * ptRes  ) ,
+	// 		l2Eta,
+	// 		l2Phi,
+	// 		l2M );
+		
+
+	// 	TLorentzVector rlv = rlv1 + rlv2;
+	// 	rMll = rlv.M();
+	// 	rPt  = rlv.Pt();
+	// 	// redo mom smearing
+		
+
+	// 	// Cuts, specifically for pair pT
+	// 	for ( auto kv : tvars ) {
+	// 		if ( ccol.has( kv.first ) ){
+	// 			if ( !ccol[ kv.first ]->inInclusiveRange( (*kv.second) ) ) return;
+	// 		}
+	// 	}
+
+
+	// 	// Apply kinematic filter
+	// 	if ( daughterFilter.fail( rlv1, rlv2 ) ) return;
+
+		
+	// 	// if ( rlv.Pt() < 2.5 ) return;
+
+		
+
+	// 	if ( applyEfficiency ){
+	// 		// INFOC( "l1PtRc = " << l1PtRc );
+	// 		// INFOC( "l2PtRc = " << l2PtRc );
+	// 		int c = 1;
+	// 		if ( grnd.Rndm( ) > 0.5  ) c = -1;
+
+	// 		double ew1 = efficiencyWeight( lv1, c );
+	// 		double ew2 = efficiencyWeight( lv2, -1 * c );
+	// 		fullWeight *= (ew1*ew2);
+	// 	}
+
+		
+	// 	book->fill( "dNdM_" + name, rlv.M(), fullWeight );
+	// 	book->fill( "dNdM_pT_" + name, rlv.M(), rlv.Pt(), fullWeight );
+	// 	book->fill( "mc_dNdM_pT_" + name, pM, lv.Pt(), fullWeight );
+		
+	// 	book->fill( "l1PtRc_" + name, rlv1.Pt() );
+	// 	book->fill( "l2PtRc_" + name, rlv2.Pt() );
+	// 	book->fill( "l1PtMc_" + name, l1PtMc );
+	// 	book->fill( "l2PtMc_" + name, l2PtMc );
+	// 	book->fill( "l1Eta_" + name, l1Eta );
+	// 	book->fill( "l2Eta_" + name, l2Eta );
+	// 	book->fill( "pEta_" + name, pEta );
+	// 	book->fill( "pRapidity_" + name, pRapidity );
+
+	// }
 
 	virtual void postEventLoop(){
 		TreeAnalyzer::postEventLoop();
@@ -318,6 +449,19 @@ protected:
 	}
 
 
+	double pidEfficiencyWeight( TLorentzVector &_lv ){
+		if ( nullptr == eff_pid ) {
+			ERRORC( "INVALID PID EFFICIENCY TABLE!" );
+			return 1.0;
+		}
+		// 1d vs. pT
+		TAxis *x = eff_pid->GetXaxis();
+		int bx = x->FindBin(_lv.Pt());
+		double w = eff_pid->GetBinContent( bx );
+		return w;
+	}
+
+
 	// data members of the tntuple
 	Float_t pPdgM;
 	Float_t pPt;
@@ -346,6 +490,7 @@ protected:
 	// My own dynamically calculated vars
 	Float_t pRapidity;
 	Float_t rMll;
+	Float_t rPt;
 
 
 	map<string, Float_t*> tvars;
@@ -373,6 +518,7 @@ protected:
 	HistogramLibrary histoLib;
 	shared_ptr<TH1> eff_mup = nullptr;
 	shared_ptr<TH1> eff_mum = nullptr;
+	shared_ptr<TH1> eff_pid = nullptr;
 
 
 };

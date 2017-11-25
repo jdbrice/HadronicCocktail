@@ -5,19 +5,20 @@
 	<Logger color="true" globalLogLevel="info" />
 
 
-	<CHANNEL>omega_mumu</CHANNEL>
+	<CHANNEL>ccbar_mumu</CHANNEL>
 	<WD>/data/star2/jdb12/Run15PP200/Cocktail/</WD>
 	<REBIN>1</REBIN>
+	<STATE>STAR_uu2p1</STATE>
 
 	<scaler>
 
 		<input>
-			<TFile url="{WD}FullAcc_{CHANNEL}.root" name="FullAcc" />
-			<TFile url="{WD}STAR_ee_{CHANNEL}.root" name="AccCut" />
+			<!-- <TFile url="{WD}FullAcc_{CHANNEL}.root" name="FullAcc" /> -->
+			<TFile url="{WD}{STATE}_{CHANNEL}.root" name="AccCut" />
 		</input>
 
 		<output>
-			<TFile url="{WD}Scaled_ee_{CHANNEL}.root" />
+			<TFile url="{WD}Scaled_{STATE}_{CHANNEL}.root" />
 		</output>
 
 
@@ -29,6 +30,7 @@
 			<ActiveChannel name="omega_pi0mumu" dndy="1.33e-1" redndy=".21" br="1.3e-4" ebr="0.4e-4" />
 			<ActiveChannel name="rho_mumu" dndy="2.22e-1" redndy=".15" br="4.55e-5" ebr="0.28e-5" />
 			<ActiveChannel name="phi_mumu" dndy="1.73e-2" redndy=".20" br="2.87e-4" ebr="0.19e-4" />
+			<ActiveChannel name="jpsi_mumu" dndy="2.44e-5" redndy=".20" br="5.961e-2" ebr="3.3e-4" />
 			<ActiveChannel name="etaprime_gammamumu" dndy="4.07e-2" redndy=".29" br="1.08e-4" ebr="0.27e-4" />
 			<ActiveChannel name="ccbar_mumu" dndy="1.8976e-02" redndy="0.01" br="1.0" ebr="0.0" />
 		</ActiveChannels>

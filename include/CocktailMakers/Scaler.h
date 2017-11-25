@@ -49,9 +49,19 @@ public:
 
 		book->cd();
 
-		TH1 *hFullAcc = get<TH1>( "dNdM_" + channel, "FullAcc" );
-		TH1 *hAccCut  = get<TH1>( "dNdM_" + channel, "AccCut" );
-		
+
+		TH1 *hFullAcc = nullptr;
+		TH1 *hAccCut = nullptr;
+		if ( "ccbar_mumu" == channel ){
+			hFullAcc = get<TH1>( "FullAcc_dNdM", "AccCut" );//(get<TH2>( "FullAcc_dNdM_pT_" + channel, "AccCut" ))->ProjectionX( ("FullAcc_dNdM_" + channel).c_str() );
+			hAccCut  = get<TH1>( "AccCut_wdNdM", "AccCut" );
+			hAccCut->Scale(10);
+		}
+		else {
+			hFullAcc = get<TH1>( "RapCut_dNdM", "AccCut" );
+			hAccCut  = get<TH1>( "AccCut_dNdM", "AccCut" );
+		}
+
 		if ( nullptr == hFullAcc || nullptr == hAccCut ){
 			ERRORC( "NULL hitograms" );
 			return;
@@ -71,9 +81,9 @@ public:
 		double BR_high   = BR + uncBR;
 
 
-		double scale_factor = (1.0 / NFA) * dNdy * BR;
-		double scale_factor_low = (1.0 / NFA) * dNdy_low * BR_low;
-		double scale_factor_high = (1.0 / NFA) * dNdy_high * BR_high;
+		double scale_factor = (1.0 / IFA) * dNdy * BR;
+		double scale_factor_low = (1.0 / IFA) * dNdy_low * BR_low;
+		double scale_factor_high = (1.0 / IFA) * dNdy_high * BR_high;
 
 		book->addClone( "FullAcc_" + channel, hFullAcc );
 		book->addClone( "AccCut_" + channel, hAccCut );
@@ -92,6 +102,12 @@ public:
 		hScaled->Scale( scale_factor, "width" ); // scale by bin-width also
 		hScaledLow->Scale( scale_factor_low, "width" );
 		hScaledHigh->Scale( scale_factor_high, "width" );
+
+		for ( int i = 1; i <= hScaled->GetNbinsX(); i++ ){
+			double nomv = hScaled->GetBinContent( i );
+			double hiv  = hScaledHigh->GetBinContent( i );
+			hScaled->SetBinError( i, hiv - nomv );
+		}
 
 
 

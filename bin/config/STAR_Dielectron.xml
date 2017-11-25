@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<Parent>
-		<!-- <Range name="pT" min="0.0" max="inf"/> -->
-		<Range name="eta" min="-1.0" max="1.0" />
-		<!-- <Range name="phi" min="-4" max="4" /> -->
 		<Range name="y" min="-1.0" max="1.0" />
 	</Parent>	
 	<Daughter>
 		<Range name="leadingPt" min="0.0" max="inf" />
 		<Range name="pT" min="0.2" max="inf"/>
 		<Range name="eta" min="-1.0" max="1.0" />
-		<Range name="phi" min="-4" max="4" />
-		<Range name="y" min="-1.0" max="1.0" />
 	</Daughter>	
 </config>

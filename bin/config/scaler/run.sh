@@ -9,3 +9,4 @@
 /home/jdb12/work/HadronicCocktail/bin/prod.app /home/jdb12/work/HadronicCocktail/bin/config/scaler/template.xml --CHANNEL=phi_mumu
 /home/jdb12/work/HadronicCocktail/bin/prod.app /home/jdb12/work/HadronicCocktail/bin/config/scaler/template.xml --CHANNEL=etaprime_gammamumu
 /home/jdb12/work/HadronicCocktail/bin/prod.app /home/jdb12/work/HadronicCocktail/bin/config/scaler/template.xml --CHANNEL=ccbar_mumu
+/home/jdb12/work/HadronicCocktail/bin/prod.app /home/jdb12/work/HadronicCocktail/bin/config/scaler/template.xml --CHANNEL=jpsi_mumu

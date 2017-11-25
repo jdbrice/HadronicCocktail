@@ -14,7 +14,7 @@
 		<Efficiency apply="false" />
 
 		<input>
-			<dst treeName="llCocktail" url="{LIST}" maxFiles="-1" splitBy="5"/>
+			<dst treeName="llCocktail" url="{LIST}" maxFiles="-1" splitBy="1"/>
 			<!-- <ccbar url="./ccbar_cocktail.root" /> -->
 		</input>
 
@@ -29,23 +29,10 @@
 		<histograms>
 			<Histo name="dNdM" title=";M_{#mu#mu};dN/dM [c^{2}/GeV]" bins_x="bins.mass"  />
 			<Histo name="dNdM_pT" title=";M_{#mu#mu};pT [GeV/c]" bins_x="bins.mass" bins_y="bins.pT" />
-			<Histo name="mc_dNdM_pT" title=";M_{#mu#mu};pT [GeV/c]" bins_x="bins.mass" bins_y="bins.pT" />
-			
-			<Histo name="pT" title=";pT [GeV/c];dN/dpT [c/GeV]" bins_x="bins.pT" />
-			<Histo name="pRapidity" title="; y; dN/dy" bins_x="bins.rapidity" />
-			
-			<Histo name="l1PtRc" title=";l1 p_{T}^{Rc} [GeV/c];dN/dpT [c/GeV]" bins_x="bins.pT" />
-			<Histo name="l2PtRc" title=";l2 p_{T}^{Rc} [GeV/c];dN/dpT [c/GeV]" bins_x="bins.pT" />
-			<Histo name="l1Eta" title=";l1 #eta [GeV/c];dN/d#eta [c/GeV]" bins_x="bins.eta" />
-			<Histo name="l2Eta" title=";l2 #eta [GeV/c];dN/d#eta [c/GeV]" bins_x="bins.eta" />
-			<Histo name="pEta" title=";#eta [GeV/c];dN/d#eta [c/GeV]" bins_x="bins.eta" />
-
-			<Histo name="pre_l1PtRc" title=";l1 p_{T}^{Rc} [GeV/c];dN/dpT [c/GeV]" bins_x="bins.pT" />
-			<Histo name="pre_l2PtRc" title=";l2 p_{T}^{Rc} [GeV/c];dN/dpT [c/GeV]" bins_x="bins.pT" />
-			<Histo name="pre_l1Eta" title=";l1 #eta [GeV/c];dN/d#eta [c/GeV]" bins_x="bins.eta" />
-			<Histo name="pre_l2Eta" title=";l2 #eta [GeV/c];dN/d#eta [c/GeV]" bins_x="bins.eta" />
-			<Histo name="pre_pEta" title=";#eta [GeV/c];dN/d#eta [c/GeV]" bins_x="bins.eta" />
-			<Histo name="pre_pRapidity" title="; y; dN/dy" bins_x="bins.rapidity" />
+			<Histo name="PtRc" title=";p_{T}^{Rc} [GeV/c];dN/dpT [c/GeV]" bins_x="bins.pT" />
+			<Histo name="PtMc" title=";p_{T}^{Mc} [GeV/c];dN/dpT [c/GeV]" bins_x="bins.pT" />
+			<Histo name="Eta" title=";#eta ;dN/d#eta [c/GeV]" bins_x="bins.eta" />
+			<Histo name="rapidity" title=";y ;dN/dy [c/GeV]" bins_x="bins.rapidity" />
 		</histograms>
 
 
@@ -60,11 +47,15 @@
 			<Include url="STAR_MTD.xml" />
 		</KinematicFilters>
 
+		<Cuts>
+			<Range name="rapidity" min="-0.5" max="0.5" />
+		</Cuts>
+
 	</blend>
 
 
 	<bins>
-		<mass width="0.020" min="0" max="10" />
+		<mass width="0.05" min="0" max="10" />
 		<pT width="0.010" min="0" max="10" />
 		<eta nBins="200" min="-1.0" max="1.0" />
 		<rapidity nBins="200" min="-1.0" max="1.0" />
