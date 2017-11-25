@@ -22,6 +22,8 @@ using namespace std;
 #include "EfficiencyWeight.h"
 
 
+// ROOT
+#include "TNamed.h"
 
 class CocktailMaker : public TaskRunner, public IHistoBookMaker
 {
@@ -72,6 +74,13 @@ protected:
 
 	virtual void make();
 	virtual void postDecay( string _name, TLorentzVector &_parent, ParticleDecayer &_pd );
+
+	virtual void postMake() {
+		TaskRunner::postMake();
+
+		TNamed n( "config", config.toXml() );
+		n.Write();
+	}
 
 	virtual void overrideConfig() {
 		DEBUG( classname(), "" );

@@ -211,7 +211,7 @@ protected:
 		
 
 		TLorentzVector rlv = rlv1 + rlv2;
-		rMll = tlv.M();
+		rMll = rlv.M();
 		// redo mom smearing
 		
 
