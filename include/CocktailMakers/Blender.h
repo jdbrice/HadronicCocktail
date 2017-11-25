@@ -308,7 +308,7 @@ protected:
 
 		
 		
-		
+		// redo mom smearing
 
 		
 	// 	lv1.SetPtEtaPhiM( l1PtMc, l1Eta, l1Phi, l1M );
