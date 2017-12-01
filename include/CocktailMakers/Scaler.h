@@ -29,7 +29,15 @@ public:
 	virtual void make(){
 
 		channel = config["CHANNEL"];
-		string sp = config.q( nodePath + ".ActiveChannels.ActiveChannel{name==" + channel + "}" );
+		vector<string> paths = config.childrenOf( nodePath + ".ActiveChannels", "ActiveChannel" );
+
+		string sp = "";//config.q( nodePath + ".ActiveChannels.ActiveChannel{name==" + channel + "}" );
+		for ( string p : paths ){
+			if (channel == config.getString( p + ":name" ))
+				sp = p;
+		}
+
+		INFOC( "Node: " << sp );
 		if ( config.exists( sp ) && config.exists( sp + ":br" ) && config.exists( sp + ":dndy" ) ){
 			BR      = config.getDouble( sp + ":br", 1.0 );
 			uncBR   = config.getDouble( sp + ":ebr", 1.0 );
@@ -55,7 +63,8 @@ public:
 		if ( "ccbar_mumu" == channel ){
 			hFullAcc = get<TH1>( "FullAcc_dNdM", "AccCut" );//(get<TH2>( "FullAcc_dNdM_pT_" + channel, "AccCut" ))->ProjectionX( ("FullAcc_dNdM_" + channel).c_str() );
 			hAccCut  = get<TH1>( "AccCut_wdNdM", "AccCut" );
-			hAccCut->Scale(10);
+			// hFullAcc->Scale( 1.0 / 0.7 );
+			BR = hFullAcc->GetBinWidth(1);
 		}
 		else {
 			hFullAcc = get<TH1>( "RapCut_dNdM", "AccCut" );
@@ -80,7 +89,7 @@ public:
 		double BR_low    = BR - uncBR;
 		double BR_high   = BR + uncBR;
 
-
+		INFOC( "IFA=" << IFA << ", dNdy=" << dNdy << ", BR=" << BR );
 		double scale_factor = (1.0 / IFA) * dNdy * BR;
 		double scale_factor_low = (1.0 / IFA) * dNdy_low * BR_low;
 		double scale_factor_high = (1.0 / IFA) * dNdy_high * BR_high;

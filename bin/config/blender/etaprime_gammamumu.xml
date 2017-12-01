@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<Include url="template.xml">
-		<LIST>lists/etaprime_gammamumu.lis</LIST>
+		<LIST>lists/comp_etaprime_gammamumu.lis</LIST>
 	</Include>
 	<ActiveChannels>
 		<ActiveChannel name="etaprime_gammamumu" pMcId="331" decay="3" dndy="4.07e-2" br="1.08e-4" />

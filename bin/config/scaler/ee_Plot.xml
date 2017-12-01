@@ -4,17 +4,17 @@
 	<Task name="skimmer" type="VegaXmlPlotter" config="" nodePath="" />
 	<Logger color="true" globalLogLevel="info" />
 
-	<Data name="dd" url="/macstar/star2/jdb12/pp200/Cocktail/MTD_Scaled_STAR.root" />
+	<Data name="dd" url="/macstar/star2/jdb12/pp200/Cocktail/ee/Dielectron_Scaled_STAR_mumu_as_ee_Acceptance.root" />
 
 	<Margins left="0.10" right="0.01" top="0.1" bottom="0.15" />
 	<TLatex x="0.65" y="0.86" text="Run15 pp at #sqrt{{s}} = 200 GeV" size="0.03"/>
 
-	<TLatex x="0.65" y="0.81" text="|Y_{#mu#mu}| < 0.5 & p_{T}^{#mu#mu} > 0.0 (GeV/c)" size="0.03"/>
-	<TLatex x="0.65" y="0.75" text="|#eta_{#mu}| < 0.5 & p_{T}^{#mu} > 1.0 (GeV/c)" size="0.03"/>
+	<TLatex x="0.65" y="0.81" text="|Y_{ee}| < 1" size="0.03"/>
+	<TLatex x="0.65" y="0.75" text="|#eta_{e}| < 1 & p_{T}^{e} > 0.2" size="0.03"/>
 
 
 	<Transform>
-		<Add save_as="sum" data="" name="Scaled_eta_mumu, Scaled_eta_gammamumu, Scaled_omega_mumu, Scaled_omega_pi0mumu, Scaled_rho_mumu, Scaled_phi_mumu, Scaled_etaprime_gammamumu, Scaled_ccbar_mumu, Scaled_jpsi_mumu"/>
+		<Add save_as="sum" data="" name="Scaled_omega_mumu, Scaled_rho_mumu, Scaled_phi_mumu, Scaled_ccbar_mumu, Scaled_jpsi_mumu" />
 	</Transform>
 
 	<Plot>
@@ -25,13 +25,13 @@
 
 
 		<Histo name="Scaled_ccbar_mumu" data="dd" style="smooth" title="" xtitle="M_{ee} (GeV/c^{2})" ytitle="dN/dM (GeV/c^{2})^{-1}" >
-			<style yr="5e-10, 1e-5" xr="0, 4.0" linecolor="#0B99BC"/>
+			<style yr="1e-8, 1e-3" xr="0, 4.0" linecolor="#0B99BC"/>
 		</Histo>
 
 
-		<Histo name="Scaled_eta_mumu" data="dd" style="smooth" >
+		<!-- <Histo name="Scaled_eta_mumu" data="dd" style="smooth" >
 			<style draw="same hist c" linecolor="#83BF17" max="1e-3" min="1e-10" xr="0, 3.6"/>
-		</Histo>
+		</Histo> -->
 
 		<Histo name="Scaled_jpsi_mumu" data="dd" style="smooth" >
 			<style draw="same hist c" linecolor="#D14D28" />
@@ -41,28 +41,28 @@
 		<Histo name="Scaled_omega_mumu" data="dd" style="smooth" >
 			<style draw="same hist c" linecolor="#0000FF" />
 		</Histo>
-		<Histo name="Scaled_omega_pi0mumu" data="dd" style="smooth" >
+		<!-- <Histo name="Scaled_omega_pi0mumu" data="dd" style="smooth" >
 			<style draw="same hist c" linecolor="#59C8DF" />
-		</Histo>
+		</Histo> -->
 		<Histo name="Scaled_rho_mumu" data="dd" style="smooth" >
 			<style draw="same hist c" linecolor="#737495" />
 		</Histo>
 		<Histo name="Scaled_phi_mumu" data="dd" style="smooth" >
 			<style draw="same hist c" linecolor="#D14D28" />
 		</Histo>
-		<Histo name="Scaled_eta_gammamumu" data="dd" style="smooth" >
+		<!-- <Histo name="Scaled_eta_gammamumu" data="dd" style="smooth" >
 			<style draw="same hist c" linecolor="#FF0000" />
 		</Histo>
 		<Histo name="Scaled_etaprime_gammamumu" data="dd" style="smooth" >
 			<style draw="same hist c" linecolor="#73503C"/>
-		</Histo>
+		</Histo> -->
 		
 		<Histo name="sum" data="dd" style="smooth"  >
 			<style draw="same hist c" linecolor="black" />
 		</Histo>
 
 
-		<Export url="Cocktail.pdf" />
+		<Export url="eeCocktail.pdf" />
 	</Plot>
 
 

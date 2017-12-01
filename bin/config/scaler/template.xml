@@ -6,9 +6,9 @@
 
 
 	<CHANNEL>ccbar_mumu</CHANNEL>
-	<WD>/data/star2/jdb12/Run15PP200/Cocktail/</WD>
+	<WD>/macstar/star2/jdb12/pp200/Cocktail/</WD>
 	<REBIN>1</REBIN>
-	<STATE>STAR_uu2p1</STATE>
+	<STATE>STAR</STATE>
 
 	<scaler>
 
@@ -32,7 +32,7 @@
 			<ActiveChannel name="phi_mumu" dndy="1.73e-2" redndy=".20" br="2.87e-4" ebr="0.19e-4" />
 			<ActiveChannel name="jpsi_mumu" dndy="2.44e-5" redndy=".20" br="5.961e-2" ebr="3.3e-4" />
 			<ActiveChannel name="etaprime_gammamumu" dndy="4.07e-2" redndy=".29" br="1.08e-4" ebr="0.27e-4" />
-			<ActiveChannel name="ccbar_mumu" dndy="1.8976e-02" redndy="0.01" br="1.0" ebr="0.0" />
+			<ActiveChannel name="ccbar_mumu" dndy="0.92" olddndy="1.8976e-02" redndy="0.01" br="1.0" ebr="0.0" />
 		</ActiveChannels>
 
 	</scaler>

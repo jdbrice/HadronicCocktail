@@ -10,7 +10,7 @@ void CocktailMaker::initialize(){
 	
 	int jobIndex = config.getInt( "jobIndex" );
 	if ( "all" != config.getString( "jobIndex" ) && jobIndex >= 0  ){
-		seed = seed * ( jobIndex + 1 );
+		seed = seed + ( jobIndex + 1 );
 	}
 	INFO( classname(), "Initialize RANDOM SEED = " << seed );
 	gRandom->SetSeed( seed );

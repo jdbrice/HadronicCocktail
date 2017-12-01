@@ -10,6 +10,8 @@
 	<EFF>false</EFF>
 	<PSMEAR>true</PSMEAR>
 
+	<STATE>STAR_mumu</STATE>
+
 	<blend>
 		<Logger color="true" globalLogLevel="info" />
 
@@ -22,7 +24,7 @@
 		</input>
 
 		<output>
-			<TFile url="/data/star2/jdb12/Run15PP200/Cocktail/components/STAR_uu2p1_{ActiveChannels.ActiveChannel[0]:name}_{jobIndex}.root" />
+			<TFile url="/macstar/star2/jdb12/pp200/Cocktail/{STATE}_{ActiveChannels.ActiveChannel[0]:name}_{jobIndex}.root" />
 		</output>
 
 		<MomentumSmearing>{PSMEAR}</MomentumSmearing>
@@ -41,6 +43,7 @@
 
 			<Histo name="dNdM" title=";M_{#mu#mu};dN/dM [c^{2}/GeV]" bins_x="bins.mass"  />
 			<Histo name="dNdM_pT" title=";M_{#mu#mu};pT [GeV/c]" bins_x="bins.mass" bins_y="bins.pT" />
+			<Histo name="dNdM_pT_eff" title=";M_{#mu#mu};pT [GeV/c]" bins_x="bins.mass" bins_y="bins.pT" />
 			<Histo name="PtRc" title=";p_{T}^{Rc} [GeV/c];dN/dpT [c/GeV]" bins_x="bins.pT" />
 			<Histo name="PtMc" title=";p_{T}^{Mc} [GeV/c];dN/dpT [c/GeV]" bins_x="bins.pT" />
 			<Histo name="Eta" title=";#eta ;dN/d#eta [c/GeV]" bins_x="bins.eta" />
@@ -60,9 +63,9 @@
 		<KinematicFilters>
 			<!-- <Include url="../STAR_Dielectron.xml" /> -->
 			<Include url="../STAR_MTD.xml" />
-			<!-- <Include url="../FullAccMidRap.xml" /> -->
 		</KinematicFilters>
 
+		<!-- Cuts on the parent before looking at the full kinematic filter, just for QA purposes -->
 		<Cuts>
 			<Range name="rapidity" min="-0.5" max="0.5" />
 		</Cuts>
@@ -71,8 +74,8 @@
 
 
 	<bins>
-		<mass width="0.020" min="0" max="10" />
-		<pT width="0.010" min="0" max="10" />
+		<mass width="0.005" min="0" max="10" />
+		<pT width="0.005" min="0" max="10" />
 		<eta nBins="1000" min="-5.0" max="5.0" />
 		<rapidity nBins="1000" min="-5.0" max="5.0" />
 	</bins>
