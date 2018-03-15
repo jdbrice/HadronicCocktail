@@ -12,6 +12,8 @@ protected:
 	double uncBR   = 0.0;
 	double uncdNdy = 0.0;
 
+	float minPt = 0.0;
+
 public:
 	virtual const char* classname() const { return "Scaler"; }
 	Scaler() {}
@@ -21,9 +23,11 @@ public:
 	virtual void initialize(){
 		HistoAnalyzer::initialize();
 		INFOC( "" );
+
+		minPt = config.getFloat( nodePath + ".minPt" );
+		INFOC( "Min Pair Pt = " << minPt );
 	}
 
-		
 
 
 	virtual void make(){
@@ -58,17 +62,17 @@ public:
 		book->cd();
 
 
-		TH1 *hFullAcc = nullptr;
-		TH1 *hAccCut = nullptr;
+		TH2 *hFullAcc = nullptr;
+		TH2 *hAccCut = nullptr;
 		if ( "ccbar_mumu" == channel ){
-			hFullAcc = get<TH1>( "FullAcc_dNdM", "AccCut" );//(get<TH2>( "FullAcc_dNdM_pT_" + channel, "AccCut" ))->ProjectionX( ("FullAcc_dNdM_" + channel).c_str() );
-			hAccCut  = get<TH1>( "AccCut_wdNdM", "AccCut" );
+			hFullAcc = get<TH2>( "FullAcc_dNdM_pT", "AccCut" );//(get<TH2>( "FullAcc_dNdM_pT_" + channel, "AccCut" ))->ProjectionX( ("FullAcc_dNdM_" + channel).c_str() );
+			hAccCut  = get<TH2>( "AccCut_wdNdM_pT", "AccCut" );
 			// hFullAcc->Scale( 1.0 / 0.7 );
-			BR = hFullAcc->GetBinWidth(1);
+			// BR = hFullAcc->GetXaxis()->GetBinWidth(1);
 		}
 		else {
-			hFullAcc = get<TH1>( "RapCut_dNdM", "AccCut" );
-			hAccCut  = get<TH1>( "AccCut_dNdM", "AccCut" );
+			hFullAcc = get<TH2>( "RapCut_dNdM_pT", "AccCut" );
+			hAccCut  = get<TH2>( "AccCut_dNdM_pT", "AccCut" );
 		}
 
 		if ( nullptr == hFullAcc || nullptr == hAccCut ){
@@ -94,11 +98,11 @@ public:
 		double scale_factor_low = (1.0 / IFA) * dNdy_low * BR_low;
 		double scale_factor_high = (1.0 / IFA) * dNdy_high * BR_high;
 
-		book->addClone( "FullAcc_" + channel, hFullAcc );
-		book->addClone( "AccCut_" + channel, hAccCut );
-		TH1* hScaled = book->addClone( "Scaled_" + channel, hAccCut );
-		TH1* hScaledLow = book->addClone( "ScaledLow_" + channel, hAccCut );
-		TH1* hScaledHigh = book->addClone( "ScaledHigh_" + channel, hAccCut );
+		book->addClone( "FullAcc_pT_" + channel, hFullAcc );
+		book->addClone( "AccCut_pT_" + channel, hAccCut );
+		TH2* hScaled = (TH2*)book->addClone( "Scaled_pT_" + channel, hAccCut );
+		TH2* hScaledLow = (TH2*)book->addClone( "ScaledLow_pT_" + channel, hAccCut );
+		TH2* hScaledHigh = (TH2*)book->addClone( "ScaledHigh_pT_" + channel, hAccCut );
 
 
 		int rebin = config.getInt( "REBIN" );
@@ -108,15 +112,24 @@ public:
 		}
 
 		INFOC( "Full Scale Factor = " << scale_factor );
-		hScaled->Scale( scale_factor, "width" ); // scale by bin-width also
-		hScaledLow->Scale( scale_factor_low, "width" );
-		hScaledHigh->Scale( scale_factor_high, "width" );
+		hScaled->Scale( scale_factor ); // scale by bin-width also
+		hScaledLow->Scale( scale_factor_low );
+		hScaledHigh->Scale( scale_factor_high );
 
-		for ( int i = 1; i <= hScaled->GetNbinsX(); i++ ){
-			double nomv = hScaled->GetBinContent( i );
-			double hiv  = hScaledHigh->GetBinContent( i );
-			hScaled->SetBinError( i, hiv - nomv );
+		// for ( int i = 1; i <= hScaled->GetNbinsX(); i++ ){
+		// 	double nomv = hScaled->GetBinContent( i );
+		// 	double hiv  = hScaledHigh->GetBinContent( i );
+		// 	hScaled->SetBinError( i, hiv - nomv );
+		// }
+
+		int b1 = hScaled->GetYaxis()->FindBin(minPt);
+		TH1 * h1Scaled = hScaled->ProjectionX( ("Scaled_" + channel).c_str(), b1, -1 );
+		if ( "ccbar_mumu" == channel ){
+			h1Scaled->Scale( hFullAcc->GetXaxis()->GetBinWidth(1), "width" );
+		} else {
+			h1Scaled->Scale( 1.0, "width" );
 		}
+		
 
 
 
