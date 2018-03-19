@@ -54,8 +54,8 @@ public:
 
 
 		book->cd();
-		ntuple = new TNtuple( CocktailNTupleMaker::ntupleName.c_str(), "Dilepton cocktail tuple format",
-		CocktailNTupleMaker::ntupleSchema.c_str() );
+		ntuple = new TNtuple( DecayNTupleMaker::ntupleName.c_str(), "Dilepton cocktail tuple format",
+		DecayNTupleMaker::ntupleSchema.c_str() );
 
 	}
 protected:

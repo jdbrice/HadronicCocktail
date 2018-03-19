@@ -10,13 +10,14 @@ using namespace jdb;
 #include <exception>
 
 
-// CocktailMakers
-#include "CocktailMakers/Scaler.h"
-#include "CocktailMakers/CocktailMaker.h"
-#include "CocktailMakers/CocktailNTupleMaker.h"
+// Makers
+#include "Makers/Scaler.h"
+#include "Makers/DecayMaker.h"
+#include "Makers/DecayNTupleMaker.h"
+#include "Makers/HistogramMaker.h"
 
-#include "CocktailMakers/Blender.h"
-#include "CocktailMakers/ConvertCCbar.h"
+#include "Makers/Blender.h"
+#include "Makers/ConvertCCbar.h"
 
 
 // UnitTests
@@ -38,9 +39,10 @@ int main( int argc, char* argv[] ) {
 	TaskFactory::registerTaskRunner<UnitTestHistogramLibrary>( "UnitTestHistogramLibrary" );
 
 
-	// CocktailMakers
-	TaskFactory::registerTaskRunner<CocktailMaker>( "CocktailMaker" );	
-	TaskFactory::registerTaskRunner<CocktailNTupleMaker>( "CocktailNTupleMaker" );	
+	// Makers
+	TaskFactory::registerTaskRunner<DecayMaker>( "DecayMaker" );	
+	TaskFactory::registerTaskRunner<DecayNTupleMaker>( "DecayNTupleMaker" );
+	TaskFactory::registerTaskRunner<HistogramMaker>( "HistogramMaker" );
 
 	TaskFactory::registerTaskRunner<Blender>( "Blender" );
 	TaskFactory::registerTaskRunner<ConvertCCbar>( "ConvertCCbar" );

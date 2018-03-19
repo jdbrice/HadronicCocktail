@@ -12,6 +12,8 @@ ROOTGLIBS     	= subprocess.check_output( ["root-config",  "--glibs"] )
 ROOTLIBPATH 	= subprocess.check_output( ["root-config", "--libdir" ] )
 ROOT_SYS 		= os.environ[ "ROOTSYS" ]
 JDB_LIB			= os.environ[ "JDB_LIB" ]
+# XMLCONFIG		= os.environ[ "XMLCONFIG" ]
+
 JDB_LIB_NAME 	= 'libRooBarb.a'
 
 cppDefines 		= {}

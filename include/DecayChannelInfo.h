@@ -33,7 +33,6 @@ public:
 	}
 
 	void loadInfo( XmlConfig &_cfg, string _nodePath ){
-		_nodePath = _cfg.q( _nodePath );
 		DEBUG( classname(), "(_cfg=" << _cfg.getFilename() << ", nodePath=" << _nodePath << ")" );
 		this->name       = _cfg.getString( _nodePath + ":name", "NA" );
 		this->parentName = _cfg.getString( _nodePath + ":parent", "NA" );

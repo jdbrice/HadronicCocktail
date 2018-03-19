@@ -40,4 +40,6 @@
 *.root
 bin/log
 
+src/CintFunctionLibraryDictionary.cppsandbox/
+sandbox
 src/CintFunctionLibraryDictionary.cpp

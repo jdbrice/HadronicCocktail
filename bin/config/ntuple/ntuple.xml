@@ -2,7 +2,7 @@
 <config>
 
 
-	<Task name="Cocktail Maker" type="CocktailNTupleMaker" config="" nodePath="cm" />
+	<Task name="Cocktail Maker" type="DecayNTupleMaker" config="" nodePath="cm" />
 	<Logger color="false" globalLogLevel="info" />
 
 	<SEED>0</SEED>

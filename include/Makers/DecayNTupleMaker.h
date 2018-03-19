@@ -1,21 +1,21 @@
-#ifndef COCKTAIL_NTUPLE_MAKER_H
-#define COCKTAIL_NTUPLE_MAKER_H
+#ifndef DECAY_NTUPLE_MAKER_H
+#define DECAY_NTUPLE_MAKER_H
 
 // Project
-#include "CocktailMakers/CocktailMaker.h"
+#include "Makers/DecayMaker.h"
 
 // ROOT
 #include "TFile.h"
 #include "TNtuple.h"
 
-class CocktailNTupleMaker : public CocktailMaker
+class DecayNTupleMaker : public DecayMaker
 {
 protected:
 	TNtuple *ntuple;
 public:
-	virtual const char* classname() const { return "CocktailNTupleMaker"; }
-	CocktailNTupleMaker() {}
-	~CocktailNTupleMaker() {}
+	virtual const char* classname() const { return "DecayNTupleMaker"; }
+	DecayNTupleMaker() {}
+	~DecayNTupleMaker() {}
 
 	virtual void initialize();
 

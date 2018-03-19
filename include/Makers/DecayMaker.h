@@ -1,5 +1,5 @@
-#ifndef COCKTAIL_MAKER_H
-#define COCKTAIL_MAKER_H
+#ifndef DECAY_MAKER_H
+#define DECAY_MAKER_H
 
 // RooBarb
 #include "TaskRunner.h"
@@ -25,7 +25,7 @@ using namespace std;
 // ROOT
 #include "TNamed.h"
 
-class CocktailMaker : public TaskRunner, public IHistoBookMaker
+class DecayMaker : public TaskRunner, public IHistoBookMaker
 {
 protected:
 
@@ -48,9 +48,12 @@ protected:
 
 	shared_ptr<TF1>				  momResolution;
 	shared_ptr<TF1>				  momShape;
-
+	
+	bool momSmearing = false;
 	bool makeQA = true;
 	bool makeTF1 = false;
+
+	CutCollection ccol;
 
 	// RECO 4-vectors
 	TLorentzVector rl1lv, rl2lv, rplv;
@@ -59,9 +62,9 @@ protected:
 	double wEff = 1.0;
 
 public:
-	virtual const char* classname() const { return "CocktailMaker"; }
-	CocktailMaker() {}
-	~CocktailMaker() {}
+	virtual const char* classname() const { return "DecayMaker"; }
+	DecayMaker() {}
+	~DecayMaker() {}
 
 	virtual void init( XmlConfig &_config, string _nodePath ){
 		TaskRunner::init( _config, _nodePath );
@@ -69,6 +72,12 @@ public:
 	}
 
 	virtual void initialize();
+
+	virtual void fillState( string _s, 
+							TLorentzVector &_lvMc, TLorentzVector &_lvRc, 
+							TLorentzVector &_lvMc1, TLorentzVector &_lvRc1, 
+							TLorentzVector &_lvMc2, TLorentzVector &_lvRc2,
+							double _w = 1.0 );
 
 protected:
 
@@ -89,6 +98,10 @@ protected:
 			config.set( "jobIndex", "all" );
 		}
 	}
+
+	void prepareQAHistos();
+
+	void prepareHistos();
 	
 };
 

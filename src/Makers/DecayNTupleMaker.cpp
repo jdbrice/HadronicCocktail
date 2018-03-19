@@ -1,19 +1,19 @@
-#include "CocktailMakers/CocktailNTupleMaker.h"
+#include "Makers/DecayNTupleMaker.h"
 
 
-string CocktailNTupleMaker::ntupleSchema = "pPdgM:pPt:pEta:pPhi:pM:l1PtMc:l1PtRc:l1Eta:l1Phi:l1M:l2PtMc:l2PtRc:l2Eta:l2Phi:l2M:nPtMc:nEta:nPhi:nM:Mll:weight:pMcId:decay";
-string CocktailNTupleMaker::ntupleName = "llCocktail";
+string DecayNTupleMaker::ntupleSchema = "pPdgM:pPt:pEta:pPhi:pM:l1PtMc:l1PtRc:l1Eta:l1Phi:l1M:l2PtMc:l2PtRc:l2Eta:l2Phi:l2M:nPtMc:nEta:nPhi:nM:Mll:weight:pMcId:decay";
+string DecayNTupleMaker::ntupleName = "llCocktail";
 
 
-void CocktailNTupleMaker::initialize(){
-	CocktailMaker::initialize();
+void DecayNTupleMaker::initialize(){
+	DecayMaker::initialize();
 
 	// open the TFile
 	// file = new TFile( config.getXString( nodePath + ".output.TFile:url" ).c_str(), "RECREATE" );
 	// setup the ntuple
 	book->cd();
-	ntuple = new TNtuple( CocktailNTupleMaker::ntupleName.c_str(), "Dilepton cocktail tuple format",
-		CocktailNTupleMaker::ntupleSchema.c_str() );
+	ntuple = new TNtuple( DecayNTupleMaker::ntupleName.c_str(), "Dilepton cocktail tuple format",
+		DecayNTupleMaker::ntupleSchema.c_str() );
 	
 	// parent pdg Mass
 	// parent 4-vector
@@ -29,8 +29,8 @@ void CocktailNTupleMaker::initialize(){
 }
 
 
-void CocktailNTupleMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDecayer &_pd ){
-	CocktailMaker::postDecay( _name, _parent, _pd );
+void DecayNTupleMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDecayer &_pd ){
+	DecayMaker::postDecay( _name, _parent, _pd );
 
 	// Get the two lepton decay products
 	TLorentzVector l1lv = _pd.getLepton1().lv;
@@ -76,6 +76,6 @@ void CocktailNTupleMaker::postDecay( string _name, TLorentzVector &_parent, Part
 
 }
 
-void CocktailNTupleMaker::postMake(){
+void DecayNTupleMaker::postMake(){
 	INFO( classname(), "Closing the file and NTuple" );
 }
