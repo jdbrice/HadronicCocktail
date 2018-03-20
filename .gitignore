@@ -43,3 +43,9 @@ bin/log
 src/CintFunctionLibraryDictionary.cppsandbox/
 sandbox
 src/CintFunctionLibraryDictionary.cpp
+*.pdf
+*.list
+bin/*.lis
+bin/list
+*.json
+bin/lists

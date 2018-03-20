@@ -6,14 +6,15 @@
 	<Logger color="true" globalLogLevel="info" />
 
 	<SEED>0</SEED>
-	<N>5000</N>
-	<CHANNEL>omega_mumu</CHANNEL>
+	<N>100000</N>
+	<CHANNEL>eta_gammamumu_dalitz</CHANNEL>
+	<SMEAR>true</SMEAR>
 
 	<cm>
 		<Logger color="true" globalLogLevel="none" />
 
 		<output>
-			<TFile url="./MuonCocktail_{cm.ActiveChannels.ActiveChannel[0]:name}.root" />
+			<TFile url="./MuonCocktail_{cm.ActiveChannels.ActiveChannel[0]:name}{mod}.root" />
 		</output>
 
 		<Make QA="false" TF1="true"/>
@@ -49,13 +50,15 @@
 		</histograms>
 
 		<KinematicFilters>
-			<Include url="config/STAR_Dielectron.xml" />
+			<Include url="config/STAR_MTD.xml" />
 		</KinematicFilters>
+
+		<MomentumSmearing>{SMEAR}</MomentumSmearing>
 
 	</cm>
 
 	<bins>
-		<mass width="0.005" min="0" max="10" />
+		<mass width="0.005" min="0" max="5" />
 		<pT width="0.005" min="0" max="10" />
 		<eta nBins="1000" min="-5.0" max="5.0" />
 		<rapidity nBins="1000" min="-5.0" max="5.0" />
