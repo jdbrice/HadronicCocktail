@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+
+	<Task name="ccbar histogramer" type="HistogramMaker" config="" nodePath="ccbar" />
+	<Logger color="true" globalLogLevel="info" />
+
+	<ccbar>
+		<Logger color="true" globalLogLevel="info" />
+
+		<EventLoop progress="true" />
+
+		<Make TF1="true"/>
+
+		<FunctionLibrary>
+			<Include url="config/FunctionLibrary.xml" />
+		</FunctionLibrary>
+
+		<histograms>
+			<!-- <Include url="config/CocktailQAHistograms.xml" /> -->
+
+			<Histo name="dNdM" title=";M_{#mu#mu};dN/dM [c^{2}/GeV]" bins_x="bins.mass"  />
+			<Histo name="dNdM_pT" title=";M_{#mu#mu};pT [GeV/c]" bins_x="bins.mass" bins_y="bins.pT" />
+			<Histo name="dNdM_pT_eff" title=";M_{#mu#mu};pT [GeV/c]" bins_x="bins.mass" bins_y="bins.pT" />
+			<Histo name="PtRc" title=";p_{T}^{Rc} [GeV/c];dN/dpT [c/GeV]" bins_x="bins.pT" />
+			<Histo name="PtMc" title=";p_{T}^{Mc} [GeV/c];dN/dpT [c/GeV]" bins_x="bins.pT" />
+			<Histo name="Eta" title=";#eta ;dN/d#eta [c/GeV]" bins_x="bins.eta" />
+			<Histo name="Eta_vs_l2Eta" title=";#eta ;dN/d#eta [c/GeV]" bins_x="bins.eta" bins_y="bins.eta" />
+			<!-- <Histo name="Eta_vs_l1Eta" title=";#eta ;dN/d#eta [c/GeV]" bins_x="bins.eta" bins_y="bins.eta" /> -->
+			<Histo name="rapidity" title=";y ;dN/dy [c/GeV]" bins_x="bins.rapidity" />
+		</histograms>
+
+		<input>
+			<dst treeName="ccbar" url="lists/part1/ccbar_pythia.lis" splitBy="2"/>
+		</input>
+
+		<output>
+			<TFile url="ccbar_cocktail_{jobIndex}.root" />
+		</output>
+
+		<histograms>
+			
+		</histograms>
+
+		<!-- Cross sections in [mb] -->
+		<CrossSections ccbar="0.92" eccbar="0.10" minbias="42" eminbias="0.5" />
+
+		<!-- Used to scale the invariant mass -->
+		<BranchingRatio parent="411" br="0.176" ebr="0.032" />
+		<BranchingRatio parent="421" br="0.067" ebr="0.006" />
+		<BranchingRatio parent="431" br="0.065" ebr="0.004" /> <!-- PDG value for BR e, but using equivalence from Pythia -->
+		<BranchingRatio parent="4122" br="0.045" ebr="0.017" /> <!-- PDG value for BR e, but using equivalence from Pythia -->
+		<!-- NOTE: for 431 (Ds) and 4122 (Lambda_c) the PDG does not list inclusive muon but Pythia has exactly the same BR for electron and muon -->
+
+		<KinematicFilters>
+			<Include url="config/STAR_MTD.xml" />
+		</KinematicFilters>
+
+		<MomentumSmearing>{SMEAR}</MomentumSmearing>
+	</ccbar>
+
+	<bins>
+		<mass width="0.005" min="0" max="5" />
+		<pT width="0.005" min="0" max="10" />
+		<eta nBins="1000" min="-5.0" max="5.0" />
+		<rapidity nBins="1000" min="-5.0" max="5.0" />
+
+		
+		<!-- <Include url="config/CocktailQABins.xml" /> -->
+	</bins>
+
+</config>
