@@ -26,6 +26,7 @@
 	<TF1 name="rho_pT" formula="TsallisBlastWave" beta_max="0" T="0.0964" n="0" q="1.0926" norm="40" ymin="-0.8" ymax="0.8" min="0" max="10" Npx="200" />
 	<TF1 name="omega_pT" formula="TsallisBlastWave" beta_max="0" T="0.0964" n="0" q="1.0926" norm="40" ymin="-0.8" ymax="0.8" min="0" max="10" Npx="200" />
 	<TF1 name="jpsi_pT" formula="TsallisBlastWave" beta_max="0" T="0.0964" n="0" q="1.0926" norm="40" ymin="-0.8" ymax="0.8" min="0" max="10" Npx="200" />
+	<TF1 name="psi_pT" formula="TsallisBlastWave" beta_max="0" T="0.0964" n="0" q="1.0926" norm="40" ymin="-0.8" ymax="0.8" min="0" max="10" Npx="200" />
 
 
 
