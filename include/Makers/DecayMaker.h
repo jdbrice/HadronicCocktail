@@ -52,11 +52,12 @@ protected:
 	bool momSmearing = false;
 	bool makeQA = true;
 	bool makeTF1 = false;
+	bool makeHistos = true;
 
 	CutCollection ccol;
 
 	// RECO 4-vectors
-	TLorentzVector rl1lv, rl2lv, rplv;
+	TLorentzVector rclv1, rclv2, rclv;
 
 	shared_ptr<EfficiencyWeight> efficiency;
 	double wEff = 1.0;

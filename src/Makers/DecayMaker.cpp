@@ -2,7 +2,7 @@
 #include "EfficiencyWeightF1D.h"
 
 void DecayMaker::initialize(){
-	DEBUG( classname(), "Initialize" );
+	INFOC( "Initialize" );
 
 	int seed = config.getInt( "SEED", 0 );
 	
@@ -254,7 +254,7 @@ void DecayMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDecay
 	INFOC( "postDecay( _name=" << _name << " )" );
 
 	// =============================== MOMENTUM SMEARING ===============================
-	TLorentzVector rclv, rclv1, rclv2;
+	// TLorentzVector rclv, rclv1, rclv2;
 	double ptRes = momResolution->Eval( mclv1.Pt() );
 	double rndCrystalBall = 0.0;
 	if ( true == momSmearing ) rndCrystalBall = gRandom->Gaus( 0, 1.0 );
@@ -269,6 +269,8 @@ void DecayMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDecay
 	rclv = rclv1 + rclv2;
 	// =============================== MOMENTUM SMEARING ===============================
 
+	if ( false == makeHistos ) return;
+	
 	double w = 1.0; // could support weigthing, no use now
 	fillState( "FullAcc_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
 
