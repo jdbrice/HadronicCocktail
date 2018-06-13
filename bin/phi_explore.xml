@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<channel>phi_mumu</channel>
+	<plc>#phi</plc>
 	<Data name="d" treeName="ll" url="NTuple_{channel}.root" />
 
 	<dNdy>1.73e-2</dNdy>
@@ -31,13 +32,23 @@
 		<Histo name="AccCut0" draw="same hp" lc="#00F"/>
 		<Histo name="AccCut1" draw="same hp" lc="#000"/>
 
-		<TLatex x="0.6" y="0.8" text="N = {IRapCut}" font="42" point="14" />
-		<TLatex x="0.6" y="0.75" text="#varepsilon(|#eta^{#mu}|<0.5) = {eAccCut0}" font="42" point="14" />
-		<TLatex x="0.6" y="0.7" text="#varepsilon(+p_{T}^{#mu}>1.1) = {eAccCut1}" font="42" point="14" />
+		<TLatex x="0.55" y="0.60" text="N_{gen} = {IRapCut}" font="42" point="14" />
+		<TLatex x="0.55" y="0.55" text="#varepsilon(|#eta^{#mu}|<0.5) = {eAccCut0}" font="42" point="14" />
+		<TLatex x="0.55" y="0.50" text="#varepsilon(+p_{T}^{#mu}>1.1) = {eAccCut1}" font="42" point="14" />
 
-		<TLatex x="0.6" y="0.55" text="# MB events={Nmb}" font="42" point="14" />
-		<TLatex x="0.6" y="0.5" text="N_{#phi}^{FPS}={N_raw_FPS}" font="42" point="14" />
-		<TLatex x="0.6" y="0.45" text="N_{#phi}={N_raw}" font="42" point="14" />
+		<TLatex x="0.55" y="0.45" text="dN/dy = {dNdy}, BR = {BR}" font="42" point="14" />
+		<TLatex x="0.55" y="0.40" text="# MB events = {Nmb}" font="42" point="14" />
+		<TLatex x="0.55" y="0.35" text="N_{ {plc} }^{Full PS} = {N_raw_FPS}" font="42" point="14" />
+		<TLatex x="0.55" y="0.30" text="N_{ {plc} }^{MTD PS} = {N_raw}" font="42" point="14" />
+		
+
+		<Legend border_size="0" >
+			<Position pos="top right" padding="0.03, 0.03, 0, 0" />
+			<Entry name="RapCut" title="Generated in |y^{#mu#mu}| < 0.5" />
+			<Entry name="AccCut0" title="|#eta^{#mu}|<0.5" />
+			<Entry name="AccCut1" title="|#eta^{#mu}|<0.5 && p_{T}^{#mu}>1.1 (GeV/c)" />
+		</Legend>
+
 
 		<Export url="plot_{channel}.pdf" />
 	</Plot>
