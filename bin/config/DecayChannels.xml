@@ -37,6 +37,12 @@
 		<DecayProduct name="muon" />
 	</DecayChannel>
 
+	<DecayChannel name="phi_gammamumu_dalitz" parent="phi" >
+		<DecayProduct name="photon" />
+		<DecayProduct name="muon" />
+		<DecayProduct name="muon" />
+	</DecayChannel>
+
 	<DecayChannel name="rho_mumu" parent="rho" >
 		<DecayProduct name="muon" />
 		<DecayProduct name="muon" />
@@ -57,6 +63,25 @@
 		<DecayProduct name="muon" />
 		<DecayProduct name="muon" />
 	</DecayChannel>
+
+
+	<!-- BACKGROUNDS -->
+	<DecayChannel name="phi_kk" parent="phi" >
+		<DecayProduct name="kaon" />
+		<DecayProduct name="kaon" />
+	</DecayChannel>
+
+	<DecayChannel name="omega_pipi" parent="omega" >
+		<DecayProduct name="pion" />
+		<DecayProduct name="pion" />
+	</DecayChannel>
+
+	<DecayChannel name="rho_pipi" parent="rho" >
+		<DecayProduct name="pion" />
+		<DecayProduct name="pion" />
+	</DecayChannel>
+
+
 
 
 	<!-- electron decay channels -->

@@ -16,6 +16,8 @@
 	<Particle name="jpsi" mcId="443" mass="3.096916" width="9.29e-5" />
 	<Particle name="psi" mcId="100443" mass="3.68609" width="3.04e-4" />
 	
+	<Particle name="kaon" mcId="321" mass="0.493667" width="0" />
+	<Particle name="pion" mcId="211" mass="0.139570" width="0" />
 
 	<!-- PHOTONS -->
 	<Particle name="photon" mcId="22" mass="0" width="0" />

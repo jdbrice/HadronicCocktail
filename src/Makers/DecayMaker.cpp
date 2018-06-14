@@ -177,7 +177,7 @@ void DecayMaker::prepareQAHistos(){
 }
 
 void DecayMaker::prepareHistos(){
-	vector<string> states = { "FullAcc_", "RapCut_", "AccCut_" };
+	vector<string> states = { "FullAcc_", "PairCut_", "AccCut_" };
 	vector<string> histos = { "dNdM", "dNdM_pT", "dNdM_pT_eff", "PtRc", "PtMc", "Eta", "rapidity", "Eta_vs_l2Eta" };
 	vector<string> ls     = { "l1", "l2", "w" };
 
@@ -274,87 +274,15 @@ void DecayMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDecay
 	double w = 1.0; // could support weigthing, no use now
 	fillState( "FullAcc_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
 
-	if ( !ccol.has( "rapidity" ) || ccol["rapidity"]->inInclusiveRange( rclv.Rapidity() ) ){
-		fillState( "RapCut_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
+	if ( parentFilter.pass( rclv ) ){
+		fillState( "PairCut_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
 
 		// check the kinematic filters
-		if ( daughterFilter.pass( rclv1, rclv2 ) && parentFilter.pass( rclv ) ){
+		if ( daughterFilter.pass( rclv1, rclv2 ) ){
 			fillState( "AccCut_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
 
 		} // PASS kinematic filters
 	} // PASS rapidity cut on parent
-
-	// TLorentzVector l1lv = _pd.getLepton1().lv;
-	// TLorentzVector l2lv = _pd.getLepton2().lv;
-	
-
-	// // TLorentzVector r1lv;
-	// double ptRes = momResolution->Eval( l1lv.Pt() ) * 100.0;
-	// double rndCrystalBall = momShape->GetRandom();
-	// rl1lv.SetPtEtaPhiM( 
-	// 		l1lv.Pt() * (1 + rndCrystalBall * ptRes  ) ,
-	// 		l1lv.Eta(),
-	// 		l1lv.Phi(),
-	// 		l1lv.M() );
-
-	// // TLorentzVector r2lv;
-	// ptRes = momResolution->Eval( l1lv.Pt() ) * 100.0;
-	// rndCrystalBall = momShape->GetRandom();
-	// rl2lv.SetPtEtaPhiM( 
-	// 		l2lv.Pt() * (1 + rndCrystalBall * ptRes  ) ,
-	// 		l2lv.Eta(),
-	// 		l2lv.Phi(),
-	// 		l2lv.M() );
-
-	// rplv = rl1lv + rl2lv;
-
-
-
-	// if ( makeQA ){
-	// 	double weight = 1.0;
-	// 	TLorentzVector plv = l1lv + l2lv;
-
-	// 	TLorentzVector lllv = l1lv;
-	// 	if ( l2lv.Pt() > l1lv.Pt() )
-	// 		lllv = l2lv;
-		
-	// 	book->get( "parent_pT_pass", _name )->Fill( _parent.Pt() );
-	// 	book->get( "parent_pX_pass", _name )->Fill( _parent.Px() );
-	// 	book->get( "parent_pY_pass", _name )->Fill( _parent.Py() );
-	// 	book->get( "parent_eta", _name )->Fill( _parent.Eta() );
-	// 	book->get( "parent_phi_pass", _name )->Fill( _parent.Phi() );
-	// 	book->get( "parent_mass", _name )->Fill( plv.M() );
-	// 	book->get( "parent_mass_vs_l1_pT", _name )->Fill( plv.M(), l1lv.Pt() );
-	// 	book->get( "parent_mass_vs_l2_pT", _name )->Fill( plv.M(), l2lv.Pt() );
-	// 	book->get( "parent_mass_vs_lpT", _name )->Fill( plv.M(), lllv.Pt() );
-	// 	book->get( "parent_weightedMass", _name )->Fill( plv.M(), weight );
-		
-	// 	book->get( "parent_sampledMass", _name )->Fill( _pd.getSampledMass() );
-	// 	book->get( "parent_rawRecoMass", _name )->Fill( plv.M() );
-	// 	book->get2D( "parent_rawRecoMass_vs_pT", _name )->Fill( plv.M(), plv.Pt() );
-	// 	book->get2D( "parent_pT_vs_weight", _name )->Fill( plv.Pt(), weight );
-	// 	book->get2D( "parent_mass_vs_weight", _name )->Fill( plv.M(), weight );
-
-	// 	book->get( "l1_pT",  _name )->Fill( l1lv.Pt() );
-	// 	book->get2D( "l1_pT_vs_weight",  _name )->Fill( l1lv.Pt(), weight );
-	// 	book->get( "l1_eta", _name )->Fill( l1lv.Eta() );
-	// 	book->get( "l1_phi", _name )->Fill( l1lv.Phi(), weight );
-
-	// 	book->get( "l2_pT",  _name )->Fill( l2lv.Pt() );
-	// 	book->get2D( "l2_pT_vs_weight",  _name )->Fill( l2lv.Pt(), weight );
-	// 	book->get( "l2_eta", _name )->Fill( l2lv.Eta() );
-	// 	book->get( "l2_phi", _name )->Fill( l2lv.Phi(), weight );
-
-	// 	book->get( "l1_R_vs_pT", _name ) ->Fill( l1lv.Pt(), l1lv.Pt() / (0.3 * 0.5) );
-
-
-	// 	book->get( "mass", "" )->Fill( _pd.getSampledMass(), weight );
-
-	// 	book->get( "parent_recoMass", _name )->Fill( rplv.M(), weight );
-
-	// 	book->get( "recoMass", "" )->Fill( rplv.M(), weight );
-	// 	book->get2D( "recoMass_vs_pT", "" )->Fill( rplv.M(), rplv.Pt(), weight );
-	// }
 }
 
 void DecayMaker::fillState( string _s, 
@@ -363,24 +291,28 @@ void DecayMaker::fillState( string _s,
 									TLorentzVector &_lvMc2, TLorentzVector &_lvRc2,
 									double _w ){
 
-	book->fill(_s + "dNdM", _lvRc.M() );
-	book->fill( _s + "dNdM_pT", _lvRc.M(), _lvRc.Pt() );
-	book->fill( _s + "wdNdM", _lvRc.M(), _w );
-	book->fill( _s + "wdNdM_pT", _lvRc.M(), _lvRc.Pt(), _w );
-	book->fill( _s + "PtRc", _lvRc.Pt() );
-	book->fill( _s + "PtMc", _lvMc.Pt() );
-	book->fill( _s + "l1PtRc", _lvRc1.Pt() );
-	book->fill( _s + "l2PtRc", _lvRc2.Pt() );
-	book->fill( _s + "l1PtMc", _lvMc1.Pt() );
-	book->fill( _s + "l2PtMc", _lvMc2.Pt() );
+	// We need to weight by pT to undo the TBW 1/pT weight
+	double wpt = _lvMc.Pt();
+	book->fill(_s + "dNdM", _lvRc.M(), wpt );
+	book->fill( _s + "dNdM_pT", _lvRc.M(), _lvRc.Pt(), wpt );
+	
+	book->fill( _s + "wdNdM", _lvRc.M(), _w * wpt );
+	book->fill( _s + "wdNdM_pT", _lvRc.M(), _lvRc.Pt(), _w * wpt );
 
-	book->fill( _s + "Eta", _lvRc.Eta() );
-	book->fill( _s + "Eta_vs_l2Eta", _lvRc.Eta(), _lvRc2.Eta() );
-	book->fill( _s + "l1Eta", _lvRc1.Eta() );
-	book->fill( _s + "l1Eta_vs_l2Eta", _lvRc1.Eta(), _lvRc2.Eta() );
-	book->fill( _s + "l2Eta", _lvRc2.Eta() );
-	book->fill( _s + "rapidity", _lvRc.Rapidity() );
-	book->fill( _s + "l1rapidity", _lvRc1.Rapidity() );
-	book->fill( _s + "l2rapidity", _lvRc2.Rapidity() );
+	book->fill( _s + "PtRc", _lvRc.Pt(), wpt );
+	book->fill( _s + "PtMc", _lvMc.Pt(), wpt );
+	book->fill( _s + "l1PtRc", _lvRc1.Pt(), wpt );
+	book->fill( _s + "l2PtRc", _lvRc2.Pt(), wpt );
+	book->fill( _s + "l1PtMc", _lvMc1.Pt(), wpt );
+	book->fill( _s + "l2PtMc", _lvMc2.Pt(), wpt );
+
+	book->fill( _s + "Eta", _lvRc.Eta(), wpt );
+	book->fill( _s + "Eta_vs_l2Eta", _lvRc.Eta(), _lvRc2.Eta(), wpt );
+	book->fill( _s + "l1Eta", _lvRc1.Eta(), wpt );
+	book->fill( _s + "l1Eta_vs_l2Eta", _lvRc1.Eta(), _lvRc2.Eta(), wpt );
+	book->fill( _s + "l2Eta", _lvRc2.Eta(), wpt );
+	book->fill( _s + "rapidity", _lvRc.Rapidity(), wpt );
+	book->fill( _s + "l1rapidity", _lvRc1.Rapidity(), wpt );
+	book->fill( _s + "l2rapidity", _lvRc2.Rapidity(), wpt );
 
 }

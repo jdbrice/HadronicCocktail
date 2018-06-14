@@ -3,7 +3,7 @@
 
 
 	<Task name="Cocktail Maker" type="DecayNTupleMaker" config="" nodePath="cm" />
-	<Logger color="true" globalLogLevel="info" />
+	<Logger color="true" globalLogLevel="all" />
 
 	<SEED>0</SEED>
 	<N>100000</N>

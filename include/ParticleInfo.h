@@ -26,6 +26,7 @@ public:
 		this->mass   = 0;
 		this->width  = 0;
 		this->Nd 	 = 2;
+		this->lv.SetPtEtaPhiM( 0, 0, 0, this->mass );
 	}
 
 	ParticleInfo( string _name, int _mcId, double _mass, double _width, double _Nd ){
@@ -35,6 +36,7 @@ public:
 		this->mass  = _mass;
 		this->width = _width;	
 		this->Nd    = _Nd;
+		this->lv.SetPtEtaPhiM( 0, 0, 0, this->mass );
 	}
 
 	ParticleInfo( XmlConfig &_cfg, string _nodePath ){
@@ -46,6 +48,7 @@ public:
 		this->gamma2     = _cfg.getDouble( _nodePath + ":gamma2", 0 );
 		this->invLambda2 = _cfg.getDouble( _nodePath + ":invLambda2", 0 );
 		this->Nd         = _cfg.getInt(    _nodePath + ":Nd", 2 );
+		this->lv.SetPtEtaPhiM( 0, 0, 0, this->mass );
 
 		INFO( classname(), toString() );
 	}
