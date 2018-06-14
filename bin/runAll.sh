@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/opt/local/bin/zsh
 
 SMEAR="0"
 
@@ -7,6 +7,6 @@ declare -a CHANNELS=("omega_pi0mumu_dalitz" "eta_gammamumu_dalitz" "etaprime_gam
 
 for c in "${CHANNELS[@]}" 
 do
-	echo "./hadronicCocktail.app DecayMaker.xml --SMEAR=${SMEAR} --mod="_ms${SMEAR}" --CHANNEL=${c}"
-	./hadronicCocktail.app DecayMaker.xml --SMEAR=${SMEAR} --mod="_ms${SMEAR}" --CHANNEL=${c}
+	echo "./hadronicCocktail.app DecayMaker.xml --mod="j0" --CHANNEL=${c} --N=10000001"
+	./hadronicCocktail.app DecayMaker.xml --mod="j0" --CHANNEL=${c} --N=10000001
 done
