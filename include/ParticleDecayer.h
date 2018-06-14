@@ -79,6 +79,7 @@ public:
 		products.clear();
 		for ( string prod : this->dcInfo.productNames ){
 			ParticleInfo plcInfo = plcLib.get( prod );
+			INFOC( "Adding product " << plcInfo.toString() );
 			products.push_back( plcInfo );
 		}
 
@@ -204,12 +205,15 @@ protected:
 
 	ParticleInfo &lepton1(){
 
+		INFOC( "There are " << products.size() << " products" );
 		for ( ParticleInfo &pi : products ){
 			if (pi.isLepton())
 				return pi;
 		}
 		ERROR( classname(), "Cannot find lepton" );
-		return products[0];
+		ParticleInfo &r = products[0];
+		DEBUG( classname(), "lv( P=" << dts(r.lv.Px()) << "," << dts(r.lv.Py()) << "," << dts(r.lv.Pz()) << ", M=" << dts( r.lv.M() ) << ")" );
+		return r;
 	}
 
 
@@ -224,7 +228,8 @@ protected:
 			}
 		}
 		ERROR( classname(), "Cannot find two leptons" );
-		return products[0];
+		ParticleInfo &r = products[1];
+		return r;
 	}
 
 	ParticleInfo &neutral() {
@@ -287,15 +292,19 @@ protected:
 		ParticleInfo &d1 = products[0];
 		ParticleInfo &d2 = products[1];
 
+		INFOC( "product[0] = " << d1.toString() );
+
 		// MUST BE EQUAL
 		double M_d1 = d1.mass;
 		double M_d2 = d2.mass;
-
+		INFOC( "m_d1=" << M_d1 );
 
 		double E_d = _parent_lv.M()/2.;
 		double p = sqrt(E_d*E_d - M_d1*M_d1);
 		double costheta = this->pdfCosTheta->GetRandom(); //gRandom->Uniform(-1.,1.);
 		double phi = this->pdfPhi->GetRandom(); //gRandom->Uniform(0,TMath::Pi()*2);
+
+		INFOC( "E_d=" << E_d << ", p=" << p << ", costheta=" << costheta <<", phi=" << phi );
 
 		// make sure that the magnitude of the mom vector is correct!
 		// May allow these distributions to be input?
@@ -306,12 +315,17 @@ protected:
 		TLorentzVector daughter1( px, py, pz, E_d);
 		TLorentzVector daughter2( -px, -py, -pz, E_d );
 
+		INFOC( "daughter1 = " << daughter1.Pt() << ", eta=" << daughter1.PseudoRapidity() << ", phi=" << daughter1.Phi() << ", M=" << daughter1.M() );
+
 		applyBoost(_parent_lv,daughter1);
 		applyBoost(_parent_lv,daughter2);
+
 
 		// Note this is slightly different than Bingchu/Shuai's code
 		// That code gets d2's P correct but mass wrong
 		// this method gets the entire 4-vector correct
+
+
 
 		d1.lv = daughter1;
 		d2.lv = daughter2;

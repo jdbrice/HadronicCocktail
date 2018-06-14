@@ -14,7 +14,7 @@
 		<Logger color="true" globalLogLevel="none" />
 
 		<output>
-			<TFile url="./MuonCocktail_{cm.ActiveChannels.ActiveChannel[0]:name}{mod}.root" />
+			<TFile url="./Cocktail_{CHANNEL}_{mod}.root" />
 		</output>
 
 		<Make QA="false" TF1="true"/>

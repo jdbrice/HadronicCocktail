@@ -1,8 +1,8 @@
 #include "Makers/DecayNTupleMaker.h"
 
 
-string DecayNTupleMaker::ntupleSchema = "pPdgM:pPt:pEta:pPhi:pM:l1PtMc:l1PtRc:l1Eta:l1Phi:l1M:l2PtMc:l2PtRc:l2Eta:l2Phi:l2M:nPtMc:nEta:nPhi:nM:Mll:weight:pMcId:decay";
-string DecayNTupleMaker::ntupleName = "llCocktail";
+string DecayNTupleMaker::ntupleSchema = "pdgM:pt:eta:phi:m:y:l1PtMc:l1PtRc:l1Eta:l1Phi:l1M:l2PtMc:l2PtRc:l2Eta:l2Phi:l2M:nPtMc:nEta:nPhi:nM:Mll:weight:pMcId:decay";
+string DecayNTupleMaker::ntupleName = "ll";
 
 
 void DecayNTupleMaker::initialize(){
@@ -26,6 +26,9 @@ void DecayNTupleMaker::initialize(){
 	// weight assigned at time of generation - utility for all-in-one scaling
 	// parent MC Id 
 	// decay type 2=twobody, 3=dalitz
+	
+
+	makeHistos = false;
 }
 
 
@@ -46,29 +49,30 @@ void DecayNTupleMaker::postDecay( string _name, TLorentzVector &_parent, Particl
 	data[2]  = _parent.Eta();
 	data[3]  = _parent.Phi();
 	data[4]  = _pd.getSampledMass();
+	data[5]  = _parent.Rapidity();
 
-	data[5]  = l1lv.Pt();
-	data[6]  = rl1lv.Pt();
-	data[7]  = l1lv.Eta();
-	data[8]  = l1lv.Phi();
-	data[9]  = l1lv.M();
+	data[6]  = l1lv.Pt();
+	data[7]  = rclv1.Pt();
+	data[8]  = l1lv.Eta();
+	data[9]  = l1lv.Phi();
+	data[10]  = l1lv.M();
 
-	data[10] = l2lv.Pt();
-	data[11] = rl2lv.Pt();
-	data[12] = l2lv.Eta();
-	data[13] = l2lv.Phi();
-	data[14] = l2lv.M();
+	data[11] = l2lv.Pt();
+	data[12] = rclv2.Pt();
+	data[13] = l2lv.Eta();
+	data[14] = l2lv.Phi();
+	data[15] = l2lv.M();
 
 	if ( 3 == _pd.getNProducts() ){
 		TLorentzVector nlv  = _pd.getNeutral().lv;
-		data[15] = nlv.Pt();	
-		data[16] = nlv.Eta();
-		data[17] = nlv.Phi();
-		data[18] = nlv.M();
+		data[16] = nlv.Pt();	
+		data[17] = nlv.Eta();
+		data[18] = nlv.Phi();
+		data[19] = nlv.M();
 	}
 
-	data[19] = rplv.M();
-	data[20] = namedWeight[ _name ];
+	data[20] = rclv.M();
+	data[21] = namedWeight[ _name ];
 	data[21] = _pd.getParentInfo().mcId;
 	data[22] = _pd.getNProducts();
 

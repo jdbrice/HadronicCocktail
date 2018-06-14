@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+
+	<Task name="Cocktail Maker" type="DecayNTupleMaker" config="" nodePath="cm" />
+	<Logger color="true" globalLogLevel="all" />
+
+	<SEED>0</SEED>
+	<N>100000</N>
+	<CHANNEL>jpsi_mumu</CHANNEL>
+	<SMEAR>true</SMEAR>
+	<mod></mod>
+
+	<cm>
+		<Logger color="true" globalLogLevel="none" />
+
+		<output>
+			<TFile url="./NTuple_{CHANNEL}{mod}.root" />
+		</output>
+
+		<Make QA="false" TF1="true"/>
+		
+		<ActiveChannels>
+			<ActiveChannel name="{CHANNEL}" n="{N}" weight="1.0" />
+		</ActiveChannels>		
+
+		<DecayChannels>
+			<Include url="config/DecayChannels.xml" />
+		</DecayChannels>
+
+		<FunctionLibrary>
+			<Include url="config/FunctionLibrary.xml" />
+		</FunctionLibrary>
+
+		<ParticleLibrary>
+			<Include url="config/ParticleLibrary.xml" />
+		</ParticleLibrary>
+
+		<histograms>
+		</histograms>
+
+		<MomentumSmearing>{SMEAR}</MomentumSmearing>
+
+	</cm>
+
+	<bins>
+		<mass width="0.005" min="0" max="5" />
+		<pT width="0.005" min="0" max="10" />
+		<eta nBins="1000" min="-5.0" max="5.0" />
+		<rapidity nBins="1000" min="-5.0" max="5.0" />
+
+		
+		<!-- <Include url="config/CocktailQABins.xml" /> -->
+	</bins>
+
+</config>
