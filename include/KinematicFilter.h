@@ -45,20 +45,31 @@ public:
 		}
 
 		// do this first so that TLorentzVector::Eta does not complaine when pT==0
-		if ( !pT->inInclusiveRange( lv.Pt() ) || lv.Pt() != lv.Pt() )
+		if ( !pT->inInclusiveRange( lv.Pt() ) || lv.Pt() != lv.Pt() ){
 			return false;
+		}
 
 		if ( nullptr != _h ){ _h->Fill( 1 ); }
 		
-		if ( !eta->inInclusiveRange( lv.Eta() ) ) return false;
+		if ( !eta->inInclusiveRange( lv.Eta() ) ) {
+			return false;
+		}
 		if ( nullptr != _h ){ _h->Fill( 2 ); }
+		
+		if ( !y->inInclusiveRange( lv.Rapidity() ) ){
+			return false;
+		} 
 
-		if ( !y->inInclusiveRange( lv.Rapidity() ) ) return false;
+		
 		if ( nullptr != _h ){ _h->Fill( 3 ); }
 
-		if ( !phi->inInclusiveRange( lv.Phi() ) )  return false;
+		if ( !phi->inInclusiveRange( lv.Phi() ) ) {
+			return false;
+		}
+
 		if ( nullptr != _h ){ _h->Fill( 4 ); }
 
+		// printf("passed rclv[pt=%0.2f, eta=%0.2f, phi=%0.2f, y=%0.2f, M=%0.2f]\n", lv.Pt(), lv.PseudoRapidity(), lv.Phi(), lv.Rapidity(), lv.M() );
 		return true;
 	}
 
@@ -107,6 +118,13 @@ public:
 
 	double deltaY() {
 		return y->max - y->min;
+	}
+
+	string toString(){
+		string m = "";
+		m += dts(y->min) +" < y <" + dts( y->max );
+		return m;
+
 	}
 
 protected:

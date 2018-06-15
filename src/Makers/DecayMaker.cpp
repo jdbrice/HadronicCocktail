@@ -196,7 +196,7 @@ void DecayMaker::prepareQAHistos(){
 
 void DecayMaker::prepareHistos(){
 	vector<string> states = { "FullAcc_", "PairCut_", "AccCut0_", "AccCut1_" };
-	vector<string> histos = { "dNdM", "dNdM_pT", "dNdM_pT_eff", "PtRc", "PtMc", "Eta", "rapidity", "Eta_vs_l2Eta" };
+	vector<string> histos = { "dNdM", "dNdM_pT", "dNdM_pT_eff", "PtRc", "PtMc", "Eta", "YMc", "YRc", "Eta_vs_l2Eta" };
 	vector<string> ls     = { "l1", "l2", "w" };
 
 	for ( string s : states ){
@@ -239,19 +239,12 @@ void DecayMaker::make(){
 
 				book->get( "parent_pT_vs_phi", name  )->Fill( lv.Phi(), lv.Pt() );
 			}
-			
-			// if ( parentFilter.fail( lv, hkfParent ) ) continue;
 
 			
 			namedPlcDecayers[ name ].decay( lv );
 			
-
 			TLorentzVector l1lv = namedPlcDecayers[ name ].getLepton1().lv;
 			TLorentzVector l2lv = namedPlcDecayers[ name ].getLepton2().lv;
-
-			// if ( daughterFilter.fail( l1lv, hkfLepton1 ) || daughterFilter.fail(l2lv, hkfLepton2) ) continue;
-
-			
 
 			bool kept_decay = postDecay( name, lv, namedPlcDecayers[ name ] );
 			if ( false == kept_decay && false == keep_full_phase_space) continue;
@@ -296,6 +289,7 @@ bool DecayMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDecay
 	}
 
 	if ( parentFilter.pass( rclv ) ){
+		// printf("rclv[pt=%0.2f, eta=%0.2f, phi=%0.2f, y=%0.2f, M=%0.2f]\n", rclv.Pt(), rclv.PseudoRapidity(), rclv.Phi(), rclv.Rapidity(), rclv.M() );
 		fillState( "PairCut_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
 
 		// check the kinematic filters
@@ -306,10 +300,8 @@ bool DecayMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDecay
 		if ( daughterFilter.pass( rclv1, rclv2 ) ){
 			fillState( "AccCut1_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
 		} // PASS kinematic filters
-
 		return true;
 	} // PASS rapidity cut on parent
-
 
 	return false;
 }
@@ -340,8 +332,14 @@ void DecayMaker::fillState( string _s,
 	book->fill( _s + "l1Eta", _lvRc1.Eta(), wpt );
 	book->fill( _s + "l1Eta_vs_l2Eta", _lvRc1.Eta(), _lvRc2.Eta(), wpt );
 	book->fill( _s + "l2Eta", _lvRc2.Eta(), wpt );
-	book->fill( _s + "rapidity", _lvMc.Rapidity(), wpt );
-	book->fill( _s + "l1rapidity", _lvRc1.Rapidity(), wpt );
-	book->fill( _s + "l2rapidity", _lvRc2.Rapidity(), wpt );
+	
+	book->fill( _s + "YMc", _lvMc.Rapidity(), wpt );
+	book->fill( _s + "YRc", _lvRc.Rapidity(), wpt );
+
+	book->fill( _s + "l1YRc", _lvRc1.Rapidity(), wpt );
+	book->fill( _s + "l2YRc", _lvRc2.Rapidity(), wpt );
+
+	book->fill( _s + "l1YMc", _lvMc1.Rapidity(), wpt );
+	book->fill( _s + "l2YMc", _lvMc2.Rapidity(), wpt );
 
 }
