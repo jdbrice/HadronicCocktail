@@ -62,6 +62,9 @@ protected:
 	shared_ptr<EfficiencyWeight> efficiency;
 	double wEff = 1.0;
 
+	bool keep_intermediate_states = true;
+	bool keep_full_phase_space = true;
+
 public:
 	virtual const char* classname() const { return "DecayMaker"; }
 	DecayMaker() {}
@@ -82,8 +85,10 @@ public:
 
 protected:
 
+	unsigned long long int get_seed();
+
 	virtual void make();
-	virtual void postDecay( string _name, TLorentzVector &_parent, ParticleDecayer &_pd );
+	virtual bool postDecay( string _name, TLorentzVector &_parent, ParticleDecayer &_pd );
 
 	virtual void postMake() {
 		TaskRunner::postMake();

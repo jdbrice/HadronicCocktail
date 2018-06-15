@@ -32,7 +32,7 @@ void DecayNTupleMaker::initialize(){
 }
 
 
-void DecayNTupleMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDecayer &_pd ){
+bool DecayNTupleMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDecayer &_pd ){
 	DecayMaker::postDecay( _name, _parent, _pd );
 
 	// Get the two lepton decay products
@@ -77,6 +77,7 @@ void DecayNTupleMaker::postDecay( string _name, TLorentzVector &_parent, Particl
 	data[22] = _pd.getNProducts();
 
 	ntuple->Fill( data );
+	return true;
 
 }
 

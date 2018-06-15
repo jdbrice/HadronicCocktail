@@ -17,7 +17,7 @@
 			<TFile url="./Cocktail_{CHANNEL}_{mod}.root" />
 		</output>
 
-		<Make QA="false" TF1="true"/>
+		<Make QA="false" TF1="true" intermediate="true" fullPS="false" />
 		
 		<ActiveChannels>
 			<ActiveChannel name="{CHANNEL}" n="{N}" weight="1.0" />
@@ -61,7 +61,7 @@
 		<mass width="0.005" min="0" max="5" />
 		<pT width="0.005" min="0" max="10" />
 		<eta nBins="1000" min="-5.0" max="5.0" />
-		<rapidity nBins="1000" min="-5.0" max="5.0" />
+		<rapidity nBins="1000" min="-10.0" max="10.0" />
 
 		
 		<!-- <Include url="config/CocktailQABins.xml" /> -->

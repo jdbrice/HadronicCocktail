@@ -62,6 +62,23 @@ public:
 		return true;
 	}
 
+	bool pass( TLorentzVector &lv, string name ){
+
+		// do this first so that TLorentzVector::Eta does not complaine when pT==0
+		if (lv.Pt() != lv.Pt()) return false;
+
+		if ( "eta" == name ){
+			if ( !eta->inInclusiveRange( lv.Eta() ) ) return false;
+		} else if ( "pt" == name ){
+			if ( !pT->inInclusiveRange( lv.Pt() ) ) return false;
+		} else if ( "y" == name ){
+			if ( !y->inInclusiveRange( lv.Rapidity() ) ) return false;
+		} else if ( "phi" == name ){
+			if ( !phi->inInclusiveRange( lv.Phi() ) )  return false;
+		}
+		return true;
+	}
+
 	bool fail( TLorentzVector &lv, TH1D *_h = nullptr ){
 		return !pass( lv, _h );
 	}
@@ -71,6 +88,15 @@ public:
 		if ( !pass( lv2 ) ) return false;
 		if ( !leadingPt->inInclusiveRange( lv1.Pt() ) && !leadingPt->inInclusiveRange( lv2.Pt() ) )
 			return false;
+
+		return true;
+	}
+
+	bool pass( TLorentzVector &lv1, TLorentzVector &lv2, string name ){
+		if ( !pass( lv1, name ) ) return false;
+		if ( !pass( lv2, name ) ) return false;
+		
+		if ( "pt" == name && !leadingPt->inInclusiveRange( lv1.Pt() ) && !leadingPt->inInclusiveRange( lv2.Pt() ) ) return false;
 
 		return true;
 	}

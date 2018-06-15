@@ -1,22 +1,40 @@
 #include "Makers/DecayMaker.h"
 #include "EfficiencyWeightF1D.h"
 
+
+unsigned long long int DecayMaker::get_seed(){
+		unsigned long long int random_value = 0; //Declare value to store data into
+		size_t size = sizeof(random_value); //Declare size of data
+		ifstream urandom("/dev/urandom", ios::in|ios::binary); //Open stream
+		if(urandom) //Check if stream is open
+		{
+			urandom.read(reinterpret_cast<char*>(&random_value), size); //Read from urandom
+			if(urandom) {
+				return random_value;
+			}
+			else { //Read failed
+				return 0;
+			}
+			urandom.close(); //close stream
+		} else { //Open failed
+			std::cerr << "Failed to open /dev/urandom" << std::endl;
+		}
+		return 0;
+	}
+
 void DecayMaker::initialize(){
 	INFOC( "Initialize" );
 
-	int seed = config.getInt( "SEED", 0 );
-	
 	gRandom = new TRandom3();
 	
-	int jobIndex = config.getInt( "jobIndex" );
-	if ( "all" != config.getString( "jobIndex" ) && jobIndex >= 0  ){
-		seed = seed + ( jobIndex + 1 );
-	}
-	INFO( classname(), "Initialize RANDOM SEED = " << seed );
+	unsigned long long int seed = get_seed();
+	INFOC( "Setting seed = " << seed );
 	gRandom->SetSeed( seed );
 
 	makeQA = config.getBool( nodePath + ".Make:QA", true );
 	makeTF1 = config.getBool( nodePath + ".Make:TF1", false );
+	keep_intermediate_states = config.get<bool>( nodePath + ".Make:intermediate", true ) ;
+	keep_full_phase_space    = config.get<bool>( nodePath + ".Make:fullPS", true ) ;
 
 	INFOC( "initializeHistoBook" );
 	initializeHistoBook( config, nodePath, "" );
@@ -177,7 +195,7 @@ void DecayMaker::prepareQAHistos(){
 }
 
 void DecayMaker::prepareHistos(){
-	vector<string> states = { "FullAcc_", "PairCut_", "AccCut_" };
+	vector<string> states = { "FullAcc_", "PairCut_", "AccCut0_", "AccCut1_" };
 	vector<string> histos = { "dNdM", "dNdM_pT", "dNdM_pT_eff", "PtRc", "PtMc", "Eta", "rapidity", "Eta_vs_l2Eta" };
 	vector<string> ls     = { "l1", "l2", "w" };
 
@@ -222,7 +240,7 @@ void DecayMaker::make(){
 				book->get( "parent_pT_vs_phi", name  )->Fill( lv.Phi(), lv.Pt() );
 			}
 			
-			if ( parentFilter.fail( lv, hkfParent ) ) continue;
+			// if ( parentFilter.fail( lv, hkfParent ) ) continue;
 
 			
 			namedPlcDecayers[ name ].decay( lv );
@@ -233,9 +251,12 @@ void DecayMaker::make(){
 
 			// if ( daughterFilter.fail( l1lv, hkfLepton1 ) || daughterFilter.fail(l2lv, hkfLepton2) ) continue;
 
-			tp.showProgress( i );
+			
 
-			postDecay( name, lv, namedPlcDecayers[ name ] );
+			bool kept_decay = postDecay( name, lv, namedPlcDecayers[ name ] );
+			if ( false == kept_decay && false == keep_full_phase_space) continue;
+
+			tp.showProgress( i );
 			i++;
 		}
 		cout << "Efficiency: " << (float)i / t << endl;
@@ -243,15 +264,13 @@ void DecayMaker::make(){
 	}// active channel loop
 }
 
-void DecayMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDecayer &_pd ){
+bool DecayMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDecayer &_pd ){
 	
 
 	TLorentzVector &mclv = _parent ;
 	TLorentzVector mclv1, mclv2;
 	mclv1 = _pd.getLepton1().lv;
 	mclv2 = _pd.getLepton2().lv;
-
-	INFOC( "postDecay( _name=" << _name << " )" );
 
 	// =============================== MOMENTUM SMEARING ===============================
 	// TLorentzVector rclv, rclv1, rclv2;
@@ -269,20 +288,30 @@ void DecayMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDecay
 	rclv = rclv1 + rclv2;
 	// =============================== MOMENTUM SMEARING ===============================
 
-	if ( false == makeHistos ) return;
+	if ( false == makeHistos ) return true;
 	
 	double w = 1.0; // could support weigthing, no use now
-	fillState( "FullAcc_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
+	if ( keep_full_phase_space ){
+		fillState( "FullAcc_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
+	}
 
 	if ( parentFilter.pass( rclv ) ){
 		fillState( "PairCut_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
 
 		// check the kinematic filters
-		if ( daughterFilter.pass( rclv1, rclv2 ) ){
-			fillState( "AccCut_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
-
+		if ( keep_intermediate_states && daughterFilter.pass( rclv1, rclv2, "eta" ) ){
+			fillState( "AccCut0_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
 		} // PASS kinematic filters
+
+		if ( daughterFilter.pass( rclv1, rclv2 ) ){
+			fillState( "AccCut1_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
+		} // PASS kinematic filters
+
+		return true;
 	} // PASS rapidity cut on parent
+
+
+	return false;
 }
 
 void DecayMaker::fillState( string _s, 
@@ -311,7 +340,7 @@ void DecayMaker::fillState( string _s,
 	book->fill( _s + "l1Eta", _lvRc1.Eta(), wpt );
 	book->fill( _s + "l1Eta_vs_l2Eta", _lvRc1.Eta(), _lvRc2.Eta(), wpt );
 	book->fill( _s + "l2Eta", _lvRc2.Eta(), wpt );
-	book->fill( _s + "rapidity", _lvRc.Rapidity(), wpt );
+	book->fill( _s + "rapidity", _lvMc.Rapidity(), wpt );
 	book->fill( _s + "l1rapidity", _lvRc1.Rapidity(), wpt );
 	book->fill( _s + "l2rapidity", _lvRc2.Rapidity(), wpt );
 
