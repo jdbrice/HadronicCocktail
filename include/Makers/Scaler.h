@@ -71,8 +71,8 @@ public:
 			// BR = hFullAcc->GetXaxis()->GetBinWidth(1);
 		}
 		else {
-			hFullAcc = get<TH2>( "RapCut_dNdM_pT", "AccCut" );
-			hAccCut  = get<TH2>( "AccCut_dNdM_pT", "AccCut" );
+			hFullAcc = get<TH2>( "PairCut_dNdM_pT", "AccCut" );
+			hAccCut  = get<TH2>( "AccCut1_dNdM_pT", "AccCut" );
 		}
 
 		if ( nullptr == hFullAcc || nullptr == hAccCut ){

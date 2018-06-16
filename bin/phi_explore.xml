@@ -6,13 +6,13 @@
 
 	<dNdy>1.73e-2</dNdy>
 	<BR>2.86e-4</BR>
-	<Nmb>3.56e11</Nmb>
-
+	<!-- <Nmb>3.56e11</Nmb> -->
+	<Nmb>1.0</Nmb>
 
 	<Transform>
-		<Draw name="RapCut" data="d" draw="pt" select=" abs(y) < 0.5 " bins_x="bins.Pt" />
-		<Draw name="AccCut0" data="d" draw="pt" select=" abs(y) < 0.5 && abs( l1Eta ) < 0.5 && abs( l2Eta ) < 0.5" bins_x="bins.Pt" />
-		<Draw name="AccCut1" data="d" draw="pt" select=" abs(y) < 0.5 && abs( l1Eta ) < 0.5 && abs( l2Eta ) < 0.5 && l1PtRc>1.1 && l2PtRc>1.1" bins_x="bins.Pt" />
+		<Draw name="RapCut" data="d" draw="pt" select=" pt * (abs(y) < 0.5) " bins_x="bins.Pt" />
+		<Draw name="AccCut0" data="d" draw="pt" select=" pt* (abs(y) < 0.5 && abs( l1Eta ) < 0.5 && abs( l2Eta ) < 0.5)" bins_x="bins.Pt" />
+		<Draw name="AccCut1" data="d" draw="pt" select=" pt* (abs(y) < 0.5 && abs( l1Eta ) < 0.5 && abs( l2Eta ) < 0.5 && l1PtRc>1.1 && l2PtRc>1.1)" bins_x="bins.Pt" />
 	</Transform>
 
 	<Transform>
