@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<config>
-	<Include url="template.xml">
-		<LIST>lists/comp_omega_mumu.lis</LIST>
-	</Include>
-	<ActiveChannels>
-		<ActiveChannel name="omega_mumu" pMcId="223" decay="2" dndy="1.33e-1" br="9.0e-5" />
-	</ActiveChannels>
-</config>

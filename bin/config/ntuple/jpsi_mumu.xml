@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<config>
-	<Include url="ntuple.xml">
-		<CHANNEL>jpsi_mumu</CHANNEL>
-		<WEIGHT>4524399.0</WEIGHT>
-	</Include>
-</config>

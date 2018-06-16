@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<config>
-	<Include url="template.xml">
-		<LIST>lists/comp_phi.lis</LIST>
-	</Include>
-	<ActiveChannels>
-		<ActiveChannel name="phi_mumu" pMcId="333" decay="2" dndy="1.73e-2" br="2.87e-4" />
-	</ActiveChannels>
-</config>

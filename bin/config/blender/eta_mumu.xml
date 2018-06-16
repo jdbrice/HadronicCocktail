@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<config>
-	<Include url="template.xml">
-		<LIST>lists/comp_eta_mumu.lis</LIST>
-	</Include>
-	<ActiveChannels>
-		<ActiveChannel name="eta_mumu" pMcId="221" decay="2" dndy="1.7e-1" br="5.8e-6" />
-	</ActiveChannels>
-</config>

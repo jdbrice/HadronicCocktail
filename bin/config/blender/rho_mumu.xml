@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<config>
-	<Include url="template.xml">
-		<LIST>lists/comp_rho.lis</LIST>
-	</Include>
-	<ActiveChannels>
-		<ActiveChannel name="rho_mumu" pMcId="113" decay="2" dndy="2.22e-1" br="4.55e-5" />
-	</ActiveChannels>
-</config>
