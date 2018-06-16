@@ -6,13 +6,9 @@
 class Scaler : public HistoAnalyzer
 {
 protected:
-	string channel;
-	double BR   = 1.0;
-	double dNdy = 1.0;
-	double uncBR   = 0.0;
-	double uncdNdy = 0.0;
-
 	float minPt = 0.0;
+
+	TH1 * hsum = nullptr;
 
 public:
 	virtual const char* classname() const { return "Scaler"; }
@@ -24,59 +20,42 @@ public:
 		HistoAnalyzer::initialize();
 		INFOC( "" );
 
-		minPt = config.getFloat( nodePath + ".minPt" );
+		minPt = config.get<float>( nodePath + ".minPt" );
 		INFOC( "Min Pair Pt = " << minPt );
 	}
 
 
-
-	virtual void make(){
-
-		channel = config["CHANNEL"];
-		vector<string> paths = config.childrenOf( nodePath + ".ActiveChannels", "ActiveChannel" );
-
-		string sp = "";//config.q( nodePath + ".ActiveChannels.ActiveChannel{name==" + channel + "}" );
-		for ( string p : paths ){
-			if (channel == config.getString( p + ":name" ))
-				sp = p;
-		}
-
-		INFOC( "Node: " << sp );
-		if ( config.exists( sp ) && config.exists( sp + ":br" ) && config.exists( sp + ":dndy" ) ){
-			BR      = config.getDouble( sp + ":br", 1.0 );
-			uncBR   = config.getDouble( sp + ":ebr", 1.0 );
-			dNdy    = config.getDouble( sp + ":dndy", 1.0 );
-			uncdNdy = config.getDouble( sp + ":redndy", 1.0 );	//relative error
-
-			INFOC( "===========================CHANNEL=======================" );
-			INFOC( " name  : " << channel );
-			INFOC( " BR    : " << BR << " +/- " << uncBR );
-			INFOC( " dNdy  : " << dNdy << " +/- " << uncdNdy );
-			INFOC( "===========================CHANNEL=======================" );
-		} else {
-			ERRORC( "cannot find scaling info for " << channel );
-			return;
-		}
-
-
+	virtual void makeChannel( string p ){
+		INFOC( "{===========================CHANNEL=======================" );
 		book->cd();
+		string channel = config.get<string>( p +":name" );
+		
+		double BR      = config.get<double>( p + ":br", 1.0 );
+		double uncBR   = config.get<double>( p + ":ebr", 1.0 );
+		double dNdy    = config.get<double>( p + ":dndy", 1.0 );
+		double uncdNdy = config.get<double>( p + ":redndy", 1.0 );	//relative error
 
+		
+		INFOC( " name  : " << channel );
+		INFOC( " BR    : " << BR << " +/- " << uncBR );
+		INFOC( " dNdy  : " << dNdy << " +/- " << uncdNdy );
+		
 
 		TH2 *hFullAcc = nullptr;
-		TH2 *hAccCut = nullptr;
+		TH2 *hAccCut  = nullptr;
 		if ( "ccbar_mumu" == channel ){
-			hFullAcc = get<TH2>( "FullAcc_dNdM_pT", "AccCut" );//(get<TH2>( "FullAcc_dNdM_pT_" + channel, "AccCut" ))->ProjectionX( ("FullAcc_dNdM_" + channel).c_str() );
-			hAccCut  = get<TH2>( "AccCut_wdNdM_pT", "AccCut" );
+			hFullAcc = get<TH2>( "FullAcc_dNdM_pT", channel );//(get<TH2>( "FullAcc_dNdM_pT_" + channel, channel ))->ProjectionX( ("FullAcc_dNdM_" + channel).c_str() );
+			hAccCut  = get<TH2>( "AccCut_wdNdM_pT", channel );
 			// hFullAcc->Scale( 1.0 / 0.7 );
 			// BR = hFullAcc->GetXaxis()->GetBinWidth(1);
 		}
 		else {
-			hFullAcc = get<TH2>( "PairCut_dNdM_pT", "AccCut" );
-			hAccCut  = get<TH2>( "AccCut1_dNdM_pT", "AccCut" );
+			hFullAcc = get<TH2>( "PairCut_dNdM_pT", channel );
+			hAccCut  = get<TH2>( "AccCut1_dNdM_pT", channel );
 		}
 
-		if ( nullptr == hFullAcc || nullptr == hAccCut ){
-			ERRORC( "NULL hitograms" );
+		if ( nullptr == hFullAcc || nullptr == hAccCut){
+			ERRORC( "Some Null Histos hFullAcc=" << hFullAcc << ", hAccCut=" << hAccCut << " SKIPPING" );
 			return;
 		}
 
@@ -129,6 +108,26 @@ public:
 		} else {
 			h1Scaled->Scale( 1.0, "width" );
 		}
+
+		if ( nullptr == hsum ){
+			hsum = (TH1*)h1Scaled->Clone( "Scaled_sum" );
+		} else {
+			hsum->Add( h1Scaled );
+		}
+
+		INFOC( "}===========================CHANNEL=======================" );
+	}
+
+
+	virtual void make(){
+		vector<string> paths = config.childrenOf( nodePath + ".ActiveChannels", "ActiveChannel" );
+		INFOC( "Found " << paths.size() << " ActiveChannels" );
+		for ( string p : paths ){
+			INFOC( "Scaling ActiveChannel[" << config.get<string>( p+":name" ) << "] @ " << p );
+			makeChannel( p );
+		}
+
+		
 		
 
 

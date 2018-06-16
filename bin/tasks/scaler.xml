@@ -4,35 +4,40 @@
 	<Task name="Cocktail Scaler" type="Scaler" config="" nodePath="scaler" />
 	<Logger color="true" globalLogLevel="info" />
 
-
-	<CHANNEL>ccbar_mumu</CHANNEL>
-	<WD>/macstar/star2/jdb12/pp200/Cocktail/</WD>
 	<REBIN>1</REBIN>
 	<STATE>STAR</STATE>
 
 	<scaler>
 
 		<input>
-			<!-- <TFile url="{WD}FullAcc_{CHANNEL}.root" name="FullAcc" /> -->
-			<TFile url="{WD}{STATE}_{CHANNEL}.root" name="AccCut" />
+			<TFile name="eta_gammamumu_dalitz"      url="{DIMUON_ROOT}/data/Cocktail/eta_gammamumu_dalitz.root" />
+			<TFile name="eta_mumu"                  url="{DIMUON_ROOT}/data/Cocktail/eta_mumu.root" />
+			<TFile name="etaprime_gammamumu_dalitz" url="{DIMUON_ROOT}/data/Cocktail/etaprime_gammamumu_dalitz.root" />
+			<TFile name="jpsi_mumu"                 url="{DIMUON_ROOT}/data/Cocktail/jpsi_mumu.root" />
+			<TFile name="omega_mumu"                url="{DIMUON_ROOT}/data/Cocktail/omega_mumu.root" />
+			<TFile name="omega_pi0mumu_dalitz"      url="{DIMUON_ROOT}/data/Cocktail/omega_pi0mumu_dalitz.root" />
+			<TFile name="phi_mumu"                  url="{DIMUON_ROOT}/data/Cocktail/phi_mumu.root" />
+			<TFile name="psi_mumu"                  url="{DIMUON_ROOT}/data/Cocktail/psi_mumu.root" />
+			<TFile name="rho_mumu"                  url="{DIMUON_ROOT}/data/Cocktail/rho_mumu.root" />
+			<TFile name="ccbar_mumu"                url="{DIMUON_ROOT}/data/Cocktail/ccbar_mumu.root" />
 		</input>
 
 		<output>
-			<TFile url="{WD}Scaled_{STATE}_{CHANNEL}.root" />
+			<TFile url="Scaled_{STATE}.root" />
 		</output>
-
 
 		<!-- Stores the scaling info keyed by name -->
 		<ActiveChannels>
-			<ActiveChannel name="eta_mumu" dndy="1.7e-1" redndy=".23" br="5.8e-6" ebr="0.8e-6" />
-			<ActiveChannel name="eta_gammamumu" dndy="1.7e-1" redndy=".23" br="3.1e-4" ebr="0.4e-4" />
-			<ActiveChannel name="omega_mumu" dndy="1.33e-1" redndy=".21" br="9.0e-5" ebr="3.1e-5" />
-			<ActiveChannel name="omega_pi0mumu" dndy="1.33e-1" redndy=".21" br="1.3e-4" ebr="0.4e-4" />
-			<ActiveChannel name="rho_mumu" dndy="2.22e-1" redndy=".15" br="4.55e-5" ebr="0.28e-5" />
-			<ActiveChannel name="phi_mumu" dndy="1.73e-2" redndy=".20" br="2.87e-4" ebr="0.19e-4" />
-			<ActiveChannel name="jpsi_mumu" dndy="2.44e-5" redndy=".20" br="5.961e-2" ebr="3.3e-4" />
-			<ActiveChannel name="etaprime_gammamumu" dndy="4.07e-2" redndy=".29" br="1.08e-4" ebr="0.27e-4" />
-			<ActiveChannel name="ccbar_mumu" dndy="0.92" olddndy="1.8976e-02" redndy="0.01" br="1.0" ebr="0.0" />
+			<ActiveChannel name="eta_mumu"                  dndy= "1.7e-1" redndy=".23" br="5.8e-6" ebr="0.8e-6" />
+			<ActiveChannel name="eta_gammamumu_dalitz"      dndy= "1.7e-1" redndy=".23" br="3.1e-4" ebr="0.4e-4" />
+			<ActiveChannel name="omega_mumu"                dndy= "1.33e-1" redndy=".21" br="9.0e-5" ebr="3.1e-5" />
+			<ActiveChannel name="omega_pi0mumu_dalitz"      dndy= "1.33e-1" redndy=".21" br="1.3e-4" ebr="0.4e-4" />
+			<ActiveChannel name="rho_mumu"                  dndy= "2.22e-1" redndy=".15" br="4.55e-5" ebr="0.28e-5" />
+			<ActiveChannel name="phi_mumu"                  dndy= "1.73e-2" redndy=".20" br="2.87e-4" ebr="0.19e-4" />
+			<ActiveChannel name="jpsi_mumu"                 dndy= "2.44e-5" redndy=".20" br="5.961e-2" ebr="3.3e-4" />
+			<ActiveChannel name="psi_mumu"                  dndy= "4.88e-7" redndy=".20" br="8.0e-3" ebr="3.3e-4" />
+			<ActiveChannel name="etaprime_gammamumu_dalitz" dndy= "4.07e-2" redndy=".29" br="1.08e-4" ebr="0.27e-4" />
+			<ActiveChannel name="ccbar_mumu"                dndy="0.92" olddndy="1.8976e-02" redndy="0.01" br="1.0" ebr="0.0" />
 		</ActiveChannels>
 
 	</scaler>
