@@ -2,7 +2,7 @@
 <config>
 	<Parent>
 		<Range name="y" min="-1.0" max="1.0" />
-	</Parent>	
+	</Parent>
 	<Daughter>
 		<Range name="leadingPt" min="0.0" max="inf" />
 		<Range name="pT" min="0.2" max="inf"/>

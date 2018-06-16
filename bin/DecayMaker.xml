@@ -14,10 +14,10 @@
 		<Logger color="true" globalLogLevel="none" />
 
 		<output>
-			<TFile url="./Cocktail_{CHANNEL}_{mod}.root" />
+			<TFile url="{DIMUON_ROOT}/data/Cocktail/parts/Cocktail_{CHANNEL}_{mod}.root" />
 		</output>
 
-		<Make QA="false" TF1="true"/>
+		<Make QA="false" TF1="true" intermediate="true" fullPS="false" />
 		
 		<ActiveChannels>
 			<ActiveChannel name="{CHANNEL}" n="{N}" weight="1.0" />
@@ -46,7 +46,8 @@
 			<Histo name="Eta" title=";#eta ;dN/d#eta [c/GeV]" bins_x="bins.eta" />
 			<Histo name="Eta_vs_l2Eta" title=";#eta ;dN/d#eta [c/GeV]" bins_x="bins.eta" bins_y="bins.eta" />
 			<!-- <Histo name="Eta_vs_l1Eta" title=";#eta ;dN/d#eta [c/GeV]" bins_x="bins.eta" bins_y="bins.eta" /> -->
-			<Histo name="rapidity" title=";y ;dN/dy [c/GeV]" bins_x="bins.rapidity" />
+			<Histo name="YMc" title=";y ;dN/dy [c/GeV]" bins_x="bins.rapidity" />
+			<Histo name="YRc" title=";y ;dN/dy [c/GeV]" bins_x="bins.rapidity" />
 		</histograms>
 
 		<KinematicFilters>
@@ -61,7 +62,7 @@
 		<mass width="0.005" min="0" max="5" />
 		<pT width="0.005" min="0" max="10" />
 		<eta nBins="1000" min="-5.0" max="5.0" />
-		<rapidity nBins="1000" min="-5.0" max="5.0" />
+		<rapidity nBins="1000" min="-10.0" max="10.0" />
 
 		
 		<!-- <Include url="config/CocktailQABins.xml" /> -->

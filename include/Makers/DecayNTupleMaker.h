@@ -24,7 +24,7 @@ public:
 
 
 protected:
-	virtual void postDecay( string _name, TLorentzVector &_parent, ParticleDecayer &_pd );
+	virtual bool postDecay( string _name, TLorentzVector &_parent, ParticleDecayer &_pd );
 	virtual void postMake();
 	
 };

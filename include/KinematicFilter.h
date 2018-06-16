@@ -45,20 +45,48 @@ public:
 		}
 
 		// do this first so that TLorentzVector::Eta does not complaine when pT==0
-		if ( !pT->inInclusiveRange( lv.Pt() ) || lv.Pt() != lv.Pt() )
+		if ( !pT->inInclusiveRange( lv.Pt() ) || lv.Pt() != lv.Pt() ){
 			return false;
+		}
 
 		if ( nullptr != _h ){ _h->Fill( 1 ); }
 		
-		if ( !eta->inInclusiveRange( lv.Eta() ) ) return false;
+		if ( !eta->inInclusiveRange( lv.Eta() ) ) {
+			return false;
+		}
 		if ( nullptr != _h ){ _h->Fill( 2 ); }
+		
+		if ( !y->inInclusiveRange( lv.Rapidity() ) ){
+			return false;
+		} 
 
-		if ( !y->inInclusiveRange( lv.Rapidity() ) ) return false;
+		
 		if ( nullptr != _h ){ _h->Fill( 3 ); }
 
-		if ( !phi->inInclusiveRange( lv.Phi() ) )  return false;
+		if ( !phi->inInclusiveRange( lv.Phi() ) ) {
+			return false;
+		}
+
 		if ( nullptr != _h ){ _h->Fill( 4 ); }
 
+		// printf("passed rclv[pt=%0.2f, eta=%0.2f, phi=%0.2f, y=%0.2f, M=%0.2f]\n", lv.Pt(), lv.PseudoRapidity(), lv.Phi(), lv.Rapidity(), lv.M() );
+		return true;
+	}
+
+	bool pass( TLorentzVector &lv, string name ){
+
+		// do this first so that TLorentzVector::Eta does not complaine when pT==0
+		if (lv.Pt() != lv.Pt()) return false;
+
+		if ( "eta" == name ){
+			if ( !eta->inInclusiveRange( lv.Eta() ) ) return false;
+		} else if ( "pt" == name ){
+			if ( !pT->inInclusiveRange( lv.Pt() ) ) return false;
+		} else if ( "y" == name ){
+			if ( !y->inInclusiveRange( lv.Rapidity() ) ) return false;
+		} else if ( "phi" == name ){
+			if ( !phi->inInclusiveRange( lv.Phi() ) )  return false;
+		}
 		return true;
 	}
 
@@ -75,12 +103,28 @@ public:
 		return true;
 	}
 
+	bool pass( TLorentzVector &lv1, TLorentzVector &lv2, string name ){
+		if ( !pass( lv1, name ) ) return false;
+		if ( !pass( lv2, name ) ) return false;
+		
+		if ( "pt" == name && !leadingPt->inInclusiveRange( lv1.Pt() ) && !leadingPt->inInclusiveRange( lv2.Pt() ) ) return false;
+
+		return true;
+	}
+
 	bool fail( TLorentzVector &lv1, TLorentzVector &lv2 ){
 		return !pass( lv1, lv2 );
 	}
 
 	double deltaY() {
 		return y->max - y->min;
+	}
+
+	string toString(){
+		string m = "";
+		m += dts(y->min) +" < y <" + dts( y->max );
+		return m;
+
 	}
 
 protected:

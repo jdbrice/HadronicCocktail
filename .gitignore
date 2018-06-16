@@ -49,3 +49,4 @@ bin/*.lis
 bin/list
 *.json
 bin/lists
+*.log
