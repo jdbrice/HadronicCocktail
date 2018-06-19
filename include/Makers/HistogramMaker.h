@@ -26,10 +26,28 @@ protected:
 	bool makeTF1 = false;
 
 	KinematicFilter 			parentFilter;
-	KinematicFilter 			daughterFilter;
+	KinematicFilter 			daughterFilterA;
+	KinematicFilter 			daughterFilterB;
+
 public:
 	HistogramMaker() {}
 	~HistogramMaker() {}
+
+	bool passDaughterFilters( TLorentzVector &rclv1, TLorentzVector &rclv2, string namedCut ){
+		if ( daughterFilterA.pass( rclv1, namedCut ) && daughterFilterB.pass( rclv2, namedCut )  )
+			return true;
+		if ( daughterFilterB.pass( rclv1, namedCut ) && daughterFilterA.pass( rclv2, namedCut )  )
+			return true;
+		return false;
+	}
+
+	bool passDaughterFilters( TLorentzVector &rclv1, TLorentzVector &rclv2 ){
+		if ( daughterFilterA.pass( rclv1 ) && daughterFilterB.pass( rclv2 )  )
+			return true;
+		if ( daughterFilterB.pass( rclv1 ) && daughterFilterA.pass( rclv2 )  )
+			return true;
+		return false;
+	}
 
 	virtual void initialize(){
 		TreeAnalyzer::initialize();
@@ -108,7 +126,14 @@ public:
 		INFO( classname(), "Initializing PARENT kinematic filter");
 		parentFilter.load( config, nodePath + ".KinematicFilters.Parent" );
 		INFO( classname(), "Initializing DAUGHTER kinematic filter");
-		daughterFilter.load( config, nodePath + ".KinematicFilters.Daughter" );
+		// load two possibly different filters
+		if ( config.exists( nodePath + ".KinematicFilters.Daughter[1]" ) ){
+			daughterFilterA.load( config, nodePath + ".KinematicFilters.Daughter[0]" );
+			daughterFilterB.load( config, nodePath + ".KinematicFilters.Daughter[1]" );
+		} else { // assume only one, load it into both
+			daughterFilterA.load( config, nodePath + ".KinematicFilters.Daughter" );
+			daughterFilterB.load( config, nodePath + ".KinematicFilters.Daughter" );
+		}
 
 	}
 
@@ -119,8 +144,8 @@ public:
 	}
 
 	void prepareHistos(){
-		vector<string> states = { "FullAcc_", "RapCut_", "AccCut_" };
-		vector<string> histos = { "dNdM", "dNdM_pT", "dNdM_pT_eff", "PtRc", "PtMc", "Eta", "rapidity", "Eta_vs_l2Eta" };
+		vector<string> states = { "FullAcc_", "PairCut_", "AccCut0_", "AccCut1_" };
+		vector<string> histos = { "dNdM", "dNdM_pT", "dNdM_pT_eff", "PtRc", "PtMc", "Eta", "YMc", "YRc", "Eta_vs_l2Eta" };
 		vector<string> ls     = { "l1", "l2", "w" };
 
 		for ( string s : states ){
@@ -156,17 +181,26 @@ public:
 		rclv2.SetPtEtaPhiM( mclv2.Pt() * (1 + rndCrystalBall * ptRes  ) , mclv2.Eta(), mclv2.Phi(), mclv2.M() );
 		rclv = rclv1 + rclv2;
 		// =============================== MOMENTUM SMEARING ===============================
+		
 
-		double w = 1.0; // could support weigthing, no use now
+		float br1 = branchingRatio[ abs(tvars["pParentId"]) ];
+		float br2 = branchingRatio[ abs(tvars["nParentId"]) ];
+
+		double w = br1*br2; // could support weigthing, no use now
+		
 		fillState( "FullAcc_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
 
 		if ( parentFilter.pass( rclv ) ){
-			fillState( "RapCut_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
+			// printf("rclv[pt=%0.2f, eta=%0.2f, phi=%0.2f, y=%0.2f, M=%0.2f]\n", rclv.Pt(), rclv.PseudoRapidity(), rclv.Phi(), rclv.Rapidity(), rclv.M() );
+			fillState( "PairCut_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
 
 			// check the kinematic filters
-			if ( daughterFilter.pass( rclv1, rclv2 ) ){
-				fillState( "AccCut_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
+			if ( passDaughterFilters( rclv1, rclv2, "eta" ) ){
+				fillState( "AccCut0_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
+			} // PASS kinematic filters
 
+			if ( passDaughterFilters( rclv1, rclv2 ) ){
+				fillState( "AccCut1_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
 			} // PASS kinematic filters
 		} // PASS rapidity cut on parent
 	}

@@ -5,25 +5,25 @@
 	<Logger color="true" globalLogLevel="info" />
 
 	<REBIN>1</REBIN>
-	<STATE>STAR</STATE>
+	<STATE>MTDMTD</STATE>
 
 	<scaler>
 
 		<input>
-			<TFile name="eta_gammamumu_dalitz"      url="{DIMUON_ROOT}/data/Cocktail/eta_gammamumu_dalitz.root" />
-			<TFile name="eta_mumu"                  url="{DIMUON_ROOT}/data/Cocktail/eta_mumu.root" />
-			<TFile name="etaprime_gammamumu_dalitz" url="{DIMUON_ROOT}/data/Cocktail/etaprime_gammamumu_dalitz.root" />
-			<TFile name="jpsi_mumu"                 url="{DIMUON_ROOT}/data/Cocktail/jpsi_mumu.root" />
-			<TFile name="omega_mumu"                url="{DIMUON_ROOT}/data/Cocktail/omega_mumu.root" />
-			<TFile name="omega_pi0mumu_dalitz"      url="{DIMUON_ROOT}/data/Cocktail/omega_pi0mumu_dalitz.root" />
-			<TFile name="phi_mumu"                  url="{DIMUON_ROOT}/data/Cocktail/phi_mumu.root" />
-			<TFile name="psi_mumu"                  url="{DIMUON_ROOT}/data/Cocktail/psi_mumu.root" />
-			<TFile name="rho_mumu"                  url="{DIMUON_ROOT}/data/Cocktail/rho_mumu.root" />
-			<TFile name="ccbar_mumu"                url="{DIMUON_ROOT}/data/Cocktail/ccbar_mumu.root" />
+			<TFile name="eta_gammamumu_dalitz"      url="{DIMUON_ROOT}/data/Cocktail/{STATE}-eta_gammamumu_dalitz.root" />
+			<TFile name="eta_mumu"                  url="{DIMUON_ROOT}/data/Cocktail/{STATE}-eta_mumu.root" />
+			<TFile name="etaprime_gammamumu_dalitz" url="{DIMUON_ROOT}/data/Cocktail/{STATE}-etaprime_gammamumu_dalitz.root" />
+			<TFile name="jpsi_mumu"                 url="{DIMUON_ROOT}/data/Cocktail/{STATE}-jpsi_mumu.root" />
+			<TFile name="omega_mumu"                url="{DIMUON_ROOT}/data/Cocktail/{STATE}-omega_mumu.root" />
+			<TFile name="omega_pi0mumu_dalitz"      url="{DIMUON_ROOT}/data/Cocktail/{STATE}-omega_pi0mumu_dalitz.root" />
+			<TFile name="phi_mumu"                  url="{DIMUON_ROOT}/data/Cocktail/{STATE}-phi_mumu.root" />
+			<TFile name="psi_mumu"                  url="{DIMUON_ROOT}/data/Cocktail/{STATE}-psi_mumu.root" />
+			<TFile name="rho_mumu"                  url="{DIMUON_ROOT}/data/Cocktail/{STATE}-rho_mumu.root" />
+			<TFile name="ccbar_mumu"                url="{DIMUON_ROOT}/data/Cocktail/{STATE}-ccbar_mumu.root" />
 		</input>
 
 		<output>
-			<TFile url="Scaled_{STATE}.root" />
+			<TFile url="{DIMUON_ROOT}/data/Cocktail/{STATE}-Scaled.root" />
 		</output>
 
 		<!-- Stores the scaling info keyed by name -->
@@ -35,7 +35,7 @@
 			<ActiveChannel name="rho_mumu"                  dndy= "2.22e-1" redndy=".15" br="4.55e-5" ebr="0.28e-5" />
 			<ActiveChannel name="phi_mumu"                  dndy= "1.73e-2" redndy=".20" br="2.87e-4" ebr="0.19e-4" />
 			<ActiveChannel name="jpsi_mumu"                 dndy= "2.44e-5" redndy=".20" br="5.961e-2" ebr="3.3e-4" />
-			<ActiveChannel name="psi_mumu"                  dndy= "4.88e-7" redndy=".20" br="8.0e-3" ebr="3.3e-4" />
+			<ActiveChannel name="psi_mumu"                  dndy= "3.38e-6" redndy=".20" br="8.0e-3" ebr="3.3e-4" />
 			<ActiveChannel name="etaprime_gammamumu_dalitz" dndy= "4.07e-2" redndy=".29" br="1.08e-4" ebr="0.27e-4" />
 			<ActiveChannel name="ccbar_mumu"                dndy="0.92" olddndy="1.8976e-02" redndy="0.01" br="1.0" ebr="0.0" />
 		</ActiveChannels>

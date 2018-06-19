@@ -44,7 +44,8 @@ protected:
 	int maxN;
 
 	KinematicFilter 			  parentFilter;
-	KinematicFilter 			  daughterFilter;
+	KinematicFilter 			  daughterFilterA;
+	KinematicFilter 			  daughterFilterB;
 
 	shared_ptr<TF1>				  momResolution;
 	shared_ptr<TF1>				  momShape;
@@ -84,6 +85,22 @@ public:
 							double _w = 1.0 );
 
 protected:
+
+	bool passDaughterFilters( TLorentzVector &rclv1, TLorentzVector &rclv2, string namedCut ){
+		if ( daughterFilterA.pass( rclv1, namedCut ) && daughterFilterB.pass( rclv2, namedCut )  )
+			return true;
+		if ( daughterFilterB.pass( rclv1, namedCut ) && daughterFilterA.pass( rclv2, namedCut )  )
+			return true;
+		return false;
+	}
+
+	bool passDaughterFilters( TLorentzVector &rclv1, TLorentzVector &rclv2 ){
+		if ( daughterFilterA.pass( rclv1 ) && daughterFilterB.pass( rclv2 )  )
+			return true;
+		if ( daughterFilterB.pass( rclv1 ) && daughterFilterA.pass( rclv2 )  )
+			return true;
+		return false;
+	}
 
 	unsigned long long int get_seed();
 

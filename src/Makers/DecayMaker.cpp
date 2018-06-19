@@ -115,8 +115,18 @@ void DecayMaker::initialize(){
 	INFO( classname(), "Initializing PARENT kinematic filter");
 	parentFilter.load( config, nodePath + ".KinematicFilters.Parent" );
 	INFO( classname(), "Initializing DAUGHTER kinematic filter");
-	daughterFilter.load( config, nodePath + ".KinematicFilters.Daughter" );
+	
+	// load two possibly different filters
+	if ( config.exists( nodePath + ".KinematicFilters.Daughter[1]" ) ){
+		daughterFilterA.load( config, nodePath + ".KinematicFilters.Daughter[0]" );
+		daughterFilterB.load( config, nodePath + ".KinematicFilters.Daughter[1]" );
+	} else { // assume only one, load it into both
+		daughterFilterA.load( config, nodePath + ".KinematicFilters.Daughter" );
+		daughterFilterB.load( config, nodePath + ".KinematicFilters.Daughter" );
+	}
 
+	INFOC( "DaughterFilterA:\n" << daughterFilterA.toString() );
+	INFOC( "DaughterFilterB:\n" << daughterFilterB.toString() );
 
 	momSmearing = config.getBool( nodePath + ".MomentumSmearing", true );
 	INFOC( "==========MOMETUM SMEARING=================" );
@@ -225,7 +235,7 @@ void DecayMaker::make(){
 		tp.showProgress( i );
 		i = 1;
 		int t = 1;
-		while ( i < N ){
+		while ( i < N+1 ){
 			t++;
 		
 			TLorentzVector lv = namedPlcSamplers[name].sample();
@@ -293,11 +303,11 @@ bool DecayMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDecay
 		fillState( "PairCut_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
 
 		// check the kinematic filters
-		if ( keep_intermediate_states && daughterFilter.pass( rclv1, rclv2, "eta" ) ){
+		if ( keep_intermediate_states && passDaughterFilters( rclv1, rclv2, "eta" ) ){
 			fillState( "AccCut0_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
 		} // PASS kinematic filters
 
-		if ( daughterFilter.pass( rclv1, rclv2 ) ){
+		if ( passDaughterFilters( rclv1, rclv2 ) ){
 			fillState( "AccCut1_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
 		} // PASS kinematic filters
 		return true;

@@ -205,7 +205,6 @@ protected:
 
 	ParticleInfo &lepton1(){
 
-		INFOC( "There are " << products.size() << " products" );
 		for ( ParticleInfo &pi : products ){
 			if (pi.isLepton())
 				return pi;

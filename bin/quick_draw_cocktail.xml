@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 
-	<Data name="d" url="Scaled_STAR.root" />
+	<STATE>MTDMTD</STATE>
+	<Data name="d" url="{STATE}-Scaled.root" />
+
 
 	<TCanvas w="1600" h="900" />
 	<Margins>0.05, 0.05, 0.12, 0.12</Margins>
 
+	<axis>
+		<x min="0" max="4" />
+		<y min="1e-10" max="5e-4" />
+	</axis>
+
 	<Plot>
-		<Axes lsx="0, 4, 100" lsy="0, 1, 1000" y-title="#frac{dN}{dMdy} (GeV/c^{2})^{-1}" x-title="M_{#mu#mu} (GeV/c)^{2}" optstat="0" logy="1" min="1e-10" max="5e-4" right-y-axis="1"/>
+		<Axes lsx="{axis.x:min}, {axis.x:max}, 100" lsy="0, 1, 1000" y-title="#frac{dN}{dMdy} (GeV/c^{2})^{-1}" x-title="M_{#mu#mu} (GeV/c)^{2}" optstat="0" logy="1" min="{axis.y:min}" max="{axis.y:max}" right-y-axis="1"/>
 		<TLatex x="0.62" y="0.9" text="STAR Preliminary" point="22"/>
 		<TLatex x="0.62" y="0.84" text="p+p at #sqrt{s} = 200 GeV" point="22"/>
-		<TLatex x="0.62" y="0.79" text="|y_{#mu#mu}| < 0.5 & p_{T}^{#mu#mu} > 0.0 (GeV/c)" point="14"/>
-		<TLatex x="0.62" y="0.73" text="|#eta_{#mu}| < 0.5 & p_{T}^{#mu} > 1.1 (GeV/c)" point="14"/>
-
+		<Include url="{STATE}.Scope"/>
 		<Loop var="histname" states="ccbar_mumu, eta_mumu, jpsi_mumu, psi_mumu, omega_mumu, omega_pi0mumu_dalitz, rho_mumu, phi_mumu, eta_gammamumu_dalitz, etaprime_gammamumu_dalitz, sum" >
 			<Histo name="Scaled_{histname}" draw="same c" style="style.{histname}" />
 		</Loop>
@@ -20,21 +25,21 @@
 
 		<Legend border-size="0" fill-style="0" columns="3" text_point="20">
 			<Position pos="top left" padding="0.01, 0.0, 0.0, 0.01" h="0.24" w="0.47"/>
-			<Entry name="Scaled_etaprime_gammamumu_dalitz" title="#eta' #rightarrow#gamma#mu#mu" opt="l" />
-			<Entry name="Scaled_eta_gammamumu_dalitz" title="#eta#rightarrow#gamma#mu#mu" opt="l" />
-			<Entry name="Scaled_omega_pi0mumu_dalitz" title="#omega#rightarrow#pi^{0}#mu#mu" opt="l" />
-			<Entry name="Scaled_eta_mumu" title="#eta#rightarrow#mu#mu" opt="l" />
-			<Entry name="Scaled_phi_mumu" title="#phi#rightarrow#mu#mu" opt="l" />
-			<Entry name="Scaled_rho_mumu" title="#rho#rightarrow#mu#mu" opt="l" />
-			<Entry name="Scaled_omega_mumu" title="#omega#rightarrow#mu#mu" opt="l" />
-			<Entry name="Scaled_Smooth_ccbar_mumu" title="c#bar{c}#rightarrow#mu#mu" opt="l" />
-			<Entry name="Scaled_jpsi_mumu" title="J/#Psi#rightarrow#mu#mu" opt="l" />
-			<Entry name="Scaled_psi_mumu" title="#Psi(2S)#rightarrow#mu#mu" opt="l" />
-			<Entry name="Scaled_ccbar_mumu" title="c#bar{c}#rightarrow#mu#mu" opt="l" />
-			<Entry name="Scaled_sum" title="sum" opt="l" />
+			<Entry name="Scaled_etaprime_gammamumu_dalitz" title="#eta' #rightarrow#gamma#mu#mu" opt="l" lw="2" />
+			<Entry name="Scaled_eta_gammamumu_dalitz" title="#eta#rightarrow#gamma#mu#mu" opt="l" lw="2" />
+			<Entry name="Scaled_omega_pi0mumu_dalitz" title="#omega#rightarrow#pi^{0}#mu#mu" opt="l" lw="2" />
+			<Entry name="Scaled_eta_mumu" title="#eta#rightarrow#mu#mu" opt="l" lw="2" />
+			<Entry name="Scaled_phi_mumu" title="#phi#rightarrow#mu#mu" opt="l" lw="2" />
+			<Entry name="Scaled_rho_mumu" title="#rho#rightarrow#mu#mu" opt="l" lw="2" />
+			<Entry name="Scaled_omega_mumu" title="#omega#rightarrow#mu#mu" opt="l" lw="2" />
+			<Entry name="Scaled_Smooth_ccbar_mumu" title="c#bar{c}#rightarrow#mu#mu" opt="l" lw="2" />
+			<Entry name="Scaled_jpsi_mumu" title="J/#Psi#rightarrow#mu#mu" opt="l" lw="2" />
+			<Entry name="Scaled_psi_mumu" title="#Psi(2S)#rightarrow#mu#mu" opt="l" lw="2" />
+			<Entry name="Scaled_ccbar_mumu" title="c#bar{c}#rightarrow#mu#mu" opt="l" lw="2" />
+			<Entry name="Scaled_sum" title="sum" opt="l" lw="2" />
 		</Legend>
 
-		<Export url="cocktail.pdf" />
+		<Export url="{STATE}-cocktail.pdf" />
 	</Plot>
 
 	<style>
@@ -50,6 +55,22 @@
 		<etaprime_gammamumu_dalitz line-color="#73503C" />
 		<sum line-color="#000" />
 	</style>
+
+
+	<MTDMTD>
+		<Scope>
+			<TLatex x="0.62" y="0.79" text="|y_{#mu#mu}| < 0.5 & p_{T}^{#mu#mu} > 0.0 (GeV/c)" point="14"/>
+			<TLatex x="0.62" y="0.73" text="|#eta_{#mu}| < 0.5 & p_{T}^{#mu} > 1.1 (GeV/c)" point="14"/>
+		</Scope>
+	</MTDMTD>
+	<TOFMTD>
+		<Scope>
+			<TLatex x="0.62" y="0.79" text="|y_{#mu#mu}| < 0.5 & p_{T}^{#mu#mu} > 0.0 (GeV/c)" point="14"/>
+			<TLatex x="0.62" y="0.73" text="|#eta^{#mu_{1} }| < 0.5 & |#eta^{#mu_{2} }| < 0.5" point="14"/>
+			<TLatex x="0.62" y="0.68" text="p_{T}^{#mu_{1} }>1.1 & 0.17<p_{T}^{#mu_{2} }<0.30 (GeV/c)" point="14"/>
+		</Scope>
+	</TOFMTD>
+	
 
 
 </config>

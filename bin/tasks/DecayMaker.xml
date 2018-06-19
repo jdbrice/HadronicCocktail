@@ -51,7 +51,7 @@
 		</histograms>
 
 		<KinematicFilters>
-			<Include url="config/STAR_MTD.xml" />
+			<Include url="config/STAR_MTDTOF.xml" />
 		</KinematicFilters>
 
 		<MomentumSmearing>{SMEAR}</MomentumSmearing>

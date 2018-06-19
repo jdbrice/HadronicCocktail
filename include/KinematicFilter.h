@@ -122,7 +122,10 @@ public:
 
 	string toString(){
 		string m = "";
-		m += dts(y->min) +" < y <" + dts( y->max );
+		m += dts(pT->min) + " < pT < " + dts( pT->max ) + ", ";
+		m += dts(eta->min) + " < eta < " + dts( eta->max ) + ", ";
+		m += dts(y->min) +" < y <" + dts( y->max ) + ", ";
+		m += dts(phi->min) + " < phi < " + dts( phi->max );
 		return m;
 
 	}
