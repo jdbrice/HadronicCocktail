@@ -4,6 +4,7 @@
 
 	<Task name="ccbar histogramer" type="HistogramMaker" config="" nodePath="ccbar" />
 	<Logger color="true" globalLogLevel="info" />
+	<SMEAR>true</SMEAR>
 
 	<ccbar>
 		<Logger color="true" globalLogLevel="info" />
