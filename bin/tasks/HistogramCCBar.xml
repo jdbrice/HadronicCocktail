@@ -33,7 +33,7 @@
 		</histograms>
 
 		<input>
-			<dst treeName="ccbar" url="lists/part1/ccbar_pythia.lis" splitBy="2"/>
+			<dst treeName="ccbar" url="lists/part1/ccbar_pythia.lis" splitBy="50"/>
 		</input>
 
 		<output>
