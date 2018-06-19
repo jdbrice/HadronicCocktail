@@ -27,7 +27,8 @@
 			<Histo name="Eta" title=";#eta ;dN/d#eta [c/GeV]" bins_x="bins.eta" />
 			<Histo name="Eta_vs_l2Eta" title=";#eta ;dN/d#eta [c/GeV]" bins_x="bins.eta" bins_y="bins.eta" />
 			<!-- <Histo name="Eta_vs_l1Eta" title=";#eta ;dN/d#eta [c/GeV]" bins_x="bins.eta" bins_y="bins.eta" /> -->
-			<Histo name="rapidity" title=";y ;dN/dy [c/GeV]" bins_x="bins.rapidity" />
+			<Histo name="YMc" title=";y ;dN/dy [c/GeV]" bins_x="bins.rapidity" />
+			<Histo name="YRc" title=";y ;dN/dy [c/GeV]" bins_x="bins.rapidity" />
 		</histograms>
 
 		<input>
