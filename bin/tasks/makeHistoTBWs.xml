@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+
+	<Task name="Cocktail Maker" type="HistogramTBW" config="" nodePath="cm" />
+	<Logger color="true" globalLogLevel="info" />
+
+	<N>100000</N>
+	
+<!-- 	<particles>
+		eta
+	</particles> -->
+
+	<particles>
+		eta,
+		omega,
+		rho,
+		phi,
+		etaprime,
+		jpsi,
+		psi
+	</particles>
+
+	<cm>
+		<Logger color="true" globalLogLevel="trace" />
+
+		<output>
+			<TFile url="{DIMUON_ROOT}/data/Cocktail/TBWs.root" />
+		</output>
+
+		<FunctionLibrary>
+			<Include url="config/FunctionLibrary.xml" />
+		</FunctionLibrary>
+
+		<ParticleLibrary>
+			<Include url="config/ParticleLibrary.xml" />
+		</ParticleLibrary>
+
+		<histograms>
+			<Histo name="dNdPt" title=";p_{T} (GeV/c);dN/(2#pi p_{T} dp_{T} dy) [c^{2}/GeV]" bins_x="bins.pt"  />
+			<Histo name="dNdEta" title=";#eta ;dN/d#eta" bins_x="bins.eta"  />
+			<Histo name="dNdY" title=";y ;dN/dy" bins_x="bins.y"  />
+			<Histo name="dNdPhi" title=";#phi;dN/d#phi" bins_x="bins.phi"  />
+		</histograms>
+
+	</cm>
+
+	<bins>
+		<pt width="0.001" min="0" max="10" />
+		<eta width="0.001" min="-4" max="4" />
+		<y width="0.001" min="-4" max="4" />
+		<phi width="0.001" min="-3.2" max="3.2" />
+	</bins>
+
+</config>

@@ -6,6 +6,14 @@
 
 	<REBIN>1</REBIN>
 	<STATE>MTDMTD</STATE>
+	
+	<!-- Acceptance State -->
+	<!-- Can be: 
+		FullAcc - Full Phase Space
+		PairCut - |y^mumu| < 0.5
+		AccCut0 - MTD eta acceptnace (no pt cut)
+		AccCut1 (Nominal - MTD Acceptance) -->
+	<ACC>AccCut1</ACC>
 
 	<scaler>
 
@@ -23,7 +31,7 @@
 		</input>
 
 		<output>
-			<TFile url="{DIMUON_ROOT}/data/Cocktail/{STATE}-Scaled.root" />
+			<TFile url="{DIMUON_ROOT}/data/Cocktail/{STATE}-Scaled-{ACC}.root" />
 		</output>
 
 		<!-- Stores the scaling info keyed by name -->

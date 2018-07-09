@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+	<STATE>MTDMTD</STATE>
+	<Data name="d0" url="{DIMUON_ROOT}/data/Cocktail/{STATE}-Scaled-PairCut.root" />
+	<Data name="d1" url="{DIMUON_ROOT}/data/Cocktail/{STATE}-Scaled-AccCut0.root" />
+	<Data name="d2" url="{DIMUON_ROOT}/data/Cocktail/{STATE}-Scaled-AccCut1.root" />
+
+
+	<TCanvas w="1600" h="900" />
+	<Margins>0.01, 0.01, 0.12, 0.12</Margins>
+
+	<axis>
+		<x min="0" max="4" />
+		<y min="1e-10" max="5e-3" />
+	</axis>
+
+	<Plot>
+		<Axes lsx="{axis.x:min}, {axis.x:max}, 100" lsy="0, 1, 1000" y-title="#frac{dN}{dMdy} (GeV/c^{2})^{-1}" x-title="M_{#mu#mu} (GeV/c)^{2}" optstat="0" logy="1" min="{axis.y:min}" max="{axis.y:max}" style="style.axes" />
+
+		<Histo name="d0/Scaled_sum" style="style.sum" lc="#F00" />
+		<Histo name="d1/Scaled_sum" style="style.sum" lc="#00F" />
+		<Histo name="d2/Scaled_sum" style="style.sum" />
+
+		<Legend border-size="0" fill-style="0" columns="1" text_point="20">
+			<Position pos="top right" padding="0.01, 0.03, 0.0, 0.0" h="0.30" w="0.55"/>
+			<Entry name="d0/Scaled_sum" title="|y_{#mu#mu}| < 0.5 & p_{T}^{#mu#mu} > 0.0 (GeV/c)" opt="l" lw="2" />
+			<Entry name="d1/Scaled_sum" title="+ |#eta^{#mu}| < 0.5" opt="l" lw="2" />
+			<Entry name="d2/Scaled_sum" title="+ p_{T}^{#mu} > 1.1 (GeV/c)" opt="l" lw="2" />
+		</Legend>
+
+		<Export url="PhaseSpace-{STATE}-cocktail.pdf" />
+	</Plot>
+
+	<style>
+		<eta_mumu line-color="#83BF17" />
+		<ccbar_mumu line-color="#0B99BC" />
+		<jpsi_mumu line-color="#D14D28" />
+		<psi_mumu line-color="#F14D28" />
+		<omega_mumu line-color="#0000FF" />
+		<omega_pi0mumu_dalitz line-color="#59C8DF" />
+		<rho_mumu line-color="#737495" />
+		<phi_mumu line-color="#D14D28" />
+		<eta_gammamumu_dalitz line-color="#ff703f" />
+		<etaprime_gammamumu_dalitz line-color="#73503C" />
+		<sum line-color="#000" draw="same c hist" line-width="2" />
+
+		<axes x-title-point="20" y-title-point="20" x-title-offset="0.8" x-label-point="14" y-label-point="14"/>
+	</style>
+
+
+	<MTDMTD>
+		<Scope>
+			<TLatex x="0.62" y="0.79" text="|y_{#mu#mu}| < 0.5 & p_{T}^{#mu#mu} > 0.0 (GeV/c)" point="14"/>
+			<TLatex x="0.62" y="0.73" text="|#eta_{#mu}| < 0.5 & p_{T}^{#mu} > 1.1 (GeV/c)" point="14"/>
+		</Scope>
+	</MTDMTD>
+	<TOFMTD>
+		<Scope>
+			<TLatex x="0.62" y="0.79" text="|y_{#mu#mu}| < 0.5 & p_{T}^{#mu#mu} > 0.0 (GeV/c)" point="14"/>
+			<TLatex x="0.62" y="0.73" text="|#eta^{#mu_{1} }| < 0.5 & |#eta^{#mu_{2} }| < 0.5" point="14"/>
+			<TLatex x="0.62" y="0.68" text="p_{T}^{#mu_{1} }>1.1 & 0.17<p_{T}^{#mu_{2} }<0.30 (GeV/c)" point="14"/>
+		</Scope>
+	</TOFMTD>
+	
+
+
+</config>

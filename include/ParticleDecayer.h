@@ -107,6 +107,7 @@ public:
 		ParticleInfo &l2 = this->lepton2();
 		ParticleInfo &n  = this->neutral();
 
+		// TRACEC( "parent.M=" << _parent_lv.M() << ", M_ll=" << _M_ll );
 		// parent_lv.M() == pdgMass
 		if ( _parent_lv.M() - n.mass > _M_ll && _M_ll > ( l1.mass + l2.mass ) )
 			return true;
@@ -258,7 +259,7 @@ protected:
 	double sampleDileptonMass(){
 		if ( nullptr == dileptonMassDistribution )
 			return 0;
-
+		// TRACEC( "dileptonMassDistribution=" << dileptonMassDistribution );
 		return dileptonMassDistribution->GetRandom();
 	}
 
@@ -495,6 +496,8 @@ protected:
 
 
 		// double KrollWada( double Mll, double M0, double Mn, double ml, double G0, double iL2, double Nd );
+		// INFOC( "Dilepton Mass Distribution for " << parent.name ) ;
+		// INFOC( "mass=" << this->parent.mass << ", neutral.mass=" << this->neutral().mass << ", lepton.mass=" << this->lepton1().mass <<", gamma2=" << this->parent.gamma2 << ", invLambda2=" << this->parent.invLambda2 << ", Nd=" << this->parent.Nd );
 		dileptonMassDistribution->SetParameter( 0, this->parent.mass );
 		dileptonMassDistribution->SetParameter( 1, this->neutral().mass );
 		dileptonMassDistribution->SetParameter( 2, this->lepton1().mass );

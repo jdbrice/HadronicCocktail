@@ -2,7 +2,7 @@
 <config>
 
 	<STATE>MTDMTD</STATE>
-	<Data name="d" url="{STATE}-Scaled.root" />
+	<Data name="d" url="{DIMUON_ROOT}/data/Cocktail/{STATE}-Scaled-AccCut1.root" />
 
 
 	<TCanvas w="1600" h="900" />
@@ -18,9 +18,12 @@
 		<TLatex x="0.62" y="0.9" text="STAR Preliminary" point="22"/>
 		<TLatex x="0.62" y="0.84" text="p+p at #sqrt{s} = 200 GeV" point="22"/>
 		<Include url="{STATE}.Scope"/>
-		<Loop var="histname" states="ccbar_mumu, eta_mumu, jpsi_mumu, psi_mumu, omega_mumu, omega_pi0mumu_dalitz, rho_mumu, phi_mumu, eta_gammamumu_dalitz, etaprime_gammamumu_dalitz, sum" >
-			<Histo name="Scaled_{histname}" draw="same c" style="style.{histname}" />
+		<Loop var="histname" states="ccbar_mumu, eta_mumu, jpsi_mumu, psi_mumu, omega_mumu, omega_pi0mumu_dalitz, rho_mumu, phi_mumu, eta_gammamumu_dalitz, etaprime_gammamumu_dalitz" >
+			<Histo name="Scaled_{histname}" draw="same hist c" style="style.{histname}" />
 		</Loop>
+
+		<Histo name="Scaled_sum" style="style.sumError" />
+		<Histo name="Scaled_sum" draw="same c hist" style="style.sum" />
 
 
 		<Legend border-size="0" fill-style="0" columns="3" text_point="20">
@@ -53,7 +56,8 @@
 		<phi_mumu line-color="#D14D28" />
 		<eta_gammamumu_dalitz line-color="#ff703f" />
 		<etaprime_gammamumu_dalitz line-color="#73503C" />
-		<sum line-color="#000" />
+		<sum line-color="#000" draw="same c" />
+		<sumError line-color="#F00" draw="same E4" fill-color="#F00, 0.6" marker-style="4" marker-size="0"/>
 	</style>
 
 

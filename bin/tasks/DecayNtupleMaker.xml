@@ -6,13 +6,13 @@
 	<Logger color="true" globalLogLevel="all" />
 
 	<SEED>0</SEED>
-	<N>100000</N>
-	<CHANNEL>jpsi_mumu</CHANNEL>
+	<N>0</N>
+	<CHANNEL>phi_gammamumu_dalitz</CHANNEL>
 	<SMEAR>true</SMEAR>
 	<mod></mod>
 
 	<cm>
-		<Logger color="true" globalLogLevel="none" />
+		<Logger color="true" globalLogLevel="all" />
 
 		<output>
 			<TFile url="./NTuple_{CHANNEL}{mod}.root" />

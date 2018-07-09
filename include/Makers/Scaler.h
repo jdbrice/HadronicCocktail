@@ -8,7 +8,9 @@ class Scaler : public HistoAnalyzer
 protected:
 	float minPt = 0.0;
 
-	TH1 * hsum = nullptr;
+	TH1 * hsum     = nullptr;
+	TH1 * hsumLow  = nullptr;
+	TH1 * hsumHigh = nullptr;
 
 public:
 	virtual const char* classname() const { return "Scaler"; }
@@ -40,18 +42,20 @@ public:
 		INFOC( " BR    : " << BR << " +/- " << uncBR );
 		INFOC( " dNdy  : " << dNdy << " +/- " << uncdNdy );
 		
+		string accState = config.get<string>( "ACC", "AccCut1" );
+		INFOC( "Using " << accState << " : NOTE: AccCut1 is NOMINAL" );
 
 		TH2 *hFullAcc = nullptr;
 		TH2 *hAccCut  = nullptr;
 		if ( "ccbar_mumu" == channel ){
 			hFullAcc = get<TH2>( "FullAcc_dNdM_pT", channel );//(get<TH2>( "FullAcc_dNdM_pT_" + channel, channel ))->ProjectionX( ("FullAcc_dNdM_" + channel).c_str() );
-			hAccCut  = get<TH2>( "AccCut_wdNdM_pT", channel );
+			hAccCut  = get<TH2>( accState + "_wdNdM_pT", channel );
 			// hFullAcc->Scale( 1.0 / 0.7 );
 			// BR = hFullAcc->GetXaxis()->GetBinWidth(1);
 		}
 		else {
 			hFullAcc = get<TH2>( "PairCut_dNdM_pT", channel );
-			hAccCut  = get<TH2>( "AccCut1_dNdM_pT", channel );
+			hAccCut  = get<TH2>( accState + "_dNdM_pT", channel );
 		}
 
 		if ( nullptr == hFullAcc || nullptr == hAccCut){
@@ -95,24 +99,37 @@ public:
 		hScaledLow->Scale( scale_factor_low );
 		hScaledHigh->Scale( scale_factor_high );
 
-		// for ( int i = 1; i <= hScaled->GetNbinsX(); i++ ){
-		// 	double nomv = hScaled->GetBinContent( i );
-		// 	double hiv  = hScaledHigh->GetBinContent( i );
-		// 	hScaled->SetBinError( i, hiv - nomv );
-		// }
+
 
 		int b1 = hScaled->GetYaxis()->FindBin(minPt);
-		TH1 * h1Scaled = hScaled->ProjectionX( ("Scaled_" + channel).c_str(), b1, -1 );
+		TH1 * h1Scaled      = hScaled->ProjectionX( ("Scaled_" + channel).c_str(), b1, -1 );
+		TH1 * h1ScaledLow   = hScaledLow->ProjectionX( ("ScaledLow_" + channel).c_str(), b1, -1 );
+		TH1 * h1ScaledHigh  = hScaledHigh->ProjectionX( ("ScaledHigh_" + channel).c_str(), b1, -1 );
+		
 		if ( "ccbar_mumu" == channel ){
-			h1Scaled->Scale( hFullAcc->GetXaxis()->GetBinWidth(1), "width" );
+			h1Scaled    ->Scale( hFullAcc->GetXaxis()->GetBinWidth(1), "width" );
+			h1ScaledLow ->Scale( hFullAcc->GetXaxis()->GetBinWidth(1), "width" );
+			h1ScaledHigh->Scale( hFullAcc->GetXaxis()->GetBinWidth(1), "width" );
 		} else {
-			h1Scaled->Scale( 1.0, "width" );
+			h1Scaled    ->Scale( 1.0, "width" );
+			h1ScaledLow ->Scale( 1.0, "width" );
+			h1ScaledHigh->Scale( 1.0, "width" );
 		}
 
 		if ( nullptr == hsum ){
-			hsum = (TH1*)h1Scaled->Clone( "Scaled_sum" );
+			hsum     = (TH1*)h1Scaled    ->Clone( "Scaled_sum" );
+			hsumLow  = (TH1*)h1ScaledLow ->Clone( "ScaledLow_sum" );
+			hsumHigh = (TH1*)h1ScaledHigh->Clone( "ScaledHigh_sum" );
 		} else {
-			hsum->Add( h1Scaled );
+			hsum    ->Add( h1Scaled );
+			hsumLow ->Add( h1ScaledLow );
+			hsumHigh->Add( h1ScaledHigh );
+		}
+
+		for ( int i = 1; i <= hScaled->GetNbinsX(); i++ ){
+			double nomv = h1Scaled->GetBinContent( i );
+			double hiv  = h1ScaledHigh->GetBinContent( i );
+			h1Scaled->SetBinError( i, hiv - nomv );
 		}
 
 		INFOC( "}===========================CHANNEL=======================" );
@@ -125,14 +142,16 @@ public:
 		for ( string p : paths ){
 			INFOC( "Scaling ActiveChannel[" << config.get<string>( p+":name" ) << "] @ " << p );
 			makeChannel( p );
+
+			if ( nullptr != hsum && nullptr != hsumHigh ){
+				for ( int i = 1; i <= hsum->GetNbinsX(); i++ ){
+					double nomv = hsum->GetBinContent( i );
+					double hiv  = hsumHigh->GetBinContent( i );
+					hsum->SetBinError( i, hiv - nomv );
+				}
+			}
+			
 		}
-
-		
-		
-
-
-
-
 	} // make
 
 protected:

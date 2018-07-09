@@ -18,6 +18,7 @@ using namespace jdb;
 
 #include "Makers/Blender.h"
 #include "Makers/ConvertCCbar.h"
+#include "Makers/HistogramTBW.h"
 
 
 // UnitTests
@@ -46,6 +47,8 @@ int main( int argc, char* argv[] ) {
 
 	TaskFactory::registerTaskRunner<Blender>( "Blender" );
 	TaskFactory::registerTaskRunner<ConvertCCbar>( "ConvertCCbar" );
+
+	TaskFactory::registerTaskRunner<HistogramTBW>( "HistogramTBW" );
 
 	TaskFactory::registerTaskRunner<Scaler>( "Scaler" );
 
