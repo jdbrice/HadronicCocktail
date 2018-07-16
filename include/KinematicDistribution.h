@@ -33,13 +33,18 @@ public:
 		}
 	}
 
+	bool isReady() {
+		return this->h != nullptr || this->f != nullptr;
+	}
 
 	double sample(){
 
 		// histograms come first since they are more likely to be user input 
 		if ( nullptr != this->h ){
+			// INFO( classname(), "Sampling from TH1");
 			return this->h->GetRandom();
 		} else if ( nullptr != this->f ){
+			// INFO( classname(), "Sampling from TF1");
 			return this->f->GetRandom();
 		} 
 
@@ -49,6 +54,16 @@ public:
 
 	shared_ptr<TF1> getTF1(){
 		return f;
+	}
+
+	double eval( double x){
+		if ( nullptr != this->f ){
+			return this->f->Eval(x);
+		} else if( nullptr != this->h ){
+			int ibin = this->h->GetXaxis()->FindBin( x );
+			return this->h->GetBinContent(ibin);
+		}
+		return std::numeric_limits<double>::quiet_NaN();
 	}
 
 

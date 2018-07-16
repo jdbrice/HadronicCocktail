@@ -59,6 +59,12 @@ public:
 		} return nullptr;
 	}
 
+	void report(){
+		for ( auto kv : h1sByName ){
+			cout << kv.first << " : " << endl;
+		}
+	}
+
 protected:
 	vector< shared_ptr<TH1> > h1s;
 	map<string, shared_ptr<TH1> > h1sByName;

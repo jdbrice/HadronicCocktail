@@ -472,7 +472,7 @@ protected:
 			massDistribution->SetParameter( 0, this->parent.width );
 			massDistribution->SetParameter( 1, this->parent.mass );
 
-			massDistribution->SetRange( this->parent.mass - 10 * this->parent.width, this->parent.mass + 10 * this->parent.width ); // TODO: make configurable
+			massDistribution->SetRange( this->parent.mass - 100 * this->parent.width, this->parent.mass + 100 * this->parent.width ); // TODO: make configurable
 			// absurdly high resolution ( < 1 MeV/bin) but it only needs to compute CDF once since these should be true 1D functions
 			massDistribution->SetNpx(50000);
 		}

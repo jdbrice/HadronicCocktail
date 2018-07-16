@@ -5,7 +5,7 @@
 	<Task name="Cocktail Maker" type="HistogramTBW" config="" nodePath="cm" />
 	<Logger color="true" globalLogLevel="info" />
 
-	<N>100000</N>
+	<N>1000000000</N>
 	
 <!-- 	<particles>
 		eta
@@ -25,7 +25,7 @@
 		<Logger color="true" globalLogLevel="trace" />
 
 		<output>
-			<TFile url="{DIMUON_ROOT}/data/Cocktail/TBWs.root" />
+			<TFile url="{DIMUON_ROOT}/data/Cocktail/TBWsEval.root" />
 		</output>
 
 		<FunctionLibrary>
@@ -49,7 +49,7 @@
 		<pt width="0.001" min="0" max="10" />
 		<eta width="0.001" min="-4" max="4" />
 		<y width="0.001" min="-4" max="4" />
-		<phi width="0.001" min="-3.2" max="3.2" />
+		<phi width="0.001" min="0" max="6.4" />
 	</bins>
 
 </config>

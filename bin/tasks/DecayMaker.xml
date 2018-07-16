@@ -6,14 +6,16 @@
 	<Logger color="true" globalLogLevel="info" />
 
 	<SEED>0</SEED>
-	<N>100000</N>
+	<N>10000000</N>
 	<CHANNEL>eta_gammamumu_dalitz</CHANNEL>
+	<!-- <CHANNEL>phi_mumu</CHANNEL> -->
 	<SMEAR>true</SMEAR>
 
 	<cm>
 		<Logger color="true" globalLogLevel="none" />
 
 		<output>
+			<!-- <TFile url="test.root" /> -->
 			<TFile url="{DIMUON_ROOT}/data/Cocktail/parts/Cocktail_{CHANNEL}_{mod}.root" />
 		</output>
 
@@ -34,6 +36,10 @@
 		<ParticleLibrary>
 			<Include url="config/ParticleLibrary.xml" />
 		</ParticleLibrary>
+
+		<HistogramLibrary>
+			<Include url="config/HistogramLibrary.xml" />
+		</HistogramLibrary>
 
 		<histograms>
 			<!-- <Include url="config/CocktailQAHistograms.xml" /> -->

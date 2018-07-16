@@ -51,6 +51,11 @@ void DecayMaker::initialize(){
 	funLib.loadAll( config, nodePath + ".FunctionLibrary" );
 	INFO( classname(), "Initializing Particle Library" );
 	plcLib.loadParticles( config, nodePath + ".ParticleLibrary" );
+	INFO( classname(), "Initializing Histogram Library" );
+	histoLib.loadAll( config, nodePath + ".HistogramLibrary" );
+	// histoLib.report();
+
+	book->cd();
 
 	vector<string> acPaths = config.childrenOf( nodePath + ".ActiveChannels" );
 	INFO( classname(), "Searching " << acPaths.size() << plural( acPaths.size(), " path", " paths" ) << " for ActiveChannels" );

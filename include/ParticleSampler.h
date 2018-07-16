@@ -34,12 +34,12 @@ public:
 		// look for distributions
 		
 		kdPt.set( nullptr, this->funLib.get( "default_pT" ) ); // default in case nex ones are nullptr
-		INFO( classname(), "Looking for TF1 " << quote( _plcInfo.name + "_pT" ) << " = " << this->funLib.get( _plcInfo.name + "_pT" ) << " exp : " << this->funLib.functionExpression( _plcInfo.name + "_pT" ) );
+		INFO( classname(), "Looking for TH1 or TF1 " << quote( _plcInfo.name + "_pT" ) << " = " << this->funLib.get( _plcInfo.name + "_pT" ) << " exp : " << this->funLib.functionExpression( _plcInfo.name + "_pT" ) );
 		kdPt.set( this->histoLib.get( _plcInfo.name + "_pT" ), this->funLib.get( _plcInfo.name + "_pT" ) );
 		
 		
 		// set the particle's mass if given a TBW
-		if ( "TsallisBlastWave" ==  this->funLib.functionExpression( _plcInfo.name + "_pT" ) ){
+		if ( !kdPt.isReady() && "TsallisBlastWave" ==  this->funLib.functionExpression( _plcInfo.name + "_pT" ) ){
 			INFO( classname(), "Setting TsallisBlastWave mass param to " << _plcInfo.mass );
 			shared_ptr<TF1> f = this->funLib.get( _plcInfo.name + "_pT" );
 			
@@ -50,32 +50,51 @@ public:
 			INFO( classname(), "Checking mass is set to " <<  f->GetParameter( iPar ) << " [GeV/c]" );
 		}
 
-
-		kdRapidity.set( nullptr, this->funLib.get("CERES" ) );
-		kdRapidity.getTF1()->SetParameter( 2, this->plcInfo.mass ); // set the plc mass in CERES parameterization
+		INFO( classname(), "Looking for rapidity TH1 or TF1" );
 		kdRapidity.set( this->histoLib.get( _plcInfo.name + "_rapidity" ), this->funLib.get( _plcInfo.name + "_rapidity" ) );
+		if ( !kdRapidity.isReady() ){
+			kdRapidity.set( nullptr, this->funLib.get("CERES" ) );
+			kdRapidity.getTF1()->SetParameter( 2, this->plcInfo.mass ); // set the plc mass in CERES parameterization
+		}
+		
 		
 
-		kdPhi.set( nullptr, this->funLib.get("Phi" ) );
+		INFO( classname(), "Looking for phi TH1 or TF1" );
 		kdPhi.set( this->histoLib.get( _plcInfo.name + "_phi" ), this->funLib.get( _plcInfo.name + "_phi" ) );
+		if ( !kdPhi.isReady() ){
+			kdPhi.set( nullptr, this->funLib.get("Phi" ) );
+		}
+		
 
 	
 		INFO( classname(), "Initialize the kinematic distributions" );
+		INFO( classname(), "pT" );
 		kdPt.sample();
+		INFO( classname(), "Rapidity" );
 		kdRapidity.sample();
+		INFO( classname(), "phi" );
 		kdPhi.sample();
 		INFO( classname(), "Complete");
 
 	}
 
+	double evalPt( double x ){
+		return kdPt.eval( x );
+	}
 	double samplePt(){
 		return kdPt.sample();
 	}
 
+	double evalRapidity( double x ){
+		return kdRapidity.eval( x );
+	}
 	double sampleRapidity(){
 		return kdRapidity.sample();
 	} 
 
+	double evalPhi( double x ){
+		return kdPhi.eval( x );
+	}
 	double samplePhi(){
 		return kdPhi.sample();
 	}

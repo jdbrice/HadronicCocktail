@@ -5,8 +5,16 @@
 	<!-- Attributes -->
 	<!-- name : name of particle that will use this distribution -->
 
-	<TH1 url="/data/star2/jdb12/Run15PP200/Params/efficiency_tables.root" hName="eff_5_PtEta" name="eff_mup" />
+	<!-- <TH1 url="/data/star2/jdb12/Run15PP200/Params/efficiency_tables.root" hName="eff_5_PtEta" name="eff_mup" />
 	<TH1 url="/data/star2/jdb12/Run15PP200/Params/efficiency_tables.root" hName="eff_6_PtEta" name="eff_mum" />
-	<TH1 url="/data/star2/jdb12/Run15PP200/Params/Pid_efficiency.root" hName="PidEff" name="eff_pid" />
+	<TH1 url="/data/star2/jdb12/Run15PP200/Params/Pid_efficiency.root" hName="PidEff" name="eff_pid" /> -->
+
+	<TH1 url="{DIMUON_ROOT}/data/Cocktail/TBWsEval.root" name="eta_pT" hName="eta_dNdPt" />
+	<TH1 url="{DIMUON_ROOT}/data/Cocktail/TBWsEval.root" name="omega_pT" hName="omega_dNdPt" />
+	<TH1 url="{DIMUON_ROOT}/data/Cocktail/TBWsEval.root" name="rho_pT" hName="rho_dNdPt" />
+	<TH1 url="{DIMUON_ROOT}/data/Cocktail/TBWsEval.root" name="phi_pT" hName="phi_dNdPt" />
+	<TH1 url="{DIMUON_ROOT}/data/Cocktail/TBWsEval.root" name="etaprime_pT" hName="etaprime_dNdPt" />
+	<TH1 url="{DIMUON_ROOT}/data/Cocktail/TBWsEval.root" name="jpsi_pT" hName="jpsi_dNdPt" />
+	<TH1 url="{DIMUON_ROOT}/data/Cocktail/TBWsEval.root" name="psi_pT" hName="psi_dNdPt" />
 
 </KinematicDistributions>

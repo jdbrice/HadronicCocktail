@@ -160,12 +160,15 @@ public:
 	}
 
 	virtual void analyzeEvent(){
+
+		TRACEC( "Building TLorentzVectors" );
 		TLorentzVector mclv;
 		mclv.SetPtEtaPhiM( tvars["pairPt"], tvars["pairEta"], tvars["pairPhi"], tvars["pairMass"] );
 		TLorentzVector mclv1, mclv2;
 		mclv1.SetPtEtaPhiM( tvars["nPt"], tvars["nEta"], tvars["nPhi"], 0.105 );
 		mclv2.SetPtEtaPhiM( tvars["pPt"], tvars["pEta"], tvars["pPhi"], 0.105 );
 
+		TRACEC( "Momentum Smearing" );
 		// =============================== MOMENTUM SMEARING ===============================
 		TLorentzVector rclv, rclv1, rclv2;
 		double ptRes = momResolution->Eval( mclv1.Pt() );
@@ -183,11 +186,13 @@ public:
 		// =============================== MOMENTUM SMEARING ===============================
 		
 
+		TRACEC( "Weights" );
 		float br1 = branchingRatio[ abs(tvars["pParentId"]) ];
 		float br2 = branchingRatio[ abs(tvars["nParentId"]) ];
 
 		double w = br1*br2; // could support weigthing, no use now
 		
+		TRACEC( "Filling States w=" <<  w );
 		fillState( "FullAcc_", mclv, rclv, mclv1, rclv1, mclv2, rclv2, w );
 
 		if ( parentFilter.pass( rclv ) ){
@@ -215,25 +220,34 @@ public:
 										TLorentzVector &_lvMc2, TLorentzVector &_lvRc2,
 										double _w ){
 
-		book->fill(_s + "dNdM", _lvRc.M() );
-		book->fill( _s + "dNdM_pT", _lvRc.M(), _lvRc.Pt() );
-		book->fill( _s + "wdNdM", _lvRc.M(), _w );
-		book->fill( _s + "wdNdM_pT", _lvRc.M(), _lvRc.Pt(), _w );
-		book->fill( _s + "PtRc", _lvRc.Pt() );
-		book->fill( _s + "PtMc", _lvMc.Pt() );
-		book->fill( _s + "l1PtRc", _lvRc1.Pt() );
-		book->fill( _s + "l2PtRc", _lvRc2.Pt() );
-		book->fill( _s + "l1PtMc", _lvMc1.Pt() );
-		book->fill( _s + "l2PtMc", _lvMc2.Pt() );
+		double wpt = 1.0;
+		book->fill(_s + "dNdM", _lvRc.M(), wpt );
+		book->fill( _s + "dNdM_pT", _lvRc.M(), _lvRc.Pt(), wpt );
+		
+		book->fill( _s + "wdNdM", _lvRc.M(), _w * wpt );
+		book->fill( _s + "wdNdM_pT", _lvRc.M(), _lvRc.Pt(), _w * wpt );
 
-		book->fill( _s + "Eta", _lvRc.Eta() );
-		book->fill( _s + "Eta_vs_l2Eta", _lvRc.Eta(), _lvRc2.Eta() );
-		book->fill( _s + "l1Eta", _lvRc1.Eta() );
-		book->fill( _s + "l1Eta_vs_l2Eta", _lvRc1.Eta(), _lvRc2.Eta() );
-		book->fill( _s + "l2Eta", _lvRc2.Eta() );
-		book->fill( _s + "rapidity", _lvRc.Rapidity() );
-		book->fill( _s + "l1rapidity", _lvRc1.Rapidity() );
-		book->fill( _s + "l2rapidity", _lvRc2.Rapidity() );
+		book->fill( _s + "PtRc", _lvRc.Pt(), wpt );
+		book->fill( _s + "PtMc", _lvMc.Pt(), wpt );
+		book->fill( _s + "l1PtRc", _lvRc1.Pt(), wpt );
+		book->fill( _s + "l2PtRc", _lvRc2.Pt(), wpt );
+		book->fill( _s + "l1PtMc", _lvMc1.Pt(), wpt );
+		book->fill( _s + "l2PtMc", _lvMc2.Pt(), wpt );
+
+		book->fill( _s + "Eta", _lvRc.Eta(), wpt );
+		book->fill( _s + "Eta_vs_l2Eta", _lvRc.Eta(), _lvRc2.Eta(), wpt );
+		book->fill( _s + "l1Eta", _lvRc1.Eta(), wpt );
+		book->fill( _s + "l1Eta_vs_l2Eta", _lvRc1.Eta(), _lvRc2.Eta(), wpt );
+		book->fill( _s + "l2Eta", _lvRc2.Eta(), wpt );
+		
+		book->fill( _s + "YMc", _lvMc.Rapidity(), wpt );
+		book->fill( _s + "YRc", _lvRc.Rapidity(), wpt );
+
+		book->fill( _s + "l1YRc", _lvRc1.Rapidity(), wpt );
+		book->fill( _s + "l2YRc", _lvRc2.Rapidity(), wpt );
+
+		book->fill( _s + "l1YMc", _lvMc1.Rapidity(), wpt );
+		book->fill( _s + "l2YMc", _lvMc2.Rapidity(), wpt );
 
 	}
 

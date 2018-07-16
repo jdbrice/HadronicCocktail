@@ -101,7 +101,7 @@ public:
 			namedPlcSamplers[ name ] = ps;
 
 			book->clone( "dNdPt", name+"_dNdPt" );
-			book->clone( "dNdEta", name+"_dNdEta" );
+			// book->clone( "dNdEta", name+"_dNdEta" );
 			book->clone( "dNdY", name+"_dNdY" );
 			book->clone( "dNdPhi", name+"_dNdPhi" );
 		}
@@ -117,16 +117,38 @@ protected:
 
 	virtual void make() {
 
-		for ( size_t i = 0; i < maxN; i++){
+		// for ( size_t i = 0; i < maxN; i++){
 			for ( string name : activeParticles ){
 				// cout << "name=" << name << endl;
-				TLorentzVector lv = namedPlcSamplers[name].sample();
-				book->fill( name + "_dNdPt", lv.Pt() );
-				book->fill( name + "_dNdEta", lv.Eta() );
-				book->fill( name + "_dNdY", lv.Rapidity() );
-				book->fill( name + "_dNdPhi", lv.Phi() );
+				// TLorentzVector lv = namedPlcSamplers[name].sample();
+				
+				// Pt
+				TH1 * h = book->get( name+"_dNdPt" );
+				for ( int i = 1; i <= h->GetXaxis()->GetNbins(); i++ ){
+					double x = h->GetBinCenter( i );
+					h->SetBinContent( i, namedPlcSamplers[name].evalPt( x ) );
+				}
+
+				// Rapidity
+				h = book->get( name+"_dNdY" );
+				for ( int i = 1; i <= h->GetXaxis()->GetNbins(); i++ ){
+					double x = h->GetBinCenter( i );
+					h->SetBinContent( i, namedPlcSamplers[name].evalRapidity( x ) );
+				}
+
+				// Phi
+				h = book->get( name+"_dNdPhi" );
+				for ( int i = 1; i <= h->GetXaxis()->GetNbins(); i++ ){
+					double x = h->GetBinCenter( i );
+					h->SetBinContent( i, namedPlcSamplers[name].evalPhi( x ) );
+				}
+
+				// book->fill( name + "_dNdPt", lv.Pt() );
+				// book->fill( name + "_dNdEta", lv.Eta() );
+				// book->fill( name + "_dNdY", lv.Rapidity() );
+				// book->fill( name + "_dNdPhi", lv.Phi() );
 			}
-		}
+		// }
 	}
 
 
