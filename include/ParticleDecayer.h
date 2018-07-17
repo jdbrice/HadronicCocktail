@@ -111,6 +111,8 @@ public:
 		// parent_lv.M() == pdgMass
 		if ( _parent_lv.M() - n.mass > _M_ll && _M_ll > ( l1.mass + l2.mass ) )
 			return true;
+
+		WARNC( "Failed Dalitz energy conservation" );
 		return false;
 	}
 

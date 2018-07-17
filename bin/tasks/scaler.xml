@@ -28,6 +28,7 @@
 			<TFile name="psi_mumu"                  url="{DIMUON_ROOT}/data/Cocktail/{STATE}-psi_mumu.root" />
 			<TFile name="rho_mumu"                  url="{DIMUON_ROOT}/data/Cocktail/{STATE}-rho_mumu.root" />
 			<TFile name="ccbar_mumu"                url="{DIMUON_ROOT}/data/Cocktail/{STATE}-ccbar_mumu.root" />
+			<TFile name="bbbar_mumu"                url="{DIMUON_ROOT}/data/Cocktail/{STATE}-bbbar_mumu.root" />
 		</input>
 
 		<output>
@@ -46,6 +47,8 @@
 			<ActiveChannel name="psi_mumu"                  dndy= "3.38e-6" redndy=".20" br="8.0e-3" ebr="3.3e-4" />
 			<ActiveChannel name="etaprime_gammamumu_dalitz" dndy= "4.07e-2" redndy=".29" br="1.08e-4" ebr="0.27e-4" />
 			<ActiveChannel name="ccbar_mumu"                dndy="0.92" olddndy="1.8976e-02" redndy="0.01" br="1.0" ebr="0.0" />
+			<ActiveChannel name="bbbar_mumu"                dndy="3.2e-3" redndy="0.01e-3" br="3.63657878787878794e-02" ebr="0.036" />
+			<!-- <ActiveChannel name="bbbar_mumu"                dndy="3.2e-3" redndy="0.01e-3" br="1.0" ebr="0.0" /> -->
 		</ActiveChannels>
 
 	</scaler>

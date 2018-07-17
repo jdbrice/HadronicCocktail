@@ -6,8 +6,8 @@
 	<Logger color="true" globalLogLevel="info" />
 
 	<SEED>0</SEED>
-	<N>10000000</N>
-	<CHANNEL>eta_gammamumu_dalitz</CHANNEL>
+	<N>100000</N>
+	<CHANNEL>phi_gammamumu_dalitz</CHANNEL>
 	<!-- <CHANNEL>phi_mumu</CHANNEL> -->
 	<SMEAR>true</SMEAR>
 
@@ -15,8 +15,8 @@
 		<Logger color="true" globalLogLevel="none" />
 
 		<output>
-			<!-- <TFile url="test.root" /> -->
-			<TFile url="{DIMUON_ROOT}/data/Cocktail/parts/Cocktail_{CHANNEL}_{mod}.root" />
+			<TFile url="test.root" />
+			<!-- <TFile url="{DIMUON_ROOT}/data/Cocktail/parts/Cocktail_{CHANNEL}_{mod}.root" /> -->
 		</output>
 
 		<Make QA="false" TF1="true" intermediate="true" fullPS="false" />
@@ -57,7 +57,7 @@
 		</histograms>
 
 		<KinematicFilters>
-			<Include url="config/STAR_MTDTOF.xml" />
+			<Include url="config/STAR_MTD.xml" />
 		</KinematicFilters>
 
 		<MomentumSmearing>{SMEAR}</MomentumSmearing>

@@ -31,6 +31,8 @@ public:
 		INFOC( "{===========================CHANNEL=======================" );
 		book->cd();
 		string channel = config.get<string>( p +":name" );
+
+		INFOC( " checking if file exists: " << channel << " : " << bts( fileExists( channel ) ) );
 		
 		double BR      = config.get<double>( p + ":br", 1.0 );
 		double uncBR   = config.get<double>( p + ":ebr", 1.0 );
@@ -52,6 +54,10 @@ public:
 			hAccCut  = get<TH2>( accState + "_wdNdM_pT", channel );
 			// hFullAcc->Scale( 1.0 / 0.7 );
 			// BR = hFullAcc->GetXaxis()->GetBinWidth(1);
+		} 
+		else if ( "bbbar_mumu" == channel ){
+			hFullAcc = get<TH2>( "FullAcc_dNdM_pT", channel );
+			hAccCut  = get<TH2>( accState + "_dNdM_pT", channel );
 		}
 		else {
 			hFullAcc = get<TH2>( "PairCut_dNdM_pT", channel );
@@ -106,7 +112,7 @@ public:
 		TH1 * h1ScaledLow   = hScaledLow->ProjectionX( ("ScaledLow_" + channel).c_str(), b1, -1 );
 		TH1 * h1ScaledHigh  = hScaledHigh->ProjectionX( ("ScaledHigh_" + channel).c_str(), b1, -1 );
 		
-		if ( "ccbar_mumu" == channel ){
+		if ( "ccbar_mumu" == channel || "bbbar_mumu" == channel ){
 			h1Scaled    ->Scale( hFullAcc->GetXaxis()->GetBinWidth(1), "width" );
 			h1ScaledLow ->Scale( hFullAcc->GetXaxis()->GetBinWidth(1), "width" );
 			h1ScaledHigh->Scale( hFullAcc->GetXaxis()->GetBinWidth(1), "width" );

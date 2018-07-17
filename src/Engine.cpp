@@ -15,6 +15,7 @@ using namespace jdb;
 #include "Makers/DecayMaker.h"
 #include "Makers/DecayNTupleMaker.h"
 #include "Makers/HistogramMaker.h"
+#include "Makers/FixBBBarBinning.h"
 
 #include "Makers/Blender.h"
 #include "Makers/ConvertCCbar.h"
@@ -44,6 +45,7 @@ int main( int argc, char* argv[] ) {
 	TaskFactory::registerTaskRunner<DecayMaker>( "DecayMaker" );	
 	TaskFactory::registerTaskRunner<DecayNTupleMaker>( "DecayNTupleMaker" );
 	TaskFactory::registerTaskRunner<HistogramMaker>( "HistogramMaker" );
+	TaskFactory::registerTaskRunner<FixBBBarBinning>( "FixBBBarBinning" );
 
 	TaskFactory::registerTaskRunner<Blender>( "Blender" );
 	TaskFactory::registerTaskRunner<ConvertCCbar>( "ConvertCCbar" );
