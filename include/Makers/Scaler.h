@@ -55,7 +55,7 @@ public:
 			// hFullAcc->Scale( 1.0 / 0.7 );
 			// BR = hFullAcc->GetXaxis()->GetBinWidth(1);
 		} 
-		else if ( "bbbar_mumu" == channel ){
+		else if ( "bbbar_mumu" == channel || "drellyan_mumu" == channel ){
 			hFullAcc = get<TH2>( "FullAcc_dNdM_pT", channel );
 			hAccCut  = get<TH2>( accState + "_dNdM_pT", channel );
 		}
@@ -112,15 +112,15 @@ public:
 		TH1 * h1ScaledLow   = hScaledLow->ProjectionX( ("ScaledLow_" + channel).c_str(), b1, -1 );
 		TH1 * h1ScaledHigh  = hScaledHigh->ProjectionX( ("ScaledHigh_" + channel).c_str(), b1, -1 );
 		
-		if ( "ccbar_mumu" == channel || "bbbar_mumu" == channel ){
-			h1Scaled    ->Scale( hFullAcc->GetXaxis()->GetBinWidth(1), "width" );
-			h1ScaledLow ->Scale( hFullAcc->GetXaxis()->GetBinWidth(1), "width" );
-			h1ScaledHigh->Scale( hFullAcc->GetXaxis()->GetBinWidth(1), "width" );
-		} else {
+		// if ( "ccbar_mumu" == channel || "bbbar_mumu" == channel ){
+		// 	h1Scaled    ->Scale( hFullAcc->GetXaxis()->GetBinWidth(1), "width" );
+		// 	h1ScaledLow ->Scale( hFullAcc->GetXaxis()->GetBinWidth(1), "width" );
+		// 	h1ScaledHigh->Scale( hFullAcc->GetXaxis()->GetBinWidth(1), "width" );
+		// } else {
 			h1Scaled    ->Scale( 1.0, "width" );
 			h1ScaledLow ->Scale( 1.0, "width" );
 			h1ScaledHigh->Scale( 1.0, "width" );
-		}
+		// }
 
 		if ( nullptr == hsum ){
 			hsum     = (TH1*)h1Scaled    ->Clone( "Scaled_sum" );

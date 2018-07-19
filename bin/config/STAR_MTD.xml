@@ -6,7 +6,7 @@
 	</Parent>	
 	<Daughter>
 		<Range name="leadingPt" min="0.0" max="inf" />
-		<Range name="pT" min="1.0" max="inf"/>
+		<Range name="pT" min="1.1" max="inf"/>
 		<Range name="eta" min="-0.5" max="0.5" />
 	</Daughter>	
 </config>

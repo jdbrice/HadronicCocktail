@@ -2,21 +2,28 @@
 <config>
 
 
-	<Task name="bbbar histogramer" type="FixBBBarBinning" config="" nodePath="bbbar" />
+	<Task name="dy histogramer" type="HistogramDY" config="" nodePath="DrellYan" />
 	<Logger color="true" globalLogLevel="info" />
-	
-	<STATE>MTDMTD</STATE>
+	<SMEAR>true</SMEAR>
 
-	<bbbar>
-		<Logger color="true" globalLogLevel="none" />
-
+	<DrellYan>
+		<Logger color="true" globalLogLevel="info" />
+		<EventLoop progress="true" />
 		<input>
-			<TFile name="bbbar_mumu"                url="{DIMUON_ROOT}/data/Cocktail/{STATE}-bbbar_mumu-RAW5.root" />
+			<dst treeName="meTree" url="{DIMUON_ROOT}/data/Cocktail/parts/drellyan.root"/>
 		</input>
 
 		<output>
-			<TFile url="{DIMUON_ROOT}/data/Cocktail/{STATE}-bbbar_mumu.root" />
+			<TFile url="DrellYan_cocktail_{jobIndex}.root" />
 		</output>
+
+		
+
+		<Make TF1="true"/>
+
+		<FunctionLibrary>
+			<Include url="config/FunctionLibrary.xml" />
+		</FunctionLibrary>
 
 		<histograms>
 			<Histo name="dNdM" title=";M_{#mu#mu};dN/dM [c^{2}/GeV]" bins_x="bins.mass"  />
@@ -30,7 +37,13 @@
 			<Histo name="YMc" title=";y ;dN/dy [c/GeV]" bins_x="bins.rapidity" />
 			<Histo name="YRc" title=";y ;dN/dy [c/GeV]" bins_x="bins.rapidity" />
 		</histograms>
-	</bbbar>
+
+		<KinematicFilters>
+			<Include url="config/STAR_MTD.xml" />
+		</KinematicFilters>
+
+		<MomentumSmearing>{SMEAR}</MomentumSmearing>
+	</DrellYan>
 
 	<bins>
 		<mass width="0.005" min="0" max="5" />

@@ -10,7 +10,7 @@
 
 	<axis>
 		<x min="0" max="4" />
-		<y min="1e-10" max="5e-4" />
+		<y min="3e-10" max="5e-4" />
 	</axis>
 
 	<Plot>
@@ -18,11 +18,12 @@
 		<TLatex x="0.62" y="0.9" text="STAR Preliminary" point="22"/>
 		<TLatex x="0.62" y="0.84" text="p+p at #sqrt{s} = 200 GeV" point="22"/>
 		<Include url="{STATE}.Scope"/>
-		<Loop var="histname" states="ccbar_mumu, eta_mumu, jpsi_mumu, psi_mumu, omega_mumu, omega_pi0mumu_dalitz, rho_mumu, phi_mumu, eta_gammamumu_dalitz, etaprime_gammamumu_dalitz" >
+		<Histo name="Scaled_sum" style="style.sumError" />
+		<Loop var="histname" states="ccbar_mumu, eta_mumu, jpsi_mumu, psi_mumu, omega_mumu, omega_pi0mumu_dalitz, rho_mumu, phi_mumu, eta_gammamumu_dalitz, etaprime_gammamumu_dalitz, bbbar_mumu, drellyan_mumu" >
 			<Histo name="Scaled_{histname}" draw="same hist c" style="style.{histname}" />
 		</Loop>
 
-		<Histo name="Scaled_sum" style="style.sumError" />
+		
 		<Histo name="Scaled_sum" draw="same c hist" style="style.sum" />
 
 
@@ -39,6 +40,8 @@
 			<Entry name="Scaled_jpsi_mumu" title="J/#Psi#rightarrow#mu#mu" opt="l" lw="2" />
 			<Entry name="Scaled_psi_mumu" title="#Psi(2S)#rightarrow#mu#mu" opt="l" lw="2" />
 			<Entry name="Scaled_ccbar_mumu" title="c#bar{c}#rightarrow#mu#mu" opt="l" lw="2" />
+			<Entry name="Scaled_bbbar_mumu" title="b#bar{b}#rightarrow#mu#mu" opt="l" lw="2" />
+			<Entry name="Scaled_drellyan_mumu" title="q#bar{q}#rightarrow#mu#mu" opt="l" lw="2" />
 			<Entry name="Scaled_sum" title="sum" opt="l" lw="2" />
 		</Legend>
 
@@ -46,18 +49,24 @@
 	</Plot>
 
 	<style>
-		<eta_mumu line-color="#83BF17" />
-		<ccbar_mumu line-color="#0B99BC" />
-		<jpsi_mumu line-color="#D14D28" />
-		<psi_mumu line-color="#F14D28" />
-		<omega_mumu line-color="#0000FF" />
-		<omega_pi0mumu_dalitz line-color="#59C8DF" />
-		<rho_mumu line-color="#737495" />
-		<phi_mumu line-color="#D14D28" />
-		<eta_gammamumu_dalitz line-color="#ff703f" />
-		<etaprime_gammamumu_dalitz line-color="#73503C" />
-		<sum line-color="#000" draw="same c" />
-		<sumError line-color="#F00" draw="same E4" fill-color="#F00, 0.6" marker-style="4" marker-size="0"/>
+		<eta_mumu line-color="#83BF17" lw="2" />
+		<eta_gammamumu_dalitz line-color="#83BF17" lw="2" />
+		<!-- <eta_gammamumu_dalitz line-color="#ff703f" /> -->
+		<ccbar_mumu line-color="#0B99BC" lw="2" />
+		<bbbar_mumu line-color="#0B00BC" lw="2" />
+		<drellyan_mumu line-color="#B00000" lw="2"/>
+		<jpsi_mumu line-color="#D14D28" lw="2"/>
+		<psi_mumu line-color="#F14D28" lw="2"/>
+		<omega_mumu line-color="#0000FF" lw="2"/>
+		<omega_pi0mumu_dalitz line-color="#0000FF" lw="2"/>
+		<!-- <omega_pi0mumu_dalitz line-color="#59C8DF" /> -->
+
+		<rho_mumu line-color="#737495" lw="2"/>
+		<phi_mumu line-color="#D14D28" lw="2"/>
+		
+		<etaprime_gammamumu_dalitz line-color="#73503C" lw="2"/>
+		<sum line-color="#000" draw="same c" lw="2"/>
+		<sumError line-color="#333" draw="same E4" fill-color="#333, 0.6" marker-style="4" marker-size="0"/>
 	</style>
 
 

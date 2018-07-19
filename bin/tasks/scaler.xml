@@ -29,6 +29,7 @@
 			<TFile name="rho_mumu"                  url="{DIMUON_ROOT}/data/Cocktail/{STATE}-rho_mumu.root" />
 			<TFile name="ccbar_mumu"                url="{DIMUON_ROOT}/data/Cocktail/{STATE}-ccbar_mumu.root" />
 			<TFile name="bbbar_mumu"                url="{DIMUON_ROOT}/data/Cocktail/{STATE}-bbbar_mumu.root" />
+			<TFile name="drellyan_mumu"             url="{DIMUON_ROOT}/data/Cocktail/{STATE}-drellyan_mumu.root" />
 		</input>
 
 		<output>
@@ -46,9 +47,16 @@
 			<ActiveChannel name="jpsi_mumu"                 dndy= "2.44e-5" redndy=".20" br="5.961e-2" ebr="3.3e-4" />
 			<ActiveChannel name="psi_mumu"                  dndy= "3.38e-6" redndy=".20" br="8.0e-3" ebr="3.3e-4" />
 			<ActiveChannel name="etaprime_gammamumu_dalitz" dndy= "4.07e-2" redndy=".29" br="1.08e-4" ebr="0.27e-4" />
-			<ActiveChannel name="ccbar_mumu"                dndy="0.92" olddndy="1.8976e-02" redndy="0.01" br="1.0" ebr="0.0" />
-			<ActiveChannel name="bbbar_mumu"                dndy="3.2e-3" redndy="0.01e-3" br="3.63657878787878794e-02" ebr="0.036" />
+			<!-- 0.92mb / 42mb = 2.190476e-02 -->
+			<ActiveChannel name="ccbar_mumu"                dndy="2.190476e-02" olddndy="1.8976e-02" redndy="0.01e-2" br="1.0" ebr="0.0" />
+			<!-- 3.2mub / 42mb = 7.619048e-05 -->
+			<!-- uncertainty from 6.2mub / 42mb = 1.476190e-04 - 7.619048e-05 = 7.142852e-05 -->
+			<!-- relative uncertainty =  redndy = 7.142852e-05 / 7.619048e-05 = -->
+			<ActiveChannel name="bbbar_mumu"                dndy="7.619048e-05" redndy="0.93" br="3.63657878787878794e-02" ebr="0.0036" />
 			<!-- <ActiveChannel name="bbbar_mumu"                dndy="3.2e-3" redndy="0.01e-3" br="1.0" ebr="0.0" /> -->
+
+			<!-- 42nb / 42mb = 1e-6 -->
+			<ActiveChannel name="drellyan_mumu"             dndy="1e-6" redndy="0.05" br="1.0" ebr="0.001" />
 		</ActiveChannels>
 
 	</scaler>
