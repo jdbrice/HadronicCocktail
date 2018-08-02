@@ -66,6 +66,9 @@ protected:
 	bool keep_intermediate_states = true;
 	bool keep_full_phase_space = true;
 
+	double massDaughterA, massDaughterB;
+
+
 public:
 	virtual const char* classname() const { return "DecayMaker"; }
 	DecayMaker() {}

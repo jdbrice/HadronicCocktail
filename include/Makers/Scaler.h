@@ -12,6 +12,8 @@ protected:
 	TH1 * hsumLow  = nullptr;
 	TH1 * hsumHigh = nullptr;
 
+	float Ncoll = 1.0;
+
 public:
 	virtual const char* classname() const { return "Scaler"; }
 	Scaler() {}
@@ -83,9 +85,9 @@ public:
 		double BR_high   = BR + uncBR;
 
 		INFOC( "IFA=" << IFA << ", dNdy=" << dNdy << ", BR=" << BR );
-		double scale_factor = (1.0 / IFA) * dNdy * BR;
-		double scale_factor_low = (1.0 / IFA) * dNdy_low * BR_low;
-		double scale_factor_high = (1.0 / IFA) * dNdy_high * BR_high;
+		double scale_factor = (Ncoll / IFA) * dNdy * BR;
+		double scale_factor_low = (Ncoll / IFA) * dNdy_low * BR_low;
+		double scale_factor_high = (Ncoll / IFA) * dNdy_high * BR_high;
 
 		book->addClone( "FullAcc_pT_" + channel, hFullAcc );
 		book->addClone( "AccCut_pT_" + channel, hAccCut );
@@ -96,7 +98,9 @@ public:
 
 		int rebin = config.getInt( "REBIN" );
 		if ( rebin > 1 ){
-			hScaled->Rebin( rebin );
+			hScaled->RebinX( rebin );
+			hScaledLow->RebinX( rebin );
+			hScaledHigh->RebinX( rebin );
 			INFOC( "REBINNING by " << rebin );
 		}
 
@@ -126,11 +130,16 @@ public:
 			hsum     = (TH1*)h1Scaled    ->Clone( "Scaled_sum" );
 			hsumLow  = (TH1*)h1ScaledLow ->Clone( "ScaledLow_sum" );
 			hsumHigh = (TH1*)h1ScaledHigh->Clone( "ScaledHigh_sum" );
-		} else {
-			hsum    ->Add( h1Scaled );
-			hsumLow ->Add( h1ScaledLow );
-			hsumHigh->Add( h1ScaledHigh );
+
+			hsum->Reset();
+			hsumLow->Reset();
+			hsumHigh->Reset();
 		}
+		
+		hsum    ->Add( h1Scaled );
+		hsumLow ->Add( h1ScaledLow );
+		hsumHigh->Add( h1ScaledHigh );
+		
 
 		for ( int i = 1; i <= hScaled->GetNbinsX(); i++ ){
 			double nomv = h1Scaled->GetBinContent( i );
@@ -145,6 +154,10 @@ public:
 	virtual void make(){
 		vector<string> paths = config.childrenOf( nodePath + ".ActiveChannels", "ActiveChannel" );
 		INFOC( "Found " << paths.size() << " ActiveChannels" );
+
+		Ncoll = config.get<float>( "Ncoll", 1.0 );
+		INFOC( "Ncoll = " << Ncoll );
+
 		for ( string p : paths ){
 			INFOC( "Scaling ActiveChannel[" << config.get<string>( p+":name" ) << "] @ " << p );
 			makeChannel( p );

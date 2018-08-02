@@ -152,6 +152,15 @@ void DecayMaker::initialize(){
 		}
 	} // makeTF1
 
+
+	massDaughterA = config.get<double>( "MassDaughterA", -1 );
+	massDaughterB = config.get<double>( "MassDaughterB", -1 );
+	if ( massDaughterA > 0 || massDaughterB > 0 ){
+		WARNC( "Overriding daughter masses!" );
+		WARNC( "mass A = " << massDaughterA <<", massB = " << massDaughterB );
+	}
+
+
 	book->cd();
 
 }
@@ -286,13 +295,22 @@ bool DecayMaker::postDecay( string _name, TLorentzVector &_parent, ParticleDecay
 	double rndCrystalBall = 0.0;
 	if ( true == momSmearing ) rndCrystalBall = gRandom->Gaus( 0, 1.0 );
 	
-	rclv1.SetPtEtaPhiM(  mclv1.Pt() * (1 + rndCrystalBall * ptRes  ), mclv1.Eta(), mclv1.Phi(), mclv1.M() );
+	
+	if ( massDaughterA > 0 ) // override mass?
+		rclv1.SetPtEtaPhiM(  mclv1.Pt() * (1 + rndCrystalBall * ptRes  ), mclv1.Eta(), mclv1.Phi(), massDaughterA );
+	else
+		rclv1.SetPtEtaPhiM(  mclv1.Pt() * (1 + rndCrystalBall * ptRes  ), mclv1.Eta(), mclv1.Phi(), mclv1.M() );
 	
 	ptRes = momResolution->Eval( mclv2.Pt() );
 	rndCrystalBall = 0.0;
 	if ( true == momSmearing ) rndCrystalBall = gRandom->Gaus( 0, 1.0 );
 
-	rclv2.SetPtEtaPhiM( mclv2.Pt() * (1 + rndCrystalBall * ptRes  ) , mclv2.Eta(), mclv2.Phi(), mclv2.M() );
+	
+	if ( massDaughterB > 0 ) //override mass?
+		rclv2.SetPtEtaPhiM( mclv2.Pt() * (1 + rndCrystalBall * ptRes  ) , mclv2.Eta(), mclv2.Phi(), massDaughterB );
+	else 
+		rclv2.SetPtEtaPhiM( mclv2.Pt() * (1 + rndCrystalBall * ptRes  ) , mclv2.Eta(), mclv2.Phi(), mclv2.M() );
+
 	rclv = rclv1 + rclv2;
 	// =============================== MOMENTUM SMEARING ===============================
 

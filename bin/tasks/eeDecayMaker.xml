@@ -7,25 +7,29 @@
 
 	<SEED>0</SEED>
 	<N>1000000</N>
-	<CHANNEL>X_mumu</CHANNEL>
-	<!-- <CHANNEL>phi_mumu</CHANNEL> -->
 	<SMEAR>true</SMEAR>
-
-	<!-- <MassDaughterA>0.1056583745</MassDaughterA> -->
-	<!-- <MassDaughterB>0.1056583745</MassDaughterB> -->
 
 	<cm>
 		<Logger color="true" globalLogLevel="none" />
 
 		<output>
-			<TFile url="gammastar_{CHANNEL}.root" />
+			<TFile url="cocktail_STAR_ee.root" />
 			<!-- <TFile url="{DIMUON_ROOT}/data/Cocktail/parts/Cocktail_{CHANNEL}_{mod}.root" /> -->
 		</output>
 
 		<Make QA="false" TF1="true" intermediate="true" fullPS="true" />
 		
 		<ActiveChannels>
-			<ActiveChannel name="{CHANNEL}" n="{N}" weight="1.0" />
+			<!-- <ActiveChannel name="{CHANNEL}" n="{N}" weight="1.0" /> -->
+			<ActiveChannel name="omega_pi0ee_dalitz" n="{N}" weight="1.0" /> 
+			<ActiveChannel name="pi0_gammaee_dalitz" n="{N}" weight="1.0" /> 
+			<ActiveChannel name="eta_gammaee_dalitz" n="{N}" weight="1.0" /> 
+			<ActiveChannel name="phi_etaee_dalitz" n="{N}" weight="1.0" /> 
+			<ActiveChannel name="etaprime_gammaee_dalitz" n="{N}" weight="1.0" /> 
+			<ActiveChannel name="phi_ee" n="{N}" weight="1.0" /> 
+			<ActiveChannel name="jpsi_ee" n="{N}" weight="1.0" /> 
+			<ActiveChannel name="omega_ee" n="{N}" weight="1.0" /> 
+			<ActiveChannel name="rho_ee" n="{N}" weight="1.0" /> 
 		</ActiveChannels>		
 
 		<DecayChannels>
@@ -60,7 +64,7 @@
 		</histograms>
 
 		<KinematicFilters>
-			<Include url="config/STAR_MTD.xml" />
+			<Include url="config/STAR_Dielectron.xml" />
 		</KinematicFilters>
 
 		<MomentumSmearing>{SMEAR}</MomentumSmearing>

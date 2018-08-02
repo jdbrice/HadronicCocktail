@@ -4,7 +4,7 @@
 	<Task name="Cocktail Scaler" type="Scaler" config="" nodePath="scaler" />
 	<Logger color="true" globalLogLevel="info" />
 
-	<REBIN>1</REBIN>
+	<REBIN>10</REBIN>
 	<STATE>MTDMTD</STATE>
 	
 	<!-- Acceptance State -->
@@ -14,6 +14,9 @@
 		AccCut0 - MTD eta acceptnace (no pt cut)
 		AccCut1 (Nominal - MTD Acceptance) -->
 	<ACC>AccCut1</ACC>
+	<!-- <Ncoll>4.7</Ncoll> -->
+	<!-- <mod>-pAu</mod> -->
+	<mod>-rb10</mod>
 
 	<scaler>
 
@@ -33,7 +36,7 @@
 		</input>
 
 		<output>
-			<TFile url="{DIMUON_ROOT}/data/Cocktail/{STATE}-Scaled-{ACC}.root" />
+			<TFile url="{DIMUON_ROOT}/data/Cocktail/{STATE}-Scaled-{ACC}{mod}.root" />
 		</output>
 
 		<!-- Stores the scaling info keyed by name -->
@@ -48,7 +51,7 @@
 			<ActiveChannel name="psi_mumu"                  dndy= "3.38e-6" redndy=".20" br="8.0e-3" ebr="3.3e-4" />
 			<ActiveChannel name="etaprime_gammamumu_dalitz" dndy= "4.07e-2" redndy=".29" br="1.08e-4" ebr="0.27e-4" />
 			<!-- 0.92mb / 42mb = 2.190476e-02 -->
-			<ActiveChannel name="ccbar_mumu"                dndy="2.190476e-02" olddndy="1.8976e-02" redndy="0.01e-2" br="1.0" ebr="0.0" />
+			<ActiveChannel name="ccbar_mumu"                dndy="2.190476e-02" olddndy="1.8976e-02" redndy="0.2" br="1.0" ebr="0.0" />
 			<!-- 3.2mub / 42mb = 7.619048e-05 -->
 			<!-- uncertainty from 6.2mub / 42mb = 1.476190e-04 - 7.619048e-05 = 7.142852e-05 -->
 			<!-- relative uncertainty =  redndy = 7.142852e-05 / 7.619048e-05 = -->
@@ -56,7 +59,7 @@
 			<!-- <ActiveChannel name="bbbar_mumu"                dndy="3.2e-3" redndy="0.01e-3" br="1.0" ebr="0.0" /> -->
 
 			<!-- 42nb / 42mb = 1e-6 -->
-			<ActiveChannel name="drellyan_mumu"             dndy="1e-6" redndy="0.05" br="1.0" ebr="0.001" />
+			<ActiveChannel name="drellyan_mumu"             dndy="1e-6" redndy="0.1" br="1.0" ebr="0.001" />
 		</ActiveChannels>
 
 	</scaler>
