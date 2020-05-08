@@ -250,14 +250,14 @@ TF1 *fTsallisBlastWave_Integrand_r   = nullptr;
 TF1 *fTsallisBlastWave_Integrand_phi = nullptr;
 TF1 *fTsallisBlastWave_Integrand_y   = nullptr;
 
-double TsallisBlastWave_Integrand_y( const double *x, double* p ) {
+double TsallisBlastWave_Integrand_y( const double *x, const double* p ) {
 	double y = x[0];
 	fTsallisBlastWave_Integrand_r->SetParameter( 6, y );
 	double integral = fTsallisBlastWave_Integrand_phi->Integral( -TMath::Pi(), TMath::Pi() );
 	return TMath::CosH(y) * integral;
 }
 
-double TsallisBlastWave_Integrand_phi(const double *x, double* p){
+double TsallisBlastWave_Integrand_phi(const double *x, const double* p){
 	double phi = x[0];
 	fTsallisBlastWave_Integrand_r->SetParameter(7, phi);
 	double integral = fTsallisBlastWave_Integrand_r->Integral(0., 1.);

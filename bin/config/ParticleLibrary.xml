@@ -17,7 +17,7 @@
 	<Particle name="psi" mcId="100443" mass="3.68609" width="3.04e-4" />
 	
 	<Particle name="kaon" mcId="321" mass="0.493667" width="0" />
-	<Particle name="k0s" mcId="321" mass="0.497667" width="8.5e-3" />
+	<!-- <Particle name="k0s" mcId="321" mass="0.497667" width="8.5e-3" /> -->
 	<Particle name="pion" mcId="211" mass="0.139570" width="0" />
 
 	<!-- PHOTONS -->

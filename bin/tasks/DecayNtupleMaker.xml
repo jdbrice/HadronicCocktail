@@ -6,8 +6,8 @@
 	<Logger color="true" globalLogLevel="all" />
 
 	<SEED>0</SEED>
-	<N>0</N>
-	<CHANNEL>phi_gammamumu_dalitz</CHANNEL>
+	<N>10000</N>
+	<CHANNEL>eta_gammamumu_dalitz</CHANNEL>
 	<SMEAR>true</SMEAR>
 	<mod></mod>
 

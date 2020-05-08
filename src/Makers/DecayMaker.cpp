@@ -105,7 +105,7 @@ void DecayMaker::initialize(){
 	ccol.report();
 	INFOC( "===================CUTS===================");
 
-	funLib.loadAll( config, nodePath + ".FunctionLibrary" );
+	// funLib.loadAll( config, nodePath + ".FunctionLibrary" );
 	momResolution = funLib.get( "pT_Resolution" );
 	momShape      = funLib.get( "pT_Shape" );
 	if ( nullptr == momShape ){

@@ -4,7 +4,7 @@
 
 // RooBarb
 #include "TaskRunner.h"
-#include "UnitTest/UnitTest.h"
+#include "UnitTest.h"
 
 #include "ParticleLibrary.h"
 

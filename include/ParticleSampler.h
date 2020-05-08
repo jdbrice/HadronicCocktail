@@ -37,9 +37,9 @@ public:
 		INFO( classname(), "Looking for TH1 or TF1 " << quote( _plcInfo.name + "_pT" ) << " = " << this->funLib.get( _plcInfo.name + "_pT" ) << " exp : " << this->funLib.functionExpression( _plcInfo.name + "_pT" ) );
 		kdPt.set( this->histoLib.get( _plcInfo.name + "_pT" ), this->funLib.get( _plcInfo.name + "_pT" ) );
 		
-		
+		INFO( classname(), "kdPt.isReady() = " << kdPt.isReady() );
 		// set the particle's mass if given a TBW
-		if ( !kdPt.isReady() && "TsallisBlastWave" ==  this->funLib.functionExpression( _plcInfo.name + "_pT" ) ){
+		if ( !kdPt.isReady() || "TsallisBlastWave" ==  this->funLib.functionExpression( _plcInfo.name + "_pT" ) ){
 			INFO( classname(), "Setting TsallisBlastWave mass param to " << _plcInfo.mass );
 			shared_ptr<TF1> f = this->funLib.get( _plcInfo.name + "_pT" );
 			
@@ -55,6 +55,7 @@ public:
 		if ( !kdRapidity.isReady() ){
 			kdRapidity.set( nullptr, this->funLib.get("CERES" ) );
 			kdRapidity.getTF1()->SetParameter( 2, this->plcInfo.mass ); // set the plc mass in CERES parameterization
+            INFO( classname(), "rapidity mass param = " << kdRapidity.getTF1()->GetParameter( 2 ) );
 		}
 		
 		
